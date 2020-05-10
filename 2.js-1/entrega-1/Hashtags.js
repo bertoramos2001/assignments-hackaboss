@@ -1,27 +1,31 @@
 
 
 tweets = [
-  'aprendiendo #javascript en  Vigo',
+  'aprendiendo #javascript en Vigo',
   'empezando el segundo módulo del bootcamp!',
-  'hack a boss bootcamp vigo  #codinglive #javascript'
+  'hack a boss bootcamp vigo #codinglive #javascript'
 ]
-output = [];
+let splitTweets = [];
+for (let i = 0; i < tweets.length; i++) {   //separar cada elemento del array 'tweets' en distintos arrays, cada uno contiene todas las palabras del cada elemento por separado
+  splitTweets.push(tweets[i].split(' '));
+}
 
-for (i = 0; i < tweets.length; i++) {
-  if (tweets[i].indexOf('#') != -1) {
-    firstHashtagIndex = tweets[i].indexOf('#');
-    firstHashtagWhole = tweets[i].slice(firstHashtagIndex, firstHashtagIndex + 11)
-    if (output.indexOf(firstHashtagWhole) == -1){
-      output.push((tweets[i].slice(firstHashtagIndex, firstHashtagIndex + 11)))
-  }
-    if (tweets[i].indexOf('#', tweets[i].indexOf('#') + 1) != -1) {
-      secondHashtagIndex = tweets[i].indexOf('#', tweets[i].indexOf('#') + 1)
-      secondHashtagWhole = tweets[i].slice(secondHashtagIndex,secondHashtagIndex+11)
-      if (output.indexOf(secondHashtagWhole) == -1) {
-      output.push((tweets[i].slice(secondHashtagIndex,secondHashtagIndex+11)))
-      }
+let hashtagsArray = [];
+for (let i = 0; i < splitTweets.length; i++) {
+  for (let j = 0; j < splitTweets[i].length; j++) {   //coger las palabras que empiezan por el símbolo '#' y meterlas todas en un mismo array
+    if((splitTweets[i][j].charAt(0)) == '#') {
+      hashtagsArray.push(splitTweets[i][j]);
     }
   }
 }
 
-console.log(output);
+let index = 0;
+let output = [];
+for (let i = 0; i < hashtagsArray.length; i++) {
+  if(hashtagsArray.indexOf(hashtagsArray[i]) == index) { //filtrar los hashtags y eliminar los repetidos del array
+    output.push(hashtagsArray[i]);
+  }
+  index++;
+}
+
+console.log(output) //devolver el array con todos los hashtags de los tweets
