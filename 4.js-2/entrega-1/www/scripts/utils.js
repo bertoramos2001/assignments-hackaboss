@@ -6,45 +6,57 @@ const aside = document.getElementById('aside-reservas')
 
 
 //Funciones
-const borrarTodo = e => {
-    let listaHoteles = e.target.parentElement.querySelectorAll('li')
-    listaHoteles.forEach(hotel => hotel.remove())
+
+const crearElemento = hoteles => {
+    localStorage.setItem('hoteles', JSON.stringify(hoteles))
+    list.innerHTML = ''
+    hoteles.forEach((card, i) => {
+        const img = document.createElement('img')
+        img.setAttribute('src', card.imagen)
+        img.setAttribute('width', 50)
+        img.setAttribute('height', 50)
+        img.setAttribute('alt', 'imagen del hotel')
+        img.classList = 'foto-hotel'
+
+        const li = document.createElement('li')
+        li.textContent = `${card.nombre} ${card.precio}`
+
+        const button = document.createElement('button')
+        button.classList = 'delete'
+        button.textContent = 'x'
+        button.addEventListener('click', () => borrarLocalStorage(i))
+
+        li.appendChild(img)
+        li.appendChild(button)
+        li.classList = 'hotel-reservado'
+        list.appendChild(li)
+        if (list.getElementsByTagName('li').length >= 1) {
+            aside.style.display = 'block'
+        }
+    })
+}
+const borrarTodo = () => {
+    localStorage.clear()
     aside.style.display = 'none'
 }
 
-const borrarElemento = e => {
-    if (e.target.parentElement.parentElement.getElementsByTagName('li').length == 1) {
+const borrarLocalStorage = indice => {
+    const hoteles = cargarLocalStorage()
+    hoteles.splice(indice, 1)
+    if(hoteles.length == 0) {
         aside.style.display = 'none'
     }
-    if(e.target.classList.contains('delete')) {
-        e.target.parentElement.remove()
-    }
+    crearElemento(hoteles)
 }
 
-const addElemento = elemento => {
-    list.appendChild(elemento)
-    aside.style.display = 'block'
+const cargarLocalStorage = () => {
+    return JSON.parse(localStorage.getItem('hoteles'))
 }
 
-const crearElemento = card => {
-    const img = document.createElement('img')
-    img.setAttribute('src', card.imagen)
-    img.setAttribute('width', 50)
-    img.setAttribute('height', 50)
-    img.setAttribute('alt', 'imagen del hotel')
-    img.classList = 'foto-hotel'
-
-    const li = document.createElement('li')
-    li.textContent = `${card.nombre} ${card.precio}`
-
-    const button = document.createElement('button')
-    button.classList = 'delete'
-    button.textContent = 'x'
-
-    li.appendChild(img)
-    li.appendChild(button)
-    li.classList = 'hotel-reservado'
-    addElemento(li)
+const addLocalStorage = hotel => {
+    const hoteles = cargarLocalStorage() || []
+    const newHoteles = [...hoteles, hotel]
+    crearElemento(newHoteles)
 }
 
 
@@ -54,7 +66,7 @@ const datosHotel = articleHotel => {
         nombre: articleHotel.querySelector('.nombre-hotel').textContent,
         precio: articleHotel.querySelector('.precio-hotel').textContent
     }
-    crearElemento(info)
+    addLocalStorage(info)
 }
 
 const addReserva = e => {
@@ -63,4 +75,4 @@ const addReserva = e => {
 
 aside.style.display = 'none'
 
-export {botonesBook, addReserva, list, borrarElemento, removeAll, borrarTodo, aside}
+export {botonesBook, addReserva, crearElemento, removeAll, borrarTodo}
