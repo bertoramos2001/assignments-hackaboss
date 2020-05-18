@@ -130,6 +130,7 @@ footer {
 }
 aside {
     margin-top: 25px;
+    margin-left: 25px;
     padding: 0px 30px 0px 30px;
     background-color: #D42640;
     min-width: 200px;
