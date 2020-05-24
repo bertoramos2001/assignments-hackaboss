@@ -1,0 +1,14 @@
+{
+  "name": "entrega-1",
+  "version": "1.0.0",
+  "description": "ejercicio de consola que pinta lo que se debe pagar mensualmente de un préstamo según los datos metidos por el usuario",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "loan-calc": "^0.2.1"
+  },
+  "author": "Alberto Ramos",
+  "license": "ISC"
+}
