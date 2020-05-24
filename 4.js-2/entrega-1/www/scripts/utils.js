@@ -38,6 +38,9 @@ const crearElemento = hoteles => {
 const borrarTodo = () => {
     localStorage.clear()
     aside.style.display = 'none'
+    const hoteles = cargarLocalStorage()
+    crearElemento(hoteles)
+
 }
 
 const borrarLocalStorage = indice => {
