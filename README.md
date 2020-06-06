@@ -24,4 +24,5 @@ BACK
 
 <MTMarkdownOptions output='html4'>
     hola
+    hoho
 </MTMarkdownOptions>
