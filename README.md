@@ -27,3 +27,4 @@ BACK
     -entrega 3: backend de ecommerce; un único usuario (administrador) puede añadir y modificar productos, todos los
             usuarios pueden visualizar la lista de productos. Se pueden filtrar los poroductos mediante la querystring
         ***NOTA*** la contraseña para entrar como asministrador es 1234, como se indica en el código
+        ***NOTA*** los objetos se pueden filtrar por nombre, precio mínimo y precio máximo
