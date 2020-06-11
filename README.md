@@ -3,10 +3,10 @@
 En este repoditorio subiré todas las entregas semanales del bootcamp Hack a Boss
 
 ## HTML
-**-entrega 1:** Creación de un email simple, con imágenes y texto
+-**-entrega 1:** Creación de un email simple, con imágenes y texto
 
 ## JAVASCRIPT 1
-**-entrega 1:** Obtener los hashtags en un array de strings
+-**-entrega 1:** Obtener los hashtags en un array de strings
 
 **-entrega 2:** Filtrar objetos para decidir en qué fotografías sale cada persona
 
