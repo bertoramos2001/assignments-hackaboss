@@ -49,13 +49,6 @@ app.post('/user', login);
 //obtener lista de productos (no es necesario autenticarse)
 app.get('/product', list);
 
-//obtener lista de productos filtrándolos por nombre(no es necesario autenticarse)
-
-
-//obtener lista de productos filtrándolos por precio máximo(no es necesario autenticarse)
-
-//obtener lista de productos filtrándolos por precio mínimo (no es necesario autenticarse)
-
 //modificar un producto (es necesario autenticarse)
 app.put('/product/:id', isAuthenticated, modify)
 

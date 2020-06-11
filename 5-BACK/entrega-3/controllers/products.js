@@ -10,15 +10,18 @@ const list = (req, res) => {
     let listaProductos = bd.readList();
 
 
+    //obtener lista de productos filtrándolos por nombre(no es necesario autenticarse)
     if (product !== undefined) { //filtramos por nombre
         listaProductos = listaProductos.filter( producto => (((producto.name).trim()).toLowerCase()).replace(' ', '-') === product)
     }
+    //obtener lista de productos filtrándolos por precio mínimo (no es necesario autenticarse)
     if (minPrice !== undefined) { //filtramos por precio minimo
         if(isNaN(minPrice)) {
             res.status(400).send(); //error si alguno de los precios enviados en la querystring no son numeros
         }
         listaProductos = listaProductos.filter( producto => parseInt(producto.price) > minPrice)
     }
+    //obtener lista de productos filtrándolos por precio máximo(no es necesario autenticarse)
     if (maxPrice !== undefined) { //filtramos por precio maximo
         if(isNaN(maxPrice)) {
             res.status(400).send(); //error si alguno de los precios enviados en la querystring no son numeros

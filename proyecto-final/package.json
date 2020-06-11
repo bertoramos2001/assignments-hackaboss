@@ -1,0 +1,15 @@
+{
+  "name": "proyecto-final",
+  "version": "1.0.0",
+  "description": "Proyecto final para el bootcamp Hack a Boss, plataforma donde conectamos a futbolistas con ojeadores",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js"
+  },
+  "author": "Alberto Ramos",
+  "license": "ISC",
+  "dependencies": {
+    "jest": "^26.0.1"
+  }
+}
