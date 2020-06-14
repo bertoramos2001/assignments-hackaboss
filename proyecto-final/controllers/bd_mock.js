@@ -5,7 +5,26 @@ const getUser = (email) => {
     return users.find(matchEmail);
 }
 
-const saveUser = (email, password, role, name, surname, gender, province, birthDate, actualClub, categories, positions, skills) => {
+const saveFamily = (email, password, role, namePlayer, surnamePlayer, nameTutor, surnameTutor, gender, province, birthDate, actualClub, category, positions, skills) => {
+    users.push({
+        email,
+        password,
+        role,
+        namePlayer,
+        surnamePlayer,
+        nameTutor,
+        surnameTutor,
+        gender,
+        province,
+        birthDate,
+        actualClub,
+        category,
+        positions,
+        skills
+    })
+}
+
+const saveScout = (email, password, role, name, surname, gender, province, birthDate, actualClub, categories, positions, skills) => {
     users.push({
         email,
         password,
@@ -29,6 +48,7 @@ const getListOfUsers = () => {
 
 module.exports = {
     getUser,
-    saveUser,
+    saveScout,
+    saveFamily,
     getListOfUsers
 }
