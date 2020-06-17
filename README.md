@@ -2,6 +2,9 @@
 
 En este repoditorio subiré todas las entregas semanales del bootcamp Hack a Boss
 
+#PROYECTO FINAL (en proceso)
+Plataforma donde conectamos jóvenes futbolistas con ojeadores,  teniendo los primeros un catálogo de vídeos subidos por las familias.
+
 ## HTML
 - **entrega 1:** Creación de un email simple, con imágenes y texto
 
