@@ -61,11 +61,36 @@ const sendConfirmationEmailScout = (emailDestino, nombreOjeador) => {
       return msg;
 }
 
+const sendEmailChangeFamily = (emailDestino, apellidoFamilia) => {
+    const msg = {
+        to: emailDestino,
+        from: 'futurasestrellasfutbol@gmail.com',
+        subject: 'Cambio de email de la cuenta',
+        text: `Buenas, familia ${apellidoFamilia}.Os enviamos este email para comunicaros el cambio de dirección de correo electrónico de vuestra cuenta de FuturasEstrellas.com. Os recordamos que podéis cambiar vuestros datos, incluida la dirección de correo electrónico desde la sección de modificar perfil en vuestro perfil. Gracias por la atención, tened un buen día.`,
+        html: `<h1 style="text-align:center">Buenas, familia ${apellidoFamilia}</h1><p style="text-align:center">Os enviamos este email para comunicaros el cambio de dirección de correo electrónico de vuestra cuenta de FuturasEstrellas.com. Os recordamos que podéis cambiar vuestros datos, incluida la dirección de correo electrónico desde la sección de modificar perfil en vuestro perfil.<br><br> Gracias por la atención, tened un buen día.</p>`
+      };
+      return msg;
+}
+
+const sendEmailChangeScout = (emailDestino, nombreOjeador) => {
+    const msg = {
+        to: emailDestino,
+        from: 'futurasestrellasfutbol@gmail.com',
+        subject: 'Cambio de email de la cuenta',
+        text: `Buenas,  ${nombreOjeador}.Te enviamos este email para comunicarte el cambio de dirección de correo electrónico de tu cuenta de FuturasEstrellas.com. Te recordamos que puedes cambiar tus datos, incluida la dirección de correo electrónico desde la sección de modificar perfil en tu perfil. Gracias por la atención, ten un buen día.`,
+        html: `<h1 style="text-align:center">Buenas,  ${nombreOjeador}</h1><p style="text-align:center">Te enviamos este email para comunicarte el cambio de dirección de correo electrónica de tu cuenta de FuturasEstrellas.com. Te recordamos que puedes cambiar tus datos, incluida la dirección de correo electrónico desde la sección de modificar perfil en tu perfil.<br><br> Gracias por la atención, ten un buen día.</p>`
+      };
+      return msg;
+}
+
+
 module.exports = {
     checkPassword,
     parseBodyToArray,
     normalizeName,
     ageDiff,
     sendConfirmationEmailFamily,
-    sendConfirmationEmailScout
+    sendConfirmationEmailScout,
+    sendEmailChangeFamily,
+    sendEmailChangeScout
 }

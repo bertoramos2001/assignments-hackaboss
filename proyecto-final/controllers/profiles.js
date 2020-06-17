@@ -1,5 +1,8 @@
 const bd = require("./bd_mock");
 const functions = require('./functions');
+const sgMail = require('@sendgrid/mail');
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const showProfile = (req, res, next) => {
     const email = req.params.email;
@@ -30,7 +33,7 @@ const showProfile = (req, res, next) => {
     res.json(user)
 }
 
-const modifyProfileFamily = (req, res, next) => {
+const modifyProfileFamily = async (req, res, next) => {
     const { namePlayer, surnamePlayer, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, positions, skills } = req.body;
     const email = req.params.email;
     const user = bd.getUser(email); 
@@ -65,12 +68,23 @@ const modifyProfileFamily = (req, res, next) => {
         return;
     }
 
+    if (emailTutor !== email) {
+        try {
+            await sgMail.send(functions.sendEmailChangeFamily(emailTutor, functions.normalizeName(surnamePlayer)));
+            console.log('Message sent');
+        } catch(e) {
+            const emailError = new Error('error al enviar el email');
+            emailError.status = 400;
+            next(emailError);
+        }
+    }
+
     bd.updateProfileFamily(user, functions.normalizeName(namePlayer), functions.normalizeName(surnamePlayer), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), emailTutor, gender, province, birthDate, actualClub, category, functions.parseBodyToArray(positions), functions.parseBodyToArray(skills));
 
     res.json(user);
 }
 
-const modifyProfileScout = (req, res, next) => {
+const modifyProfileScout = async (req, res, next) => {
     const { name, surname, email, gender, province, birthDate, actualClub, categories, positions, skills } = req.body;
     const emailParams = req.params.email;
     const user = bd.getUser(emailParams);
@@ -103,6 +117,17 @@ const modifyProfileScout = (req, res, next) => {
         invalidParamsError.status = 400;
         next(invalidParamsError);
         return;
+    }
+
+    if (email !== emailParams) {
+        try {
+            await sgMail.send(functions.sendEmailChangeScout(email, functions.normalizeName(name)));
+            console.log('Message sent');
+        } catch(e) {
+            const emailError = new Error('error al enviar el email');
+            emailError.status = 400;
+            next(emailError);
+        }
     }
 
     bd.updateProfileScout(user, functions.normalizeName(name), functions.normalizeName(surname), email, gender, province, birthDate, actualClub, functions.parseBodyToArray(categories), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills));

@@ -22,15 +22,25 @@ const canUpdateProfile = (req, res, next) => {
     const { email } = req.params;
     const user = bd.getUser(email);
 
+    if (!user) {
+        const userNotFoundError = new Error('usuario no encontrado');
+        userNotFoundError.status = 404;
+        next(userNotFoundError)
+        return;
+    }
+
     try {
         const decodedToken = jwt.verify(authorization, process.env.SECRET);
-        if (user.id === decodedToken.id) {
-            req.auth = decodedToken;
+        if (user.id !== decodedToken.id) {
+            const authError = new Error('invalid token');
+            authError.status = 401;
+            next(authError);
         }
+        req.auth = decodedToken;
     } catch(e) {
         const authError = new Error('invalid token');
         authError.status = 401;
-        next(authError);  //ejecutamos el middleware de gestion de errores que tenemos en server
+        next(authError);
     }
     next();
 
