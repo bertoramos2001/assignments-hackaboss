@@ -38,6 +38,16 @@ const modifyProfileFamily = async (req, res, next) => {
     const email = req.params.email;
     const user = bd.getUser(email); 
 
+    let avatarPerfil = '';
+
+    if (!req.file) {
+        const profileImageError = new Error('Debes añadir una foto de perfil');
+        profileImageError.status = 400;
+        next(profileImageError);
+    } else {
+        avatarPerfil = req.file.path;
+    }
+
     if (!user) {
         const userNotFoundError = new Error('usuario no encontrado');
         userNotFoundError.status = 404;
@@ -69,17 +79,18 @@ const modifyProfileFamily = async (req, res, next) => {
     }
 
     if (emailTutor !== email) {
-        try {
-            await sgMail.send(functions.sendEmailChangeFamily(emailTutor, functions.normalizeName(surnamePlayer)));
-            console.log('Message sent');
-        } catch(e) {
-            const emailError = new Error('error al enviar el email');
-            emailError.status = 400;
-            next(emailError);
-        }
+        // try {
+        //     await sgMail.send(functions.sendEmailChangeFamily(emailTutor, functions.normalizeName(surnamePlayer)));
+        //     console.log('Message sent');
+        // } catch(e) {
+        //     const emailError = new Error('error al enviar el email');
+        //     emailError.status = 400;
+        //     next(emailError);
+        // }
+        console.log('email enviado')
     }
 
-    bd.updateProfileFamily(user, functions.normalizeName(namePlayer), functions.normalizeName(surnamePlayer), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), emailTutor, gender, province, birthDate, actualClub, category, functions.parseBodyToArray(positions), functions.parseBodyToArray(skills));
+    bd.updateProfileFamily(user, functions.normalizeName(namePlayer), functions.normalizeName(surnamePlayer), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), emailTutor, gender, province, birthDate, actualClub, category, functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
 
     res.json(user);
 }
@@ -88,6 +99,16 @@ const modifyProfileScout = async (req, res, next) => {
     const { name, surname, email, gender, province, birthDate, actualClub, categories, positions, skills } = req.body;
     const emailParams = req.params.email;
     const user = bd.getUser(emailParams);
+
+    let avatarPerfil = '';
+
+    if (!req.file) {
+        const profileImageError = new Error('Debes añadir una foto de perfil');
+        profileImageError.status = 400;
+        next(profileImageError);
+    } else {
+        avatarPerfil = req.file.path;
+    }
 
     if (!user) {
         const userNotFoundError = new Error('usuario no encontrado');
@@ -120,17 +141,18 @@ const modifyProfileScout = async (req, res, next) => {
     }
 
     if (email !== emailParams) {
-        try {
-            await sgMail.send(functions.sendEmailChangeScout(email, functions.normalizeName(name)));
-            console.log('Message sent');
-        } catch(e) {
-            const emailError = new Error('error al enviar el email');
-            emailError.status = 400;
-            next(emailError);
-        }
+        // try {
+        //     await sgMail.send(functions.sendEmailChangeScout(email, functions.normalizeName(name)));
+        //     console.log('Message sent');
+        // } catch(e) {
+        //     const emailError = new Error('error al enviar el email');
+        //     emailError.status = 400;
+        //     next(emailError);
+        // }
+        console.log('email enviado')
     }
 
-    bd.updateProfileScout(user, functions.normalizeName(name), functions.normalizeName(surname), email, gender, province, birthDate, actualClub, functions.parseBodyToArray(categories), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills));
+    bd.updateProfileScout(user, functions.normalizeName(name), functions.normalizeName(surname), email, gender, province, birthDate, actualClub, functions.parseBodyToArray(categories), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
 
     res.json(user)
 }

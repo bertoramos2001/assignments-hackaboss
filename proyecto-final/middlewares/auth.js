@@ -31,12 +31,13 @@ const canUpdateProfile = (req, res, next) => {
 
     try {
         const decodedToken = jwt.verify(authorization, process.env.SECRET);
+        req.auth = decodedToken;
+
         if (user.id !== decodedToken.id) {
             const authError = new Error('invalid token');
             authError.status = 401;
             next(authError);
         }
-        req.auth = decodedToken;
     } catch(e) {
         const authError = new Error('invalid token');
         authError.status = 401;

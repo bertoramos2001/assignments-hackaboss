@@ -20,6 +20,16 @@ const registerScout = async (req, res, next) => {
         return;
     }
 
+    let avatarPerfil = '';
+
+    if (!req.file) {
+        const profileImageError = new Error('Debes añadir una foto de perfil');
+        profileImageError.status = 400;
+        next(profileImageError);
+    } else {
+        avatarPerfil = req.file.path;
+    }
+
     //calculamos la edad del ojeador
     let age = functions.ageDiff(new Date(birthDate), new Date());
 
@@ -60,19 +70,21 @@ const registerScout = async (req, res, next) => {
     //encriptar la password(para no almacenarla en texto claro)
     const passwordBcrypt = await bcrypt.hash(password, 10);
     //almacenar datos
-    bd.saveScout(email, passwordBcrypt, 'ojeador', functions.normalizeName(name), functions.normalizeName(surname), gender, province, birthDate, actualClub, functions.parseBodyToArray(categories), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills));
+    bd.saveScout(email, passwordBcrypt, 'ojeador', functions.normalizeName(name), functions.normalizeName(surname), gender, province, birthDate, actualClub, functions.parseBodyToArray(categories), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
 
     //enviar email confirmación
-    try {
-        await sgMail.send(functions.sendConfirmationEmailScout(email, functions.normalizeName(name)));
-        console.log('Message sent');
-    } catch(e) {
-        console.log(e.response.body)
-        const emailError = new Error('error al enviar el email');
-        emailError.status = 400;
-        next(emailError);
-    }
-    res.send();
+    // try {
+    //     await sgMail.send(functions.sendConfirmationEmailScout(email, functions.normalizeName(name)));
+    //     console.log('Message sent');
+    // } catch(e) {
+    //     console.log(e.response.body)
+    //     const emailError = new Error('error al enviar el email');
+    //     emailError.status = 400;
+    //     next(emailError);
+    // }
+    console.log('email enviado')
+    //res.send();
+    res.json(req.file)
 }
 const listUsers = (req, res) => {
     res.json(bd.getListOfUsers());
@@ -88,6 +100,16 @@ const registerFamily = async (req, res, next) => {
         missingParamsError.status = 400;
         next(missingParamsError);
         return;
+    }
+
+    let avatarPerfil = '';
+
+    if (!req.file) {
+        const profileImageError = new Error('Debes añadir una foto de perfil');
+        profileImageError.status = 400;
+        next(profileImageError);
+    } else {
+        avatarPerfil = req.file.path;
     }
 
      //calculamos la edad del jugador
@@ -133,19 +155,21 @@ const registerFamily = async (req, res, next) => {
      //encriptar la password(para no almacenarla en texto claro)
     const passwordBcrypt = await bcrypt.hash(password, 10);
     //almacenar los datos
-    bd.saveFamily(emailTutor, passwordBcrypt, 'familia', functions.normalizeName(namePlayer), functions.normalizeName(surnamePlayer), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), gender, province, birthDate, actualClub, category, functions.parseBodyToArray(positions), functions.parseBodyToArray(skills));
+    bd.saveFamily(emailTutor, passwordBcrypt, 'familia', functions.normalizeName(namePlayer), functions.normalizeName(surnamePlayer), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), gender, province, birthDate, actualClub, category, functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
 
     //enviar email confirmación
-    try {
-        await sgMail.send(functions.sendConfirmationEmailFamily(emailTutor, functions.normalizeName(surnamePlayer)));
-        console.log('Message sent');
-    } catch(e) {
-        console.log(e.response.body)
-        const emailError = new Error('error al enviar el email');
-        emailError.status = 400;
-        next(emailError);
-    }
-    res.send();
+    // try {
+    //     await sgMail.send(functions.sendConfirmationEmailFamily(emailTutor, functions.normalizeName(surnamePlayer)));
+    //     console.log('Message sent');
+    // } catch(e) {
+    //     console.log(e.response.body)
+    //     const emailError = new Error('error al enviar el email');
+    //     emailError.status = 400;
+    //     next(emailError);
+    // }
+    console.log('email enviado')
+    //res.send();
+    res.json(req.file)
 }
 
 const login = async (req, res, next) => {

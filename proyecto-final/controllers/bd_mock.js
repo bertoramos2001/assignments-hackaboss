@@ -1,7 +1,7 @@
 let users = [];
 let id = 0;
 
-const saveFamily = (email, password, role, namePlayer, surnamePlayer, nameTutor, surnameTutor, gender, province, birthDate, actualClub, category, positions, skills) => {
+const saveFamily = (email, password, role, namePlayer, surnamePlayer, nameTutor, surnameTutor, gender, province, birthDate, actualClub, category, positions, skills, avatarPerfil) => {
     users.push({
         id: id++,
         email,
@@ -17,11 +17,12 @@ const saveFamily = (email, password, role, namePlayer, surnamePlayer, nameTutor,
         actualClub,
         category,
         positions,
-        skills
+        skills,
+        avatarPerfil
     })
 }
 
-const saveScout = (email, password, role, name, surname, gender, province, birthDate, actualClub, categories, positions, skills) => {
+const saveScout = (email, password, role, name, surname, gender, province, birthDate, actualClub, categories, positions, skills, avatarPerfil) => {
     users.push({
         id:id++,
         email,
@@ -35,7 +36,8 @@ const saveScout = (email, password, role, name, surname, gender, province, birth
         actualClub,
         categories,
         positions,
-        skills
+        skills,
+        avatarPerfil
     })
 }
 
@@ -48,7 +50,7 @@ const getUser = (email) => {
     return users.find(matchEmail);
 }
 
-const updateProfileFamily = (user, namePlayer, surnamePlayer, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, positions, skills) => {
+const updateProfileFamily = (user, namePlayer, surnamePlayer, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, positions, skills, avatarPerfil) => {
     user.email = emailTutor;
     user.namePlayer = namePlayer;
     user.surnamePlayer = surnamePlayer;
@@ -61,10 +63,11 @@ const updateProfileFamily = (user, namePlayer, surnamePlayer, nameTutor, surname
     user.category = category;
     user.positions = positions;
     user.skills = skills;
+    user.avatarPerfil = avatarPerfil;
     return;
 }
 
-const updateProfileScout = (user, name, surname, email, gender, province, birthDate, actualClub, categories, positions, skills) => {
+const updateProfileScout = (user, name, surname, email, gender, province, birthDate, actualClub, categories, positions, skills, avatarPerfil) => {
     user.email = email;
     user.name = name;
     user.surname = surname;
@@ -75,6 +78,7 @@ const updateProfileScout = (user, name, surname, email, gender, province, birthD
     user.categories = categories;
     user.positions = positions;
     user.skills = skills;
+    user.avatarPerfil = avatarPerfil;
     return;
 }
 
