@@ -6,31 +6,58 @@ const express = require('express');
 const morgan = require('morgan');
 const multer = require('multer');
 
-const fileFilter = (req, file, cb) => {
+const imageFilter = (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true) //almacena la imagen y no da error
     } else {
-        const formatError = new Error('Solo se aceptan archivos jpg o png')//se lanza un error y no se almacena el erchivo enviado
+        const formatError = new Error('Solo se aceptan archivos jpg o png')//se lanza un error y no se almacena el archivo enviado
         formatError.status = 400;
         cb(formatError, false);
     }
 }
 
-const storage = multer.diskStorage({
+const videoFilter = (req, file, cb) => {
+    if (file.mimetype === 'video/mp4') {
+        cb(null, true) //almacena el video y no da error
+    } else {
+        const formatError = new Error('Solo se aceptan archivos mp4')//se lanza un error y no se almacena el archivo enviado
+        formatError.status = 400;
+        cb(formatError, false);
+    }
+}
+
+const storageAvatar = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, './uploads/')
+        cb(null, './uploads/avatars')
     },
     filename: function(req, file, cb) {
         cb(null, new Date().toISOString()  + file.originalname)
     }
 });
 
-const upload = multer({
-    storage: storage,
+const storageVideo = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null,'./uploads/videos')
+    },
+    filename: function(req, file, cb) {
+        cb(null, new Date().toISOString()  + file.originalname)
+    }
+})
+
+const uploadAvatar = multer({
+    storage: storageAvatar,
     limits: {
     filesize: 1024 * 1024
     },
-    fileFilter: fileFilter
+    fileFilter: imageFilter
+})
+
+const uploadVideo = multer({
+    storage: storageVideo,
+    limits: {
+        filesize: 1024 * 1024 * 10
+    },
+    fileFilter: videoFilter
 })
 
 const { listUsers, login, registerFamily, registerScout } = require('./controllers/users');
@@ -42,20 +69,21 @@ const port = process.env.PORT;
 const app = express();
 
 app.use(morgan('dev'));
+app.use('/uploads', express.static('uploads'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
 //registro y login
-app.post('/registroFamilia', upload.single('avatarPerfil'), registerFamily);
-app.post('/registroOjeador', upload.single('avatarPerfil'), registerScout);
+app.post('/registroFamilia', uploadAvatar.single('avatarPerfil'), registerFamily);
+app.post('/registroOjeador', uploadAvatar.single('avatarPerfil'), registerScout);
 app.post('/login', login);
 app.get('/registroOjeador', isAuthenticated, listUsers);
 //ver perfil público
 app.get('/perfil/:role/:email', showProfile);
-app.put('/perfil/editar/familia/:email', isAuthenticated, canUpdateProfile, upload.single('avatarPerfil'), modifyProfileFamily);
-app.put('/perfil/editar/ojeador/:email', isAuthenticated, canUpdateProfile, upload.single('avatarPerfil'), modifyProfileScout);
-app.post('/perfil/editar/familia/:email/videos', upload.single('videoFamilia'), postVideo);
+app.put('/perfil/editar/familia/:email', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileFamily);
+app.put('/perfil/editar/ojeador/:email', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileScout);
+app.post('/perfil/editar/familia/:email/videos', uploadVideo.single('videoFamilia'), postVideo);
 //app.get('/perfil/familia/:email/videos', showVideos)
 
 

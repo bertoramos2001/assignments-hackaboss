@@ -1,5 +1,6 @@
 let users = [];
 let id = 0;
+let videos = [];
 
 const saveFamily = (email, password, role, namePlayer, surnamePlayer, nameTutor, surnameTutor, gender, province, birthDate, actualClub, category, positions, skills, avatarPerfil) => {
     users.push({
@@ -82,6 +83,16 @@ const updateProfileScout = (user, name, surname, email, gender, province, birthD
     return;
 }
 
+const saveVideo = (idUsuario, titulo, descrpicion, videoFamilia) => {
+    videos.push({
+        id: idUsuario,
+        titulo,
+        descrpicion,
+        videoFamilia
+    })
+    return;
+}
+
 
 module.exports = {
     getListOfUsers,
@@ -90,4 +101,5 @@ module.exports = {
     updateProfileScout,
     saveFamily,
     saveScout,
+    saveVideo
 }
