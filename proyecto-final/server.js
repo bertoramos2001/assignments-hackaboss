@@ -63,7 +63,7 @@ const uploadVideo = multer({
 const { listUsers, login, registerFamily, registerScout } = require('./controllers/users');
 const { isAuthenticated, canUpdateProfile } = require('./middlewares/auth');
 const { modifyProfileFamily, modifyProfileScout, showProfile } = require('./controllers/profiles');
-const { postVideo } = require('./controllers/videos');
+const { postVideo, showVideos, deleteVideo } = require('./controllers/videos');
 
 const port = process.env.PORT;
 const app = express();
@@ -84,7 +84,8 @@ app.get('/perfil/:role/:email', showProfile);
 app.put('/perfil/editar/familia/:email', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileFamily);
 app.put('/perfil/editar/ojeador/:email', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileScout);
 app.post('/perfil/editar/familia/:email/videos', uploadVideo.single('videoFamilia'), postVideo);
-//app.get('/perfil/familia/:email/videos', showVideos)
+app.get('/perfil/familia/:email/videos', showVideos);
+app.delete('/perfil/editar/familia/:email/videos/:idVideo', deleteVideo);
 
 
 app.use((error, req, res, next) => {  //middleware generico para la gestion de errores (si algun middleware da error, se ejecuta este)

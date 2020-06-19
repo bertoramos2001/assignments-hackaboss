@@ -1,5 +1,6 @@
 let users = [];
 let id = 0;
+let idVideos = 0;
 let videos = [];
 
 const saveFamily = (email, password, role, namePlayer, surnamePlayer, nameTutor, surnameTutor, gender, province, birthDate, actualClub, category, positions, skills, avatarPerfil) => {
@@ -86,6 +87,7 @@ const updateProfileScout = (user, name, surname, email, gender, province, birthD
 const saveVideo = (idUsuario, titulo, descrpicion, videoFamilia) => {
     videos.push({
         id: idUsuario,
+        idVideo: idVideos++,
         titulo,
         descrpicion,
         videoFamilia
@@ -93,9 +95,20 @@ const saveVideo = (idUsuario, titulo, descrpicion, videoFamilia) => {
     return;
 }
 
+const getListOfVideos = (userId) => {
+    return videos.filter(video => video.id === userId);
+}
+
+const deleteVideo = (idVideo) => {
+    videos = videos.filter(video => parseInt(video.idVideo) !== idVideo);
+    return;
+}
+
 
 module.exports = {
+    deleteVideo,
     getListOfUsers,
+    getListOfVideos,
     getUser,
     updateProfileFamily,
     updateProfileScout,
