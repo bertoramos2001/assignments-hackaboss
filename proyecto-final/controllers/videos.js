@@ -28,13 +28,6 @@ const showVideos = (req, res, next) => {
         return;
     }
 
-    if (role !== 'familia' && role !== 'ojeador') {
-        const differentAccountError = new Error(`No existe el tipo de cuenta ${role}`);
-        differentAccountError.status = 400;
-        next(differentAccountError);
-        return;
-    }
-
     res.json(bd.getListOfVideos(user.id));
 }
 
