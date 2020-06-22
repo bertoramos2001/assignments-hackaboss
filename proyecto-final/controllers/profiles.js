@@ -34,7 +34,7 @@ const showProfile = (req, res, next) => {
 }
 
 const modifyProfileFamily = async (req, res, next) => {
-    const { namePlayer, surnamePlayer, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, positions, skills } = req.body;
+    const { name, surname, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, positions, skills } = req.body;
     const email = req.params.email;
     const user = bd.getUser(email); 
 
@@ -55,7 +55,7 @@ const modifyProfileFamily = async (req, res, next) => {
         return;
     }
 
-    if ( !namePlayer || !surnamePlayer || !nameTutor || !surnameTutor || !emailTutor || !gender || !province || !birthDate || !actualClub || !category || !positions || !skills) {
+    if ( !name || !surname || !nameTutor || !surnameTutor || !emailTutor || !gender || !province || !birthDate || !actualClub || !category || !positions || !skills) {
         const missingParamsError = new Error('No se han introducido todos los parámetros obligatorios');
         missingParamsError.status = 400;
         next(missingParamsError);
@@ -80,7 +80,7 @@ const modifyProfileFamily = async (req, res, next) => {
 
     if (emailTutor !== email) {
         // try {
-        //     await sgMail.send(functions.sendEmailChangeFamily(emailTutor, functions.normalizeName(surnamePlayer)));
+        //     await sgMail.send(functions.sendEmailChangeFamily(emailTutor, functions.normalizeName(surname)));
         //     console.log('Message sent');
         // } catch(e) {
         //     const emailError = new Error('error al enviar el email');
@@ -90,13 +90,13 @@ const modifyProfileFamily = async (req, res, next) => {
         console.log('email enviado')
     }
 
-    bd.updateProfileFamily(user, functions.normalizeName(namePlayer), functions.normalizeName(surnamePlayer), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), emailTutor, gender, province, birthDate, actualClub, category, functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
+    bd.updateProfileFamily(user, functions.normalizeName(name), functions.normalizeName(surname), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), emailTutor, gender, province, birthDate, actualClub, category, functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
 
     res.json(user);
 }
 
 const modifyProfileScout = async (req, res, next) => {
-    const { name, surname, email, gender, province, birthDate, actualClub, categories, positions, skills } = req.body;
+    const { name, surname, email, gender, province, birthDate, actualClub, category, positions, skills } = req.body;
     const emailParams = req.params.email;
     const user = bd.getUser(emailParams);
 
@@ -117,7 +117,7 @@ const modifyProfileScout = async (req, res, next) => {
         return;
     }
 
-    if ( !name || !surname || !email || !gender || !province || !birthDate || !actualClub || !categories || !positions || !skills) {
+    if ( !name || !surname || !email || !gender || !province || !birthDate || !actualClub || !category || !positions || !skills) {
         const missingParamsError = new Error('No se han introducido todos los parámetros obligatorios');
         missingParamsError.status = 400;
         next(missingParamsError);
@@ -152,7 +152,7 @@ const modifyProfileScout = async (req, res, next) => {
         console.log('email enviado')
     }
 
-    bd.updateProfileScout(user, functions.normalizeName(name), functions.normalizeName(surname), email, gender, province, birthDate, actualClub, functions.parseBodyToArray(categories), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
+    bd.updateProfileScout(user, functions.normalizeName(name), functions.normalizeName(surname), email, gender, province, birthDate, actualClub, functions.parseBodyToArray(category), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
 
     res.json(user)
 }

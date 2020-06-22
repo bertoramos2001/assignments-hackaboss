@@ -6,6 +6,7 @@ const express = require('express');
 const morgan = require('morgan');
 const multer = require('multer');
 
+
 const imageFilter = (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true) //almacena la imagen y no da error
@@ -37,8 +38,7 @@ const storageAvatar = multer.diskStorage({
 
 const storageVideo = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null,'./uploads/videos')
-    },
+     },
     filename: function(req, file, cb) {
         cb(null, new Date().toISOString()  + file.originalname)
     }
@@ -60,7 +60,7 @@ const uploadVideo = multer({
     fileFilter: videoFilter
 })
 
-const { listUsers, login, registerFamily, registerScout } = require('./controllers/users');
+const { listUsers, login, registerFamily, registerScout, searchUsers } = require('./controllers/users');
 const { isAuthenticated, canUpdateProfile } = require('./middlewares/auth');
 const { modifyProfileFamily, modifyProfileScout, showProfile } = require('./controllers/profiles');
 const { postVideo, showVideos, deleteVideo } = require('./controllers/videos');
@@ -85,7 +85,9 @@ app.put('/perfil/editar/familia/:email', isAuthenticated, canUpdateProfile, uplo
 app.put('/perfil/editar/ojeador/:email', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileScout);
 app.post('/perfil/editar/familia/:email/videos', uploadVideo.single('videoFamilia'), postVideo);
 app.get('/perfil/familia/:email/videos', showVideos);
-app.delete('/perfil/editar/familia/:email/videos/:idVideo', deleteVideo);
+app.delete('/perfil/editar/familia/:email/videos/:idVideo', isAuthenticated, canUpdateProfile, deleteVideo);
+//Búsqueda de perfiles
+app.get('/search', searchUsers);
 
 
 app.use((error, req, res, next) => {  //middleware generico para la gestion de errores (si algun middleware da error, se ejecuta este)

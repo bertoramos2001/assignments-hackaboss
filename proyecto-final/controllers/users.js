@@ -10,10 +10,10 @@ const functions = require('./functions')
 
 const registerScout = async (req, res, next) => {
     //recoger los datos de registro
-    const { name, surname, email, gender, province, birthDate, actualClub, categories, positions, skills, password, confirmPassword } = req.body;
+    const { name, surname, email, gender, province, birthDate, actualClub, category, positions, skills, password, confirmPassword } = req.body;
 
     //comprobar que son validos los datos que dan en el registro
-    if ( !name || !surname || !email || !gender || !province || !birthDate || !actualClub || !categories || !positions || !skills || !password || !confirmPassword) {
+    if ( !name || !surname || !email || !gender || !province || !birthDate || !actualClub || !category || !positions || !skills || !password || !confirmPassword) {
         const missingParamsError = new Error('No se han introducido todos los parámetros obligatorios');
         missingParamsError.status = 400;
         next(missingParamsError);
@@ -70,7 +70,7 @@ const registerScout = async (req, res, next) => {
     //encriptar la password(para no almacenarla en texto claro)
     const passwordBcrypt = await bcrypt.hash(password, 10);
     //almacenar datos
-    bd.saveScout(email, passwordBcrypt, 'ojeador', functions.normalizeName(name), functions.normalizeName(surname), gender, province, birthDate, actualClub, functions.parseBodyToArray(categories), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
+    bd.saveScout(email, passwordBcrypt, 'ojeador', functions.normalizeName(name), functions.normalizeName(surname), gender, province, birthDate, actualClub, functions.parseBodyToArray(category), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
 
     //enviar email confirmación
     // try {
@@ -92,10 +92,10 @@ const listUsers = (req, res) => {
 
 const registerFamily = async (req, res, next) => {
     //recoger los datos de registro
-    const { namePlayer, surnamePlayer, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, positions, skills, password, confirmPassword } = req.body;
+    const { name, surname, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, positions, skills, password, confirmPassword } = req.body;
     
     //comprobar que los datos de registo son válidos
-    if ( !namePlayer || !surnamePlayer || !nameTutor || !surnameTutor || !emailTutor || !gender || !province || !birthDate || !actualClub || !category || !positions || !skills || !password || !confirmPassword) {
+    if ( !name || !surname || !nameTutor || !surnameTutor || !emailTutor || !gender || !province || !birthDate || !actualClub || !category || !positions || !skills || !password || !confirmPassword) {
         const missingParamsError = new Error('No se han introducido todos los parámetros obligatorios');
         missingParamsError.status = 400;
         next(missingParamsError);
@@ -155,11 +155,11 @@ const registerFamily = async (req, res, next) => {
      //encriptar la password(para no almacenarla en texto claro)
     const passwordBcrypt = await bcrypt.hash(password, 10);
     //almacenar los datos
-    bd.saveFamily(emailTutor, passwordBcrypt, 'familia', functions.normalizeName(namePlayer), functions.normalizeName(surnamePlayer), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), gender, province, birthDate, actualClub, category, functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
+    bd.saveFamily(emailTutor, passwordBcrypt, 'familia', functions.normalizeName(name), functions.normalizeName(surname), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), gender, province, birthDate, actualClub, functions.parseBodyToArray(category), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
 
     //enviar email confirmación
     // try {
-    //     await sgMail.send(functions.sendConfirmationEmailFamily(emailTutor, functions.normalizeName(surnamePlayer)));
+    //     await sgMail.send(functions.sendConfirmationEmailFamily(emailTutor, functions.normalizeName(surname)));
     //     console.log('Message sent');
     // } catch(e) {
     //     console.log(e.response.body)
@@ -205,12 +205,119 @@ const login = async (req, res, next) => {
     res.json({
         token
     })
-
 }
 
+const searchUsers = (req, res) => {
+    const nombre = req.query['nombre'];
+    const apellido = req.query['apellido'];
+    const genero = req.query['genero'];
+    const rol = req.query['rol'];
+    const provincia = req.query['provincia'];
+    const edadMinima = req.query['edadMinima'];
+    const edadMaxima = req.query['edadMaxima'];
+    const posicion = req.query['posicion'];
+    const categoria = req.query['categoria'];
+    const skills = req.query['skills'];
+    let listaUsuarios = bd.readList();
+
+    if ( nombre ) { //si existe nombre
+        listaUsuarios = listaUsuarios.filter( usuario => (((usuario.name).trim()).toLowerCase()).replace(' ', '-') === nombre);
+    }
+    if ( apellido ) {
+        listaUsuarios = listaUsuarios.filter( usuario => (((usuario.surname).trim()).toLowerCase()).replace(' ', '-') === apellido);
+    }
+    if ( genero ) {
+        listaUsuarios = listaUsuarios.filter( usuario => usuario.gender === genero);
+    }
+    if ( rol ) {
+        listaUsuarios = listaUsuarios.filter( usuario => usuario.role === rol);
+    }
+    if ( provincia ) {
+        listaUsuarios = listaUsuarios.filter( usuario => (usuario.province).toLowerCase() === provincia);
+    }
+    if ( edadMinima ) {
+        listaUsuarios = listaUsuarios.filter( usuario => parseInt(functions.ageDiff(new Date(usuario.birthDate), new Date())) >= parseInt(edadMinima));
+    }
+    if ( edadMaxima ) {
+        listaUsuarios = listaUsuarios.filter( usuario => parseInt(functions.ageDiff(new Date(usuario.birthDate), new Date())) <= parseInt(edadMaxima));
+    }
+    if ( posicion ) {
+        listaUsuarios = listaUsuarios.filter( usuario => {
+            if (Array.isArray(posicion)) {
+                let count = 0;
+                for ( let i = 0; i < (usuario.positions).length; i++ ) {
+                    for ( let j = 0; j < posicion.length; j++) {
+                        if (((((usuario.positions[i]).trim()).toLowerCase()).replace(' ','-')) === posicion[j]) {
+                            count++;
+                        }
+                    }
+                }
+                return (count > 0);
+            } else {
+                let count = 0;
+                for ( let i = 0; i < (usuario.positions).length; i++ ) {
+                    if (((((usuario.positions[i]).trim()).toLowerCase()).replace(' ','-')) === posicion) {
+                        count++;
+                    }
+                }
+                return (count > 0);
+            }
+        })
+    }
+    if ( skills ) {
+        listaUsuarios = listaUsuarios.filter( usuario => {
+            if (Array.isArray(skills)) {
+                let count = 0;
+                for ( let i = 0; i < (usuario.skills).length; i++ ) {
+                    for ( let j = 0; j < skills.length; j++) {
+                        if (((((usuario.skills[i]).trim()).toLowerCase()).replace(' ','-')) === skills[j]) {
+                            count++;
+                        }
+                    }
+                }
+                return (count > 0);
+            } else {
+                let count = 0;
+                for ( let i = 0; i < (usuario.skills).length; i++ ) {
+                    if (((((usuario.skills[i]).trim()).toLowerCase()).replace(' ','-')) === skills) {
+                        count++;
+                    }
+                }
+                return (count > 0);
+            }
+        })
+    }
+    if (categoria) {
+        listaUsuarios = listaUsuarios.filter( usuario => {
+            if (Array.isArray(categoria)) {
+                let count = 0;
+                for ( let i = 0; i < (usuario.category).length; i++ ) {
+                    for ( let j = 0; j < categoria.length; j++) {
+                        if (((((usuario.category[i]).trim()).toLowerCase()).replace(' ','-')) === categoria[j]) {
+                            count++;
+                        }
+                    }
+                }
+                return (count > 0);
+            } else {
+                let count = 0;
+                for ( let i = 0; i < (usuario.category).length; i++ ) {
+                    if (((((usuario.category[i]).trim()).toLowerCase()).replace(' ','-')) === categoria) {
+                        console.log(usuario.category[i])
+                        count++;
+                    }
+                }
+                return (count > 0);
+            }
+        })
+    }
+
+    res.json(listaUsuarios);
+}
 module.exports = {
     listUsers,
     login,
     registerFamily,
-    registerScout
+    registerScout,
+    searchUsers
 }

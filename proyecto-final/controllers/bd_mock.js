@@ -3,14 +3,14 @@ let id = 0;
 let idVideos = 0;
 let videos = [];
 
-const saveFamily = (email, password, role, namePlayer, surnamePlayer, nameTutor, surnameTutor, gender, province, birthDate, actualClub, category, positions, skills, avatarPerfil) => {
+const saveFamily = (email, password, role, name, surname, nameTutor, surnameTutor, gender, province, birthDate, actualClub, category, positions, skills, avatarPerfil) => {
     users.push({
         id: id++,
         email,
         password,
         role,
-        namePlayer,
-        surnamePlayer,
+        name,
+        surname,
         nameTutor,
         surnameTutor,
         gender,
@@ -24,7 +24,7 @@ const saveFamily = (email, password, role, namePlayer, surnamePlayer, nameTutor,
     })
 }
 
-const saveScout = (email, password, role, name, surname, gender, province, birthDate, actualClub, categories, positions, skills, avatarPerfil) => {
+const saveScout = (email, password, role, name, surname, gender, province, birthDate, actualClub, category, positions, skills, avatarPerfil) => {
     users.push({
         id:id++,
         email,
@@ -36,7 +36,7 @@ const saveScout = (email, password, role, name, surname, gender, province, birth
         province,
         birthDate,
         actualClub,
-        categories,
+        category,
         positions,
         skills,
         avatarPerfil
@@ -52,10 +52,10 @@ const getUser = (email) => {
     return users.find(matchEmail);
 }
 
-const updateProfileFamily = (user, namePlayer, surnamePlayer, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, positions, skills, avatarPerfil) => {
+const updateProfileFamily = (user, name, surname, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, positions, skills, avatarPerfil) => {
     user.email = emailTutor;
-    user.namePlayer = namePlayer;
-    user.surnamePlayer = surnamePlayer;
+    user.name = name;
+    user.surname = surname;
     user.nameTutor = nameTutor;
     user.surnameTutor = surnameTutor;
     user.gender = gender;
@@ -69,7 +69,7 @@ const updateProfileFamily = (user, namePlayer, surnamePlayer, nameTutor, surname
     return;
 }
 
-const updateProfileScout = (user, name, surname, email, gender, province, birthDate, actualClub, categories, positions, skills, avatarPerfil) => {
+const updateProfileScout = (user, name, surname, email, gender, province, birthDate, actualClub, category, positions, skills, avatarPerfil) => {
     user.email = email;
     user.name = name;
     user.surname = surname;
@@ -77,7 +77,7 @@ const updateProfileScout = (user, name, surname, email, gender, province, birthD
     user.province = province;
     user.birthDate = birthDate;
     user.actualClub = actualClub;
-    user.categories = categories;
+    user.category = category;
     user.positions = positions;
     user.skills = skills;
     user.avatarPerfil = avatarPerfil;
@@ -104,6 +104,10 @@ const deleteVideo = (idVideo) => {
     return;
 }
 
+const readList = () => {
+    return users;
+}
+
 
 module.exports = {
     deleteVideo,
@@ -112,6 +116,7 @@ module.exports = {
     getUser,
     updateProfileFamily,
     updateProfileScout,
+    readList,
     saveFamily,
     saveScout,
     saveVideo
