@@ -2,6 +2,7 @@ let users = [];
 let id = 0;
 let idVideos = 0;
 let videos = [];
+let contracts = [];
 
 const saveFamily = (email, password, role, name, surname, nameTutor, surnameTutor, gender, province, birthDate, actualClub, category, positions, skills, avatarPerfil) => {
     users.push({
@@ -108,6 +109,25 @@ const readList = () => {
     return users;
 }
 
+const saveContract = (idRemitente, emailRemitente, idDestinatario, emailDestinatario, mensaje) => {
+    contracts.push({
+        de: emailRemitente,
+        idRemitente,
+        para: emailDestinatario,
+        idDestinatario,
+        mensaje
+    })
+    return contracts
+}
+
+const listReceivedContracts = (idDestinatario) => {
+    return contracts.filter(contract => parseInt(contract.idDestinatario) === parseInt(idDestinatario));
+}
+
+const listSentContracts = (idRemitente) => {
+    return contracts.filter(contract => parseInt(contract.idRemitente) === parseInt(idRemitente));
+}
+
 
 module.exports = {
     deleteVideo,
@@ -119,5 +139,8 @@ module.exports = {
     readList,
     saveFamily,
     saveScout,
-    saveVideo
+    saveVideo,
+    saveContract,
+    listReceivedContracts,
+    listSentContracts
 }

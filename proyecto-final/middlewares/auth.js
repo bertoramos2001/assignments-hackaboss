@@ -18,7 +18,7 @@ const isAuthenticated = (req, res, next) => {
 }
 
 const canUpdateProfile = (req, res, next) => {
-    const { authorization } = req. headers;
+    const { authorization } = req.headers;
     const { email } = req.params;
     const user = bd.getUser(email);
 
@@ -44,10 +44,31 @@ const canUpdateProfile = (req, res, next) => {
         next(authError);
     }
     next();
+}
 
+const isScout = (req, res, next) => {
+    const { authorization } = req. headers;
+
+    try {
+        const decodedToken = jwt.verify(authorization, process.env.SECRET);
+        
+        if (decodedToken.role !== 'ojeador') {
+            const authError = new Error('invalid role');
+            authError.status = 401;
+            next(authError);
+        }
+        req.auth = decodedToken;
+
+    } catch(e) {
+        const authError = new Error('invalid token');
+        authError.status = 401;
+        next(authError)
+    }
+    next();
 }
 
 module.exports = {
     canUpdateProfile,
-    isAuthenticated
+    isAuthenticated,
+    isScout
 }

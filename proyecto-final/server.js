@@ -61,9 +61,10 @@ const uploadVideo = multer({
 })
 
 const { listUsers, login, registerFamily, registerScout, searchUsers } = require('./controllers/users');
-const { isAuthenticated, canUpdateProfile } = require('./middlewares/auth');
+const { isAuthenticated, canUpdateProfile, isScout } = require('./middlewares/auth');
 const { modifyProfileFamily, modifyProfileScout, showProfile } = require('./controllers/profiles');
 const { postVideo, showVideos, deleteVideo } = require('./controllers/videos');
+const { sendContract, showReceivedContracts, showSentContracts } = require('./controllers/contracts');
 
 const port = process.env.PORT;
 const app = express();
@@ -88,6 +89,10 @@ app.get('/perfil/familia/:email/videos', showVideos);
 app.delete('/perfil/editar/familia/:email/videos/:idVideo', isAuthenticated, canUpdateProfile, deleteVideo);
 //Búsqueda de perfiles
 app.get('/search', searchUsers);
+//envío y recibo de contrataciones de jugadores
+app.post('/perfil/familia/:email/enviarContrato', isAuthenticated, isScout, sendContract);
+app.get('/mensajes/familia/:email', isAuthenticated, canUpdateProfile, showReceivedContracts);
+app.get('/mensajes/ojeador/:email', isAuthenticated, canUpdateProfile, showSentContracts);
 
 
 app.use((error, req, res, next) => {  //middleware generico para la gestion de errores (si algun middleware da error, se ejecuta este)

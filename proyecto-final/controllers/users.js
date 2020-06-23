@@ -196,7 +196,8 @@ const login = async (req, res, next) => {
     
     const tokenPayload = {
         id: user.id,
-        role: user.role
+        role: user.role,
+        email:user.email
     }
     const token = jwt.sign(tokenPayload, process.env.SECRET, { 
         expiresIn: '1d' //el token caduca en 1 dia
@@ -303,7 +304,6 @@ const searchUsers = (req, res) => {
                 let count = 0;
                 for ( let i = 0; i < (usuario.category).length; i++ ) {
                     if (((((usuario.category[i]).trim()).toLowerCase()).replace(' ','-')) === categoria) {
-                        console.log(usuario.category[i])
                         count++;
                     }
                 }
