@@ -86,9 +86,6 @@ const registerScout = async (req, res, next) => {
     //res.send();
     res.json(req.file)
 }
-const listUsers = (req, res) => {
-    res.json(bd.getListOfUsers());
-}
 
 const registerFamily = async (req, res, next) => {
     //recoger los datos de registro
@@ -242,7 +239,7 @@ const searchUsers = (req, res) => {
     if ( edadMaxima ) {
         listaUsuarios = listaUsuarios.filter( usuario => parseInt(functions.ageDiff(new Date(usuario.birthDate), new Date())) <= parseInt(edadMaxima));
     }
-    if ( posicion ) {
+    if ( posicion ) { //teniendo en cuenta que posicion puede o no ser un array (dependiendo del numero de filtros que pase el usuario) y que lista de usuarios también, hice un bucle anidado
         listaUsuarios = listaUsuarios.filter( usuario => {
             if (Array.isArray(posicion)) {
                 let count = 0;
@@ -265,7 +262,7 @@ const searchUsers = (req, res) => {
             }
         })
     }
-    if ( skills ) {
+    if ( skills ) { //teniendo en cuenta que skills puede o no ser un array (dependiendo del numero de filtros que pase el usuario) y que lista de usuarios también, hice un bucle anidado
         listaUsuarios = listaUsuarios.filter( usuario => {
             if (Array.isArray(skills)) {
                 let count = 0;
@@ -288,7 +285,7 @@ const searchUsers = (req, res) => {
             }
         })
     }
-    if (categoria) {
+    if (categoria) { //teniendo en cuenta que categoria puede o no ser un array (dependiendo del numero de filtros que pase el usuario) y que lista de usuarios también, hice un bucle anidado
         listaUsuarios = listaUsuarios.filter( usuario => {
             if (Array.isArray(categoria)) {
                 let count = 0;
@@ -315,7 +312,6 @@ const searchUsers = (req, res) => {
     res.json(listaUsuarios);
 }
 module.exports = {
-    listUsers,
     login,
     registerFamily,
     registerScout,

@@ -38,6 +38,7 @@ const storageAvatar = multer.diskStorage({
 
 const storageVideo = multer.diskStorage({
     destination: function(req, file, cb) {
+        cb(null, './uploads/videos')
      },
     filename: function(req, file, cb) {
         cb(null, new Date().toISOString()  + file.originalname)
@@ -60,7 +61,7 @@ const uploadVideo = multer({
     fileFilter: videoFilter
 })
 
-const { listUsers, login, registerFamily, registerScout, searchUsers } = require('./controllers/users');
+const { login, registerFamily, registerScout, searchUsers } = require('./controllers/users');
 const { isAuthenticated, canUpdateProfile, isScout } = require('./middlewares/auth');
 const { modifyProfileFamily, modifyProfileScout, showProfile } = require('./controllers/profiles');
 const { postVideo, showVideos, deleteVideo } = require('./controllers/videos');
@@ -79,12 +80,11 @@ app.use(cors());
 app.post('/registroFamilia', uploadAvatar.single('avatarPerfil'), registerFamily);
 app.post('/registroOjeador', uploadAvatar.single('avatarPerfil'), registerScout);
 app.post('/login', login);
-app.get('/registroOjeador', isAuthenticated, listUsers);
 //ver perfil público
 app.get('/perfil/:role/:email', showProfile);
 app.put('/perfil/editar/familia/:email', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileFamily);
 app.put('/perfil/editar/ojeador/:email', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileScout);
-app.post('/perfil/editar/familia/:email/videos', uploadVideo.single('videoFamilia'), postVideo);
+app.post('/perfil/editar/familia/:email/videos', isAuthenticated, canUpdateProfile, uploadVideo.single('videoFamilia'), postVideo);
 app.get('/perfil/familia/:email/videos', showVideos);
 app.delete('/perfil/editar/familia/:email/videos/:idVideo', isAuthenticated, canUpdateProfile, deleteVideo);
 //Búsqueda de perfiles

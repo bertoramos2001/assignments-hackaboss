@@ -12,15 +12,9 @@ const sendContract = (req, res, next) => {
         next(userNotFoundError)
         return;
     }
-    if(!decodedToken || decodedToken.role !== 'ojeador') {
-        const AuthError = new Error('Debes estar registrado como ojeador para poder enviar contrataciones');
-        AuthError.status = 404;
-        next(AuthError)
-        return;
-    }
     if(!mensaje) {
         const emptyMessage = new Error('No puedes enviar un mensaje vacío');
-        emptyMessage.status = 404;
+        emptyMessage.status = 400;
         next(emptyMessage)
         return;
     }
@@ -33,6 +27,13 @@ const sendContract = (req, res, next) => {
 const showReceivedContracts = (req, res, next) => {
     const decodedToken = req.auth;
 
+    if(!decodedToken || decodedToken.role !== 'familia') {
+        const AuthError = new Error('Debes estar registrado como familia para poder ver los mensajes que te llegan');
+        AuthError.status = 400;
+        next(AuthError)
+        return;
+    }
+
     const listaContratosRecibidos = bd.listReceivedContracts(decodedToken.id);
 
     res.json(listaContratosRecibidos);
@@ -40,6 +41,13 @@ const showReceivedContracts = (req, res, next) => {
 
 const showSentContracts = (req, res, next) => {
     const decodedToken = req.auth;
+
+    if(!decodedToken || decodedToken.role !== 'ojeador') {
+        const AuthError = new Error('Debes estar registrado como ojeador para poder ver los mensajes que has enviado');
+        AuthError.status = 400;
+        next(AuthError)
+        return;
+    }
 
     const listaContratosEnviados = bd.listSentContracts(decodedToken.id);
 

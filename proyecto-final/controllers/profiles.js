@@ -92,7 +92,7 @@ const modifyProfileFamily = async (req, res, next) => {
 
     bd.updateProfileFamily(user, functions.normalizeName(name), functions.normalizeName(surname), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), emailTutor, gender, province, birthDate, actualClub, category, functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
 
-    res.json(user);
+    res.send();
 }
 
 const modifyProfileScout = async (req, res, next) => {
@@ -154,7 +154,7 @@ const modifyProfileScout = async (req, res, next) => {
 
     bd.updateProfileScout(user, functions.normalizeName(name), functions.normalizeName(surname), email, gender, province, birthDate, actualClub, functions.parseBodyToArray(category), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
 
-    res.json(user)
+    res.send()
 }
 
 module.exports = {
