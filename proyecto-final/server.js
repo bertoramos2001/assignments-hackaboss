@@ -63,7 +63,7 @@ const uploadVideo = multer({
 
 const { login, registerFamily, registerScout, searchUsers } = require('./controllers/users');
 const { isAuthenticated, canUpdateProfile, isScout } = require('./middlewares/auth');
-const { modifyProfileFamily, modifyProfileScout, showProfile } = require('./controllers/profiles');
+const { modifyProfileFamily, modifyProfileScout, showProfile, changePassword } = require('./controllers/profiles');
 const { postVideo, showVideos, deleteVideo } = require('./controllers/videos');
 const { sendContract, showReceivedContracts, showSentContracts } = require('./controllers/contracts');
 
@@ -84,6 +84,7 @@ app.post('/login', login);
 app.get('/perfil/:role/:email', showProfile);
 app.put('/perfil/editar/familia/:email', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileFamily);
 app.put('/perfil/editar/ojeador/:email', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileScout);
+app.patch('/perfil/editar/:role/:email/cambioContrasena', isAuthenticated, canUpdateProfile, changePassword);
 app.post('/perfil/editar/familia/:email/videos', isAuthenticated, canUpdateProfile, uploadVideo.single('videoFamilia'), postVideo);
 app.get('/perfil/familia/:email/videos', showVideos);
 app.delete('/perfil/editar/familia/:email/videos/:idVideo', isAuthenticated, canUpdateProfile, deleteVideo);

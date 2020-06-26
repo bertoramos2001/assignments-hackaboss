@@ -1,4 +1,5 @@
 const bd = require("./bd_mock");
+const bcrypt = require('bcrypt');
 const functions = require('./functions');
 const sgMail = require('@sendgrid/mail');
 
@@ -157,7 +158,62 @@ const modifyProfileScout = async (req, res, next) => {
     res.send()
 }
 
+const changePassword = async (req, res, next) => {
+    const email = req.params.email;
+    const role = req.params.role;
+    const user = bd.getUser(email);
+    const { oldPassword, newPassword, confirmNewPassword } = req.body;
+
+    if (!user) {
+        const userNotFoundError = new Error('usuario no encontrado');
+        userNotFoundError.status = 404;
+        next(userNotFoundError)
+        return;
+    }
+
+    if (role !== 'familia' && role !== 'ojeador') {
+        const differentAccountError = new Error(`No existe el tipo de cuenta ${role}`);
+        differentAccountError.status = 400;
+        next(differentAccountError);
+        return;
+    }
+
+    else if (role !== user.role) {
+        const accountTypeError = new Error(`No existe ninguna cuenta registrada como ${role} con este email`);
+        accountTypeError.status = 404;
+        next(accountTypeError);
+        return;
+    }
+    const passwordIsValid = await bcrypt.compare(oldPassword, user.password);  
+    if(!passwordIsValid) {
+        const passwordInvalidError = new Error('la contraseña no coincide con la exisente en esta cuenta')
+        passwordInvalidError.status = 401;
+        next(passwordInvalidError)
+        return;
+    }
+    if (functions.checkPassword(newPassword) == false) {
+        const invalidPasswordError = new Error('la contraseña debe contener un minimo de 8 caracteres, una mayuscula y un numero');
+        invalidPasswordError.status = 400;
+        next(invalidPasswordError);
+        return;
+    }
+    if (newPassword != confirmNewPassword) {
+        const invalidPasswordError = new Error('las contraseñas no coinciden');
+        invalidPasswordError.status = 400;
+        next(invalidPasswordError);
+        return;
+    }
+    const passwordBcrypt = await bcrypt.hash(newPassword, 10);
+
+    bd.updatePassword(user, passwordBcrypt);
+
+    console.log(passwordBcrypt)
+    console.log(oldPassword)
+    res.send();
+}
+
 module.exports = {
+    changePassword,
     modifyProfileFamily,
     modifyProfileScout,
     showProfile

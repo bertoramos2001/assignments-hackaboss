@@ -128,6 +128,11 @@ const listSentContracts = (idRemitente) => {
     return contracts.filter(contract => parseInt(contract.idRemitente) === parseInt(idRemitente));
 }
 
+const updatePassword = (usuario, nuevaContrasena) => {
+    usuario.password = nuevaContrasena;
+    return;
+}
+
 
 module.exports = {
     deleteVideo,
@@ -142,5 +147,6 @@ module.exports = {
     saveVideo,
     saveContract,
     listReceivedContracts,
-    listSentContracts
+    listSentContracts,
+    updatePassword
 }
