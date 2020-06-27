@@ -72,7 +72,7 @@ const registerScout = async (req, res, next) => {
     //almacenar datos
     bd.saveScout(email, passwordBcrypt, 'ojeador', functions.normalizeName(name), functions.normalizeName(surname), gender, province, birthDate, actualClub, functions.parseBodyToArray(category), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
 
-    //enviar email confirmación
+    //enviar email confirmación //esto del envio de email esta comentado porque la version gratuita permite un maximo de 100 emails diarios y haciendo las pruebas superaba estos limites
     // try {
     //     await sgMail.send(functions.sendConfirmationEmailScout(email, functions.normalizeName(name)));
     //     console.log('Message sent');
@@ -154,7 +154,7 @@ const registerFamily = async (req, res, next) => {
     //almacenar los datos
     bd.saveFamily(emailTutor, passwordBcrypt, 'familia', functions.normalizeName(name), functions.normalizeName(surname), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), gender, province, birthDate, actualClub, functions.parseBodyToArray(category), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
 
-    //enviar email confirmación
+    //enviar email confirmación //esto del envio de email esta comentado porque la version gratuita permite un maximo de 100 emails diarios y haciendo las pruebas superaba estos limites
     // try {
     //     await sgMail.send(functions.sendConfirmationEmailFamily(emailTutor, functions.normalizeName(surname)));
     //     console.log('Message sent');

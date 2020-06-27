@@ -79,7 +79,7 @@ const modifyProfileFamily = async (req, res, next) => {
         return;
     }
 
-    if (emailTutor !== email) {
+    if (emailTutor !== email) { //esto del envio de email esta comentado porque la version gratuita permite un maximo de 100 emails diarios y haciendo las pruebas superaba estos limites
         // try {
         //     await sgMail.send(functions.sendEmailChangeFamily(emailTutor, functions.normalizeName(surname)));
         //     console.log('Message sent');
@@ -141,7 +141,7 @@ const modifyProfileScout = async (req, res, next) => {
         return;
     }
 
-    if (email !== emailParams) {
+    if (email !== emailParams) { //esto del envio de email esta comentado porque la version gratuita permite un maximo de 100 emails diarios y haciendo las pruebas superaba estos limites
         // try {
         //     await sgMail.send(functions.sendEmailChangeScout(email, functions.normalizeName(name)));
         //     console.log('Message sent');
