@@ -212,9 +212,110 @@ const changePassword = async (req, res, next) => {
     res.send();
 }
 
+const addExperience = (req, res, next) => {
+    const { email } = req.params;
+    const { nombreEquipo, anoInicio, anoFin, resumen } = req.body;
+    const user = bd.getUser(email);
+
+    if (!user) {
+        const userNotFoundError = new Error('usuario no encontrado');
+        userNotFoundError.status = 404;
+        next(userNotFoundError)
+        return;
+    }
+    if (!nombreEquipo || !anoInicio || !anoFin || !resumen ) {
+        const invalidParamsError = new Error('Debes rellenar todos los campos para añadir una experiencia');
+        invalidParamsError.status = 400;
+        next(invalidParamsError);
+        return;
+    }
+    const id = user.id;
+
+    bd.saveExperience(id, nombreEquipo, anoInicio, anoFin, resumen);
+
+    res.send();
+
+}
+
+const showExperience = (req, res, next) => {
+    const { email, role } = req.params;
+    const user = bd.getUser(email);
+
+    if (!user) {
+        const userNotFoundError = new Error('usuario no encontrado');
+        userNotFoundError.status = 404;
+        next(userNotFoundError)
+        return;
+    }
+
+    if (role !== 'familia' && role !== 'ojeador') {
+        const differentAccountError = new Error(`No existe el tipo de cuenta ${role}`);
+        differentAccountError.status = 400;
+        next(differentAccountError);
+        return;
+    }
+
+    else if (role !== user.role) {
+        const accountTypeError = new Error(`No existe ninguna cuenta registrada como ${role} con este email`);
+        accountTypeError.status = 404;
+        next(accountTypeError);
+        return;
+    }
+
+    res.json(bd.getListOfExperiences(user.id));
+}
+
+const deleteExperience = (req, res, next) => {
+    const { idExperiencia, email, role } = req.params;
+    const user = bd.getUser(email);
+
+    if (!user) {
+        const userNotFoundError = new Error('usuario no encontrado');
+        userNotFoundError.status = 404;
+        next(userNotFoundError)
+        return;
+    }
+
+    if (role !== 'familia' && role !== 'ojeador') {
+        const differentAccountError = new Error(`No existe el tipo de cuenta ${role}`);
+        differentAccountError.status = 400;
+        next(differentAccountError);
+        return;
+    }
+
+    else if (role !== user.role) {
+        const accountTypeError = new Error(`No existe ninguna cuenta registrada como ${role} con este email`);
+        accountTypeError.status = 404;
+        next(accountTypeError);
+        return;
+    }
+
+    const experienceToDelete = bd.getExperience(idExperiencia);
+
+    if (!experienceToDelete) {
+        const experienceError = new Error(`No existe la experiencia que estas buscando`);
+        experienceError.status = 404;
+        next(experienceError);
+        return;
+    }
+
+    if (parseInt(experienceToDelete.id) !== parseInt(user.id)) {
+        const experienceError = new Error(`No tienes permiso para borrar una experiencia que no es tuya`);
+        experienceError.status = 403;
+        next(experienceError);
+        return;
+    }
+
+    bd.deleteExperience(idExperiencia);
+    res.send();
+}
+
 module.exports = {
     changePassword,
     modifyProfileFamily,
     modifyProfileScout,
-    showProfile
+    showProfile,
+    showExperience,
+    addExperience,
+    deleteExperience
 }

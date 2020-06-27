@@ -3,6 +3,8 @@ let id = 0;
 let idVideos = 0;
 let videos = [];
 let contracts = [];
+let experiences = [];
+let idExperiences = 0;
 
 const saveFamily = (email, password, role, name, surname, nameTutor, surnameTutor, gender, province, birthDate, actualClub, category, positions, skills, avatarPerfil) => {
     users.push({
@@ -100,8 +102,13 @@ const getListOfVideos = (userId) => {
     return videos.filter(video => video.id === userId);
 }
 
+const getVideo = (idVideo) => {
+    const matchVideo = video => parseInt(video.idVideo) === parseInt(idVideo);
+    return videos.find(matchVideo);
+}
+
 const deleteVideo = (idVideo) => {
-    videos = videos.filter(video => parseInt(video.idVideo) !== idVideo);
+    videos = videos.filter((video => parseInt(video.idVideo) !== idVideo) && (parseInt(video.id) !== id));
     return;
 }
 
@@ -133,6 +140,31 @@ const updatePassword = (usuario, nuevaContrasena) => {
     return;
 }
 
+const saveExperience = (idUser, nombreEquipo, anoInicio, anoFin, resumen) => {
+    experiences.push({
+        id: idUser,
+        idExperience: idExperiences++,
+        nombreEquipo,
+        anoInicio,
+        anoFin,
+        resumen
+    })
+    return;
+}
+
+const getListOfExperiences = (idUser) => {
+    return experiences.filter(experience => experience.id === idUser);
+}
+
+const getExperience = (idExperience) => {
+    const matchExperience = experience => parseInt(experience.idExperience) === parseInt(idExperience);
+    return experiences.find(matchExperience);
+}
+
+const deleteExperience = (idExperience) => {
+    experiences = experiences.filter(experience => parseInt(experience.idExperience) !== parseInt(idExperience));
+    return;
+}
 
 module.exports = {
     deleteVideo,
@@ -145,8 +177,13 @@ module.exports = {
     saveFamily,
     saveScout,
     saveVideo,
+    getVideo,
     saveContract,
     listReceivedContracts,
     listSentContracts,
-    updatePassword
+    updatePassword,
+    getListOfExperiences,
+    saveExperience,
+    deleteExperience,
+    getExperience
 }

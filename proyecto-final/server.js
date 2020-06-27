@@ -63,7 +63,7 @@ const uploadVideo = multer({
 
 const { login, registerFamily, registerScout, searchUsers } = require('./controllers/users');
 const { isAuthenticated, canUpdateProfile, isScout } = require('./middlewares/auth');
-const { modifyProfileFamily, modifyProfileScout, showProfile, changePassword } = require('./controllers/profiles');
+const { modifyProfileFamily, modifyProfileScout, showProfile, changePassword, showExperience, addExperience, deleteExperience } = require('./controllers/profiles');
 const { postVideo, showVideos, deleteVideo } = require('./controllers/videos');
 const { sendContract, showReceivedContracts, showSentContracts } = require('./controllers/contracts');
 
@@ -81,9 +81,12 @@ app.post('/registroFamilia', uploadAvatar.single('avatarPerfil'), registerFamily
 app.post('/registroOjeador', uploadAvatar.single('avatarPerfil'), registerScout);
 app.post('/login', login);
 //ver perfil público
-app.get('/perfil/:role/:email', showProfile);
-app.put('/perfil/editar/familia/:email', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileFamily);
-app.put('/perfil/editar/ojeador/:email', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileScout);
+app.get('/perfil/:role/:email/home', showProfile);
+app.put('/perfil/editar/familia/:email/home', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileFamily);
+app.put('/perfil/editar/ojeador/:email/home', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileScout);
+app.get('/perfil/:role/:email/experiencia', showExperience);
+app.post('/perfil/editar/:role/:email/experiencia', isAuthenticated, canUpdateProfile, addExperience);
+app.delete('/perfil/editar/:role/:email/experiencia/:idExperiencia', isAuthenticated, canUpdateProfile, deleteExperience);
 app.patch('/perfil/editar/:role/:email/cambioContrasena', isAuthenticated, canUpdateProfile, changePassword);
 app.post('/perfil/editar/familia/:email/videos', isAuthenticated, canUpdateProfile, uploadVideo.single('videoFamilia'), postVideo);
 app.get('/perfil/familia/:email/videos', showVideos);
