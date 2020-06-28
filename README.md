@@ -2,7 +2,7 @@
 
 En este repoditorio subiré todas las entregas semanales del bootcamp Hack a Boss
 
-#PROYECTO FINAL (en proceso)
+# PROYECTO FINAL (en proceso)
 Plataforma donde conectamos jóvenes futbolistas con ojeadores,  teniendo los primeros un catálogo de vídeos subidos por las familias.
 
 ## HTML
