@@ -31,3 +31,6 @@ Plataforma donde conectamos jóvenes futbolistas con ojeadores,  teniendo los pr
  >***NOTA*** la contraseña para entrar como asministrador es 1234, como se indica en el código
 
  >***NOTA*** los objetos se pueden filtrar por nombre, precio mínimo y precio máximo
+
+ ## 6.MySQL
+ -**entrega 1:** Base de datos de web que gestiona reservas en restaurantes durante la pandemia
