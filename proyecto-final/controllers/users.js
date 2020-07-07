@@ -22,11 +22,7 @@ const registerScout = async (req, res, next) => {
 
     let avatarPerfil = '';
 
-    if (!req.file) {
-        const profileImageError = new Error('Debes añadir una foto de perfil');
-        profileImageError.status = 400;
-        next(profileImageError);
-    } else {
+    if (req.file) {
         avatarPerfil = req.file.path;
     }
 
@@ -101,11 +97,7 @@ const registerFamily = async (req, res, next) => {
 
     let avatarPerfil = '';
 
-    if (!req.file) {
-        const profileImageError = new Error('Debes añadir una foto de perfil');
-        profileImageError.status = 400;
-        next(profileImageError);
-    } else {
+    if (req.file) {
         avatarPerfil = req.file.path;
     }
 

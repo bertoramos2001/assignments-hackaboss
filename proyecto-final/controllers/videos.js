@@ -1,7 +1,7 @@
 const bd = require('./bd_mock')
 
 const postVideo = (req, res, next) => {
-    let videoFamilia = '';
+    let videoFamilia;
     const { titulo, descripcion } = req.body;
     const { email } = req.params;
     const user = bd.getUser(email);
@@ -17,6 +17,7 @@ const postVideo = (req, res, next) => {
         const profileImageError = new Error('Debes añadir un vídeo');
         profileImageError.status = 400;
         next(profileImageError);
+        return;
     } else {
         videoFamilia = req.file.path;
     }
