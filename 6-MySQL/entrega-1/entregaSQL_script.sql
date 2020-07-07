@@ -46,7 +46,7 @@ CREATE TABLE restaurantes (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50),
     direccion VARCHAR(50),
-    capacidad_maxima INT UNSIGNED DEFAULT 0,
+    capacidad_maxima INT UNSIGNED DEFAULT 0
 );
 
 CREATE TABLE acompanantes (
