@@ -39,7 +39,7 @@ const ageDiff = (birthDate, actualDate) => {
     return diff;
 }
 
-const sendConfirmationEmailFamily = (emailDestino, apellidoFamilia) => {
+const createConfirmationEmailFamily = (emailDestino, apellidoFamilia) => {
     const msg = {
         to: emailDestino,
         from: 'futurasestrellasfutbol@gmail.com',
@@ -50,7 +50,7 @@ const sendConfirmationEmailFamily = (emailDestino, apellidoFamilia) => {
       return msg;
 }
 
-const sendConfirmationEmailScout = (emailDestino, nombreOjeador) => {
+const createConfirmationEmailScout = (emailDestino, nombreOjeador) => {
     const msg = {
         to: emailDestino,
         from: 'futurasestrellasfutbol@gmail.com',
@@ -61,7 +61,7 @@ const sendConfirmationEmailScout = (emailDestino, nombreOjeador) => {
       return msg;
 }
 
-const sendEmailChangeFamily = (emailDestino, apellidoFamilia) => {
+const createEmailChangeFamily = (emailDestino, apellidoFamilia) => {
     const msg = {
         to: emailDestino,
         from: 'futurasestrellasfutbol@gmail.com',
@@ -72,7 +72,7 @@ const sendEmailChangeFamily = (emailDestino, apellidoFamilia) => {
       return msg;
 }
 
-const sendEmailChangeScout = (emailDestino, nombreOjeador) => {
+const createEmailChangeScout = (emailDestino, nombreOjeador) => {
     const msg = {
         to: emailDestino,
         from: 'futurasestrellasfutbol@gmail.com',
@@ -89,8 +89,8 @@ module.exports = {
     parseBodyToArray,
     normalizeName,
     ageDiff,
-    sendConfirmationEmailFamily,
-    sendConfirmationEmailScout,
-    sendEmailChangeFamily,
-    sendEmailChangeScout
+    createConfirmationEmailFamily,
+    createConfirmationEmailScout,
+    createEmailChangeFamily,
+    createEmailChangeScout
 }

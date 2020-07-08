@@ -9,8 +9,15 @@
 -- jugador_ojeador (#id, -id_jugador, -id_ojeador)
 
 
-USE proyectoHAB;
+SELECT * FROM ojeadores;
+DELETE FROM jugadores WHERE sexo='male';
+SELECT id FROM jugadores WHERE email_tutor='randomexample@gmail.com';
+SELECT COUNT(*) FROM jugadores WHERE email_tutor='randomexample@gmail.com' UNION SELECT COUNT(*) FROM ojeadores WHERE email='randomexample@gmail.com';
+SELECT COUNT(*) FROM jugadores WHERE email_tutor='randomexample@gmail.com';
+SELECT COUNT(*) FROM jugadores JUG, ojeadores OJ WHERE JUG.email_tutor='examplerandom@gmail.com' OR OJ.email='examplerandom@gmail.com';
+SELECT id FROM jugadores JUG, ojeadores OJ WHERE JUG.email_tutor = ? AND JUG.contrasena = ? OR OJ.email = ? AND OJ.contrasena = ?;
 
+USE proyectoHAB;
 SET FOREIGN_KEY_CHECKS = 0;
 
 CREATE TABLE jugadores (
@@ -24,9 +31,12 @@ CREATE TABLE jugadores (
     sexo VARCHAR(10) NOT NULL,
     provincia VARCHAR(20) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
-    club_actual VARCHAR(20) NOT NULL,
-    contrasena VARCHAR(60) NOT NULL,
-    avatar VARCHAR(200)
+    club_actual VARCHAR(50) NOT NULL,
+    categoria VARCHAR(20) NOT NULL,
+    posicion_principal VARCHAR(30) NOT NULL,
+    pierna_buena VARCHAR(10) NOT NULL,
+    avatar VARCHAR(200),
+    contrasena VARCHAR(200) NOT NULL
     
 );
 
@@ -39,9 +49,12 @@ CREATE TABLE ojeadores (
     sexo VARCHAR(10) NOT NULL,
     provincia VARCHAR(20) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
-    club_actual VARCHAR(20) NOT NULL,
-    contrasena VARCHAR(60) NOT NULL,
-    avatar VARCHAR(200)
+    club_actual VARCHAR(50) NOT NULL,
+	categoria_busca VARCHAR(20) NOT NULL,
+    posicion_principal_busca VARCHAR(30) NOT NULL,
+    pierna_buena_busca VARCHAR(10) NOT NULL,
+    avatar VARCHAR(200),
+	contrasena VARCHAR(200) NOT NULL
 );
 
 CREATE TABLE videos (
@@ -73,38 +86,12 @@ CREATE TABLE experiencias(
     FOREIGN KEY (id_jugador) REFERENCES jugadores(id)
 );
 
-CREATE TABLE categorias(
-	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	id_ojeador INT UNSIGNED,
-    FOREIGN KEY (id_ojeador) REFERENCES ojeadores(id),
-	id_jugador INT UNSIGNED,
-    FOREIGN KEY (id_jugador) REFERENCES jugadores(id),
-    categoria VARCHAR(15) NOT NULL
-);
-
-CREATE TABLE posiciones (
-	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	id_ojeador INT UNSIGNED,
-    FOREIGN KEY (id_ojeador) REFERENCES ojeadores(id),
-	id_jugador INT UNSIGNED,
-    FOREIGN KEY (id_jugador) REFERENCES jugadores(id),
-    posicion VARCHAR(15) NOT NULL
-);
-
-CREATE TABLE aptitudes (
-	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	id_ojeador INT UNSIGNED,
-    FOREIGN KEY (id_ojeador) REFERENCES ojeadores(id),
-	id_jugador INT UNSIGNED,
-    FOREIGN KEY (id_jugador) REFERENCES jugadores(id),
-    aptitud VARCHAR(15) NOT NULL
-);
-
 CREATE TABLE jugador_ojeador (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	id_ojeador INT UNSIGNED,
+    rating TINYINT UNSIGNED,
+	id_ojeador INT UNSIGNED NOT NULL,
     FOREIGN KEY (id_ojeador) REFERENCES ojeadores(id),
-	id_jugador INT UNSIGNED,
+	id_jugador INT UNSIGNED NOT NULL,
     FOREIGN KEY (id_jugador) REFERENCES jugadores(id)
 );
 

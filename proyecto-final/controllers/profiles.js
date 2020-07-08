@@ -35,7 +35,7 @@ const showProfile = (req, res, next) => {
 }
 
 const modifyProfileFamily = async (req, res, next) => {
-    const { name, surname, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, positions, skills } = req.body;
+    const { name, surname, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, position, strongLeg } = req.body;
     const email = req.params.email;
     const user = bd.getUser(email); 
 
@@ -56,7 +56,7 @@ const modifyProfileFamily = async (req, res, next) => {
         return;
     }
 
-    if ( !name || !surname || !nameTutor || !surnameTutor || !emailTutor || !gender || !province || !birthDate || !actualClub || !category || !positions || !skills) {
+    if ( !name || !surname || !nameTutor || !surnameTutor || !emailTutor || !gender || !province || !birthDate || !actualClub || !category || !position || !strongLeg) {
         const missingParamsError = new Error('No se han introducido todos los parámetros obligatorios');
         missingParamsError.status = 400;
         next(missingParamsError);
@@ -81,7 +81,7 @@ const modifyProfileFamily = async (req, res, next) => {
 
     if (emailTutor !== email) { //esto del envio de email esta comentado porque la version gratuita permite un maximo de 100 emails diarios y haciendo las pruebas superaba estos limites
         // try {
-        //     await sgMail.send(functions.sendEmailChangeFamily(emailTutor, functions.normalizeName(surname)));
+        //     await sgMail.send(functions.createEmailChangeFamily(emailTutor, functions.normalizeName(surname)));
         //     console.log('Message sent');
         // } catch(e) {
         //     const emailError = new Error('error al enviar el email');
@@ -91,13 +91,13 @@ const modifyProfileFamily = async (req, res, next) => {
         console.log('email enviado')
     }
 
-    bd.updateProfileFamily(user, functions.normalizeName(name), functions.normalizeName(surname), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), emailTutor, gender, province, birthDate, actualClub, category, functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
+    bd.updateProfileFamily(user, functions.normalizeName(name), functions.normalizeName(surname), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), emailTutor, gender, province, birthDate, actualClub, category, functions.parseBodyToArray(position), functions.parseBodyToArray(strongLeg), avatarPerfil);
 
     res.send();
 }
 
 const modifyProfileScout = async (req, res, next) => {
-    const { name, surname, email, gender, province, birthDate, actualClub, category, positions, skills } = req.body;
+    const { name, surname, email, gender, province, birthDate, actualClub, category, position, strongLeg } = req.body;
     const emailParams = req.params.email;
     const user = bd.getUser(emailParams);
 
@@ -118,7 +118,7 @@ const modifyProfileScout = async (req, res, next) => {
         return;
     }
 
-    if ( !name || !surname || !email || !gender || !province || !birthDate || !actualClub || !category || !positions || !skills) {
+    if ( !name || !surname || !email || !gender || !province || !birthDate || !actualClub || !category || !position || !strongLeg) {
         const missingParamsError = new Error('No se han introducido todos los parámetros obligatorios');
         missingParamsError.status = 400;
         next(missingParamsError);
@@ -143,7 +143,7 @@ const modifyProfileScout = async (req, res, next) => {
 
     if (email !== emailParams) { //esto del envio de email esta comentado porque la version gratuita permite un maximo de 100 emails diarios y haciendo las pruebas superaba estos limites
         // try {
-        //     await sgMail.send(functions.sendEmailChangeScout(email, functions.normalizeName(name)));
+        //     await sgMail.send(functions.createEmailChangeScout(email, functions.normalizeName(name)));
         //     console.log('Message sent');
         // } catch(e) {
         //     const emailError = new Error('error al enviar el email');
@@ -153,7 +153,7 @@ const modifyProfileScout = async (req, res, next) => {
         console.log('email enviado')
     }
 
-    bd.updateProfileScout(user, functions.normalizeName(name), functions.normalizeName(surname), email, gender, province, birthDate, actualClub, functions.parseBodyToArray(category), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
+    bd.updateProfileScout(user, functions.normalizeName(name), functions.normalizeName(surname), email, gender, province, birthDate, actualClub, functions.parseBodyToArray(category), functions.parseBodyToArray(position), functions.parseBodyToArray(strongLeg), avatarPerfil);
 
     res.send()
 }

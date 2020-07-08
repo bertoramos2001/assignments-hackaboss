@@ -61,7 +61,7 @@ const uploadVideo = multer({
     fileFilter: videoFilter
 })
 
-const { login, registerFamily, registerScout, searchUsers } = require('./controllers/users');
+const { loginFamily, loginScout, registerFamily, registerScout, searchUsers } = require('./controllers/users');
 const { isAuthenticated, canUpdateProfile, isScout } = require('./middlewares/auth');
 const { modifyProfileFamily, modifyProfileScout, showProfile, changePassword, showExperience, addExperience, deleteExperience } = require('./controllers/profiles');
 const { postVideo, showVideos, deleteVideo } = require('./controllers/videos');
@@ -69,6 +69,7 @@ const { sendContract, showReceivedContracts, showSentContracts } = require('./co
 
 const port = process.env.PORT;
 const app = express();
+const database = './database.js';
 
 app.use(morgan('dev'));
 app.use('/uploads', express.static('uploads'))
@@ -79,7 +80,8 @@ app.use(cors());
 //registro y login
 app.post('/registroFamilia', uploadAvatar.single('avatarPerfil'), registerFamily);
 app.post('/registroOjeador', uploadAvatar.single('avatarPerfil'), registerScout);
-app.post('/login', login);
+app.post('/loginFamilia', loginFamily);
+app.post('/loginOjeador', loginScout)
 //ver perfil público
 app.get('/perfil/:role/:email/home', showProfile);
 app.put('/perfil/editar/familia/:email/home', isAuthenticated, canUpdateProfile, uploadAvatar.single('avatarPerfil'), modifyProfileFamily);

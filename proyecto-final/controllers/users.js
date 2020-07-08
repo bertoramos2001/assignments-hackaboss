@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const validator = require('validator');
 const sgMail = require('@sendgrid/mail');
 
+const databaseFunctions = require('./databaseFunctions');
+
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const bd = require('./bd_mock');   //empleamos un archivo de js temporalmente como si fuera la base de datos
@@ -10,10 +12,10 @@ const functions = require('./functions')
 
 const registerScout = async (req, res, next) => {
     //recoger los datos de registro
-    const { name, surname, email, gender, province, birthDate, actualClub, category, positions, skills, password, confirmPassword } = req.body;
+    const { name, surname, email, gender, province, birthDate, actualClub, category, position, strongLeg, password, confirmPassword } = req.body;
 
     //comprobar que son validos los datos que dan en el registro
-    if ( !name || !surname || !email || !gender || !province || !birthDate || !actualClub || !category || !positions || !skills || !password || !confirmPassword) {
+    if ( !name || !surname || !email || !gender || !province || !birthDate || !actualClub || !category || !position || !strongLeg || !password || !confirmPassword) {
         const missingParamsError = new Error('No se han introducido todos los parámetros obligatorios');
         missingParamsError.status = 400;
         next(missingParamsError);
@@ -56,21 +58,57 @@ const registerScout = async (req, res, next) => {
     }
 
     //si ya existe otro usuario registrado con ese email, error
-    if (bd.getUser(email)) {
+    if ((await databaseFunctions.checkScoutCount(email)) > 0) {
         const userError = new Error('ya existe otro usuario con el mismo email');
         userError.status = 409;
         next(userError)
         return;
     }
 
-    //encriptar la password(para no almacenarla en texto claro)
-    const passwordBcrypt = await bcrypt.hash(password, 10);
-    //almacenar datos
-    bd.saveScout(email, passwordBcrypt, 'ojeador', functions.normalizeName(name), functions.normalizeName(surname), gender, province, birthDate, actualClub, functions.parseBodyToArray(category), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
+    const scout = {
+        'rol': 'ojeador',
+        'nombreJugador': functions.normalizeName(name),
+        'apellidosJugador': functions.normalizeName(surname),
+        'email': email,
+        'sexo': gender,
+        'provincia': province,
+        'fechaNacimiento': birthDate,
+        'clubActual': actualClub,
+        'categoriaBusca': category,
+        'posicionBusca': position,
+        'piernaBuenaBusca': strongLeg,
+        'avatar': avatarPerfil,
+        'contraseña': password
+    }
+
+    let responseDTO;
+    if ( await databaseFunctions.saveScout(scout)) {
+        responseDTO = {
+            'code': 200,
+            'description': 'Cuenta de familia creada correctamente',
+            'rol': 'ojeador',
+            'nombreJugador': functions.normalizeName(name),
+            'apellidosJugador': functions.normalizeName(surname),
+            'email': email,
+            'sexo': gender,
+            'provincia': province,
+            'fechaNacimiento': birthDate,
+            'clubActual': actualClub,
+            'categoriaBusca': category,
+            'posicionBusca': position,
+            'piernaBuenaBusca': strongLeg,
+            'avatar': avatarPerfil
+        };
+    } else {
+        responseDTO = {
+            'code': 200,
+            'description': 'No se ha podido crear la cuenta de familia'
+        };
+    }
 
     //enviar email confirmación //esto del envio de email esta comentado porque la version gratuita permite un maximo de 100 emails diarios y haciendo las pruebas superaba estos limites
     // try {
-    //     await sgMail.send(functions.sendConfirmationEmailScout(email, functions.normalizeName(name)));
+    //     await sgMail.send(functions.createConfirmationEmailScout(email, functions.normalizeName(name)));
     //     console.log('Message sent');
     // } catch(e) {
     //     console.log(e.response.body)
@@ -80,15 +118,15 @@ const registerScout = async (req, res, next) => {
     // }
     console.log('email enviado')
     //res.send();
-    res.json(req.file)
+    return res.status(responseDTO.code).json(responseDTO);
 }
 
 const registerFamily = async (req, res, next) => {
     //recoger los datos de registro
-    const { name, surname, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, positions, skills, password, confirmPassword } = req.body;
+    const { name, surname, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, position, strongLeg, password, confirmPassword } = req.body;
     
     //comprobar que los datos de registo son válidos
-    if ( !name || !surname || !nameTutor || !surnameTutor || !emailTutor || !gender || !province || !birthDate || !actualClub || !category || !positions || !skills || !password || !confirmPassword) {
+    if ( !name || !surname || !nameTutor || !surnameTutor || !emailTutor || !gender || !province || !birthDate || !actualClub || !category || !position || !strongLeg || !password || !confirmPassword) {
         const missingParamsError = new Error('No se han introducido todos los parámetros obligatorios');
         missingParamsError.status = 400;
         next(missingParamsError);
@@ -134,21 +172,61 @@ const registerFamily = async (req, res, next) => {
     }
 
     //si ya existe otro usuario registrado con ese email, error
-    if (bd.getUser(emailTutor)) {
+    if ((await databaseFunctions.checkPlayerCount(emailTutor)) > 0) {
         const userError = new Error('ya existe otro usuario con el mismo email');
         userError.status = 409;
         next(userError)
         return;
     }
 
-     //encriptar la password(para no almacenarla en texto claro)
-    const passwordBcrypt = await bcrypt.hash(password, 10);
     //almacenar los datos
-    bd.saveFamily(emailTutor, passwordBcrypt, 'familia', functions.normalizeName(name), functions.normalizeName(surname), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), gender, province, birthDate, actualClub, functions.parseBodyToArray(category), functions.parseBodyToArray(positions), functions.parseBodyToArray(skills), avatarPerfil);
+    const family = {
+        'rol': 'familia',
+        'nombreJugador': functions.normalizeName(name),
+        'apellidosJugador': functions.normalizeName(surname),
+        'nombreTutor': functions.normalizeName(nameTutor),
+        'apellidosTutor': functions.normalizeName(surnameTutor),
+        'emailTutor': emailTutor,
+        'sexo': gender,
+        'provincia': province,
+        'fechaNacimiento': birthDate,
+        'clubActual': actualClub,
+        'categoria': category,
+        'posicion': position,
+        'piernaBuena': strongLeg,
+        'avatar': avatarPerfil,
+        'contraseña': password
+    }
+    let responseDTO;
+    if ( await databaseFunctions.saveFamily(family)) {
+        responseDTO = {
+            'code': 200,
+            'description': 'Cuenta de familia creada correctamente',
+            'rol': 'familia',
+            'nombreJugador': functions.normalizeName(name),
+            'apellidosJugador': functions.normalizeName(surname),
+            'nombreTutor': functions.normalizeName(nameTutor),
+            'apellidosTutor': functions.normalizeName(surnameTutor),
+            'emailTutor': emailTutor,
+            'sexo': gender,
+            'provincia': province,
+            'fechaNacimiento': birthDate,
+            'clubActual': actualClub,
+            'categoria': category,
+            'posicion': position,
+            'piernaBuena': strongLeg,
+            'avatar': avatarPerfil
+        };
+    } else {
+        responseDTO = {
+            'code': 200,
+            'description': 'No se ha podido crear la cuenta de familia'
+        };
+    }
 
     //enviar email confirmación //esto del envio de email esta comentado porque la version gratuita permite un maximo de 100 emails diarios y haciendo las pruebas superaba estos limites
     // try {
-    //     await sgMail.send(functions.sendConfirmationEmailFamily(emailTutor, functions.normalizeName(surname)));
+    //     await sgMail.send(functions.createConfirmationEmailFamily(emailTutor, functions.normalizeName(surname)));
     //     console.log('Message sent');
     // } catch(e) {
     //     console.log(e.response.body)
@@ -158,43 +236,52 @@ const registerFamily = async (req, res, next) => {
     // }
     console.log('email enviado')
     //res.send();
-    res.json(req.file)
+    return res.status(responseDTO.code).json(responseDTO);
 }
 
-const login = async (req, res, next) => {
+const loginFamily = async (req, res, next) => {
     const {email, password} = req.body;
+    const rol = 'familia';
 
-    //buscar email en bbdd (si no existe, dar un error)
-    const user = bd.getUser(email);
-
-    if (!user) {
-        const userNotFoundError = new Error('usuario no encontrado');
-        userNotFoundError.status = 404;
-        next(userNotFoundError)
-        return;
-    }
-
-    //comprobar password(si no coinciden, dar un error)
-    const passwordIsValid = await bcrypt.compare(password, user.password);  
-    if(!passwordIsValid) {
-        const passwordInvalidError = new Error('la contraseña no es válida')
-        passwordInvalidError.status = 401;
-        next(passwordInvalidError)
-        return;
-    }
+    const responseDTO = await databaseFunctions.login(email, password, rol);
     
     const tokenPayload = {
-        id: user.id,
-        role: user.role,
-        email:user.email
+        id: responseDTO.id,
+        role: responseDTO.rol,
+        email: responseDTO.email
     }
-    const token = jwt.sign(tokenPayload, process.env.SECRET, { 
-        expiresIn: '1d' //el token caduca en 1 dia
-    });
+    //si el usuario no logra entrar correctamente en la cuenta, el token estará vacío; si logra entrar, asignaremos el token
+    let token = '';
+    if (responseDTO.description === ('Login correcto')) {
+        token = jwt.sign(tokenPayload, process.env.SECRET, { 
+            expiresIn: '1d' //el token caduca en 1 dia
+        });
+    }
 
-    res.json({
-        token
-    })
+    res.status(responseDTO.code).json({responseDTO, token})
+}
+
+const loginScout = async (req, res, next) => {
+    const {email, password} = req.body;
+    const rol = 'ojeador';
+
+    const responseDTO = await databaseFunctions.login(email, password, rol);
+    console.log(responseDTO.description)
+    
+    const tokenPayload = {
+        id: responseDTO.id,
+        role: responseDTO.rol,
+        email: responseDTO.email
+    }
+    //si el usuario no logra entrar correctamente en la cuenta, el token estará vacío; si logra entrar, asignaremos el token
+    let token = '';
+    if (responseDTO.description === ('Login correcto')) {
+        token = jwt.sign(tokenPayload, process.env.SECRET, { 
+            expiresIn: '1d' //el token caduca en 1 dia
+        });
+    }
+
+    res.status(responseDTO.code).json({responseDTO, token})
 }
 
 const searchUsers = (req, res) => {
@@ -207,7 +294,7 @@ const searchUsers = (req, res) => {
     const edadMaxima = req.query['edadMaxima'];
     const posicion = req.query['posicion'];
     const categoria = req.query['categoria'];
-    const skills = req.query['skills'];
+    const strongLeg = req.query['piernaBuena'];
     let listaUsuarios = bd.readList();
 
     if ( nombre ) { //si existe nombre
@@ -235,9 +322,9 @@ const searchUsers = (req, res) => {
         listaUsuarios = listaUsuarios.filter( usuario => {
             if (Array.isArray(posicion)) {
                 let count = 0;
-                for ( let i = 0; i < (usuario.positions).length; i++ ) {
+                for ( let i = 0; i < (usuario.position).length; i++ ) {
                     for ( let j = 0; j < posicion.length; j++) {
-                        if (((((usuario.positions[i]).trim()).toLowerCase()).replace(' ','-')) === posicion[j]) {
+                        if (((((usuario.position[i]).trim()).toLowerCase()).replace(' ','-')) === posicion[j]) {
                             count++;
                         }
                     }
@@ -245,8 +332,8 @@ const searchUsers = (req, res) => {
                 return (count > 0);
             } else {
                 let count = 0;
-                for ( let i = 0; i < (usuario.positions).length; i++ ) {
-                    if (((((usuario.positions[i]).trim()).toLowerCase()).replace(' ','-')) === posicion) {
+                for ( let i = 0; i < (usuario.position).length; i++ ) {
+                    if (((((usuario.position[i]).trim()).toLowerCase()).replace(' ','-')) === posicion) {
                         count++;
                     }
                 }
@@ -254,13 +341,13 @@ const searchUsers = (req, res) => {
             }
         })
     }
-    if ( skills ) { //teniendo en cuenta que skills puede o no ser un array (dependiendo del numero de filtros que pase el usuario) y que lista de usuarios también, hice un bucle anidado
+    if ( strongLeg ) { //teniendo en cuenta que pierna buena puede o no ser un array (dependiendo del numero de filtros que pase el usuario) y que lista de usuarios también, hice un bucle anidado
         listaUsuarios = listaUsuarios.filter( usuario => {
-            if (Array.isArray(skills)) {
+            if (Array.isArray(strongLeg)) {
                 let count = 0;
-                for ( let i = 0; i < (usuario.skills).length; i++ ) {
-                    for ( let j = 0; j < skills.length; j++) {
-                        if (((((usuario.skills[i]).trim()).toLowerCase()).replace(' ','-')) === skills[j]) {
+                for ( let i = 0; i < (usuario.strongLeg).length; i++ ) {
+                    for ( let j = 0; j < strongLeg.length; j++) {
+                        if (((((usuario.strongLeg[i]).trim()).toLowerCase()).replace(' ','-')) === strongLeg[j]) {
                             count++;
                         }
                     }
@@ -268,8 +355,8 @@ const searchUsers = (req, res) => {
                 return (count > 0);
             } else {
                 let count = 0;
-                for ( let i = 0; i < (usuario.skills).length; i++ ) {
-                    if (((((usuario.skills[i]).trim()).toLowerCase()).replace(' ','-')) === skills) {
+                for ( let i = 0; i < (usuario.strongLeg).length; i++ ) {
+                    if (((((usuario.strongLeg[i]).trim()).toLowerCase()).replace(' ','-')) === strongLeg) {
                         count++;
                     }
                 }
@@ -304,7 +391,8 @@ const searchUsers = (req, res) => {
     res.json(listaUsuarios);
 }
 module.exports = {
-    login,
+    loginFamily,
+    loginScout,
     registerFamily,
     registerScout,
     searchUsers
