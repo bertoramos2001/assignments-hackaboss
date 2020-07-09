@@ -1,4 +1,5 @@
-const bd = require('./../controllers/bd_mock')
+const bd = require('./../controllers/bd_mock');
+const databaseFunctions = require('./../controllers/databaseFunctions');
 
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
@@ -10,7 +11,7 @@ const isAuthenticated = (req, res, next) => {
         const decodedToken = jwt.verify(authorization, process.env.SECRET);
         req.auth = decodedToken;
     } catch(e) {
-        const authError = new Error('invalid token');
+        const authError = new Error('Token no válido');
         authError.status = 401;
         next(authError);  //ejecutamos el middleware de gestion de errores que tenemos en server
     }
@@ -20,9 +21,9 @@ const isAuthenticated = (req, res, next) => {
 const canUpdateProfile = (req, res, next) => {
     const { authorization } = req.headers;
     const { email } = req.params;
-    const user = bd.getUser(email);
 
-    if (!user) {
+
+    if (databaseFunctions.checkUserExists(email) < 1) {
         const userNotFoundError = new Error('usuario no encontrado');
         userNotFoundError.status = 404;
         next(userNotFoundError)
@@ -33,15 +34,33 @@ const canUpdateProfile = (req, res, next) => {
         const decodedToken = jwt.verify(authorization, process.env.SECRET);
         req.auth = decodedToken;
 
-        if (user.id !== decodedToken.id) {
-            const authError = new Error('invalid token');
+        if (decodedToken.role === 'ojeador') {
+            if(databaseFunctions.checkScoutCount(email) < 1) {
+                const authError = new Error('Token no válido1');
+                authError.status = 401;
+                next(authError);
+                return;
+            }
+        } else if (decodedToken.role === 'familia') {
+            if(databaseFunctions.checkPlayerCount(email) < 1) {
+                const authError = new Error('Token no válido2');
+                authError.status = 401;
+                next(authError);
+                return;
+            }
+        }
+        if (email !== decodedToken.email) {
+            const authError = new Error('Token no válido3');
             authError.status = 401;
             next(authError);
+            return;
         }
     } catch(e) {
-        const authError = new Error('invalid token');
+        const authError = new Error('Token no válido4');
+        console.log(e)
         authError.status = 401;
         next(authError);
+        return;
     }
     next();
 }
