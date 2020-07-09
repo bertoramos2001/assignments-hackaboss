@@ -1,11 +1,33 @@
 const database = require('../database.js');
 
-
+//obtener el id del usuario
 const getIdUser = async (email) => {
     const sql = `SELECT id FROM jugadores WHERE email_tutor=${email}`;
     const connection = await database.connection();
     await connection.execute(sql, [email]);
 
+}
+
+//obtener todos los datos del ojeador
+const getScout = async (email) => {
+    const sql = 'SELECT rol, nombre, apellidos, email, sexo, provincia, fecha_nacimiento, club_actual, categoria_busca, posicion_principal_busca, pierna_buena_busca, avatar FROM ojeadores WHERE email=?';
+    const connection = await database.connection();
+    let [rows] = await connection.execute(sql, [email]);
+    rows[0]['code'] = 200;
+    rows[0]['description'] = 'ojeador encontrado correctamente';
+
+    return(rows[0]);
+}
+
+//obtener todos los datos de la familia
+const getPlayer = async (email) => {
+    const sql = 'SELECT rol, nombre_jugador, apellidos_jugador, nombre_tutor, apellidos_tutor, email_tutor, sexo, provincia, fecha_nacimiento, club_actual, categoria, posicion_principal, pierna_buena, avatar FROM jugadores WHERE email_tutor=?';
+    const connection = await database.connection();
+    let [rows] = await connection.execute(sql, [email]);
+    rows[0]['code'] = 200;
+    rows[0]['description'] = 'familia encontrada correctamente';
+
+    return(rows[0]);
 }
 
 //comprobamos que el usuario existe tanto en la tabla de jugadores como en la de ojeadores
@@ -15,39 +37,6 @@ const checkUserExists = async (email) => {
     const [rows] = await connection.execute(sql, [email, email]);
 
     return (rows[0]['COUNT(*)']);
-}
-
-const loginFamilyo = async (email, password) => {
-    const sql = 'SELECT id FROM jugadores WHERE email_tutor = ? AND contrasena = SHA1(?)';
-    try {
-        const connection = await database.connection();
-        const [rows] = await connection.execute(sql, [email, password]);
-        console.log(email)
-        let description;
-        if (!rows[0]) {
-            description = 'Usuario/contraseña incorrectos';
-        } else {
-            description = 'Login correcto';
-        }
-
-        let responseDTO = {
-            'code': 200,
-            'description': description,
-        };
-
-        if (rows[0]) {
-            responseDTO['id'] = rows[0].id;
-            responseDTO['rol'] = 'familia';
-            responseDTO['emailTutor'] = email;
-        }
-
-        return responseDTO;
-    } catch (exception) {
-        return {
-            'code': 500,
-            'description': exception.toString()
-        };
-    }
 }
 
 //tanto login scout como login family llaman a esta funcion, la cual dependiendo del rol del usuario, intentará el login en la tabla de jugadores o en la de ojeadores
@@ -132,6 +121,8 @@ module.exports = {
     checkScoutCount,
     checkUserExists,
     getIdUser,
+    getPlayer,
+    getScout,
     login,
     saveFamily,
     saveScout

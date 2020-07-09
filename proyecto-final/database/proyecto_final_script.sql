@@ -14,8 +14,8 @@ DELETE FROM jugadores WHERE sexo='male';
 SELECT id FROM jugadores WHERE email_tutor='randomexample@gmail.com';
 SELECT COUNT(*) FROM jugadores WHERE email_tutor='randomexample@gmail.com' UNION SELECT COUNT(*) FROM ojeadores WHERE email='randomexample@gmail.com';
 SELECT COUNT(*) FROM jugadores WHERE email_tutor='randomexample@gmail.com';
-SELECT COUNT(*) FROM jugadores JUG, ojeadores OJ WHERE JUG.email_tutor='examplerandom@gmail.com' OR OJ.email='examplerandom@gmail.com';
-SELECT id FROM jugadores JUG, ojeadores OJ WHERE JUG.email_tutor = ? AND JUG.contrasena = ? OR OJ.email = ? AND OJ.contrasena = ?;
+SELECT COUNT(*) FROM jugadores JUG, ojeadores OJ WHERE JUG.email_tutor='randomexample@gmail.com' OR OJ.email='examplerandom@gmail.com';
+SELECT id FROM jugadores WHERE email_tutor = 'randomexample@gmail.com' AND contrasena = SHA2('Salgue2001', 512);
 
 USE proyectoHAB;
 SET FOREIGN_KEY_CHECKS = 0;

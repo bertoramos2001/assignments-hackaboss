@@ -69,7 +69,6 @@ const { sendContract, showReceivedContracts, showSentContracts } = require('./co
 
 const port = process.env.PORT;
 const app = express();
-const database = './database.js';
 
 app.use(morgan('dev'));
 app.use('/uploads', express.static('uploads'))

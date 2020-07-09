@@ -3,35 +3,52 @@ const bcrypt = require('bcrypt');
 const functions = require('./functions');
 const sgMail = require('@sendgrid/mail');
 
+const databaseFunctions = require('./databaseFunctions');
+
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const showProfile = (req, res, next) => {
+const showProfile = async (req, res, next) => {
     const email = req.params.email;
     const role = req.params.role;
-    const user = bd.getUser(email);
 
-    if (!user) {
+    if (databaseFunctions.checkUserExists(email) < 1) {
         const userNotFoundError = new Error('usuario no encontrado');
         userNotFoundError.status = 404;
         next(userNotFoundError)
         return;
     }
-
     if (role !== 'familia' && role !== 'ojeador') {
         const differentAccountError = new Error(`No existe el tipo de cuenta ${role}`);
         differentAccountError.status = 400;
         next(differentAccountError);
         return;
     }
-
-    else if (role !== user.role) {
-        const accountTypeError = new Error(`No existe ninguna cuenta registrada como ${role} con este email`);
-        accountTypeError.status = 404;
-        next(accountTypeError);
-        return;
+    if (role === 'ojeador') {
+        if (databaseFunctions.checkScoutCount(email) === 0) {
+            const accountTypeError = new Error(`No existe ninguna cuenta registrada como ojeador con este email`);
+            accountTypeError.status = 404;
+            next(accountTypeError);
+            return;
+        }
+    }
+    if (role === 'familia') {
+        if (databaseFunctions.checkPlayerCount(email) === 0) {
+            const accountTypeError = new Error(`No existe ninguna cuenta registrada como familia con este email`);
+            accountTypeError.status = 404;
+            next(accountTypeError);
+            return;
+        }
     }
 
-    res.json(user)
+    let responseDTO;
+    if (role === 'ojeador') {
+        responseDTO = await databaseFunctions.getScout(email);
+        
+    } else if (role === 'familia') {
+        responseDTO = await databaseFunctions.getPlayer(email);
+    }
+
+    res.json(responseDTO)
 }
 
 const modifyProfileFamily = async (req, res, next) => {
