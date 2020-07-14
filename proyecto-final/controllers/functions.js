@@ -19,24 +19,11 @@ const normalizeName = (name) => {
         .map(word => `${word[0].toUpperCase()}${word.slice(1)}`)
         .join(' ');
 }
+const moment = require('moment')
 
-const ageDiff = (birthDate, actualDate) => {
-    var actualYear = actualDate.getFullYear();
-    var actualMonth = actualDate.getMonth();
-    var actualDay = actualDate.getDate();
-    var oldYear = birthDate.getFullYear();
-    var oldMonth = birthDate.getMonth();
-    var oldDay = birthDate.getDate();
-    var diff = actualYear - oldYear;
-    if(oldMonth > actualMonth) diff--;
-    else
-    {
-      if(oldMonth == actualMonth)
-      {
-        if(oldDay > actualDay) diff--;
-      }
-    }
-    return diff;
+const ageDiff = (birthDate) => {
+    let years = moment().diff(birthDate, 'years');
+    return years;
 }
 
 const createConfirmationEmailFamily = (emailDestino, apellidoFamilia) => {

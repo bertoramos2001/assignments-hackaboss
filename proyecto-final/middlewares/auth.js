@@ -18,7 +18,7 @@ const isAuthenticated = (req, res, next) => {
     next();
 }
 
-const canUpdateProfile = (req, res, next) => {
+const canUpdateProfile = async (req, res, next) => {
     const { authorization } = req.headers;
     const { email } = req.params;
 
@@ -33,32 +33,39 @@ const canUpdateProfile = (req, res, next) => {
     try {
         const decodedToken = jwt.verify(authorization, process.env.SECRET);
         req.auth = decodedToken;
+        let id, rol;
 
         if (decodedToken.role === 'ojeador') {
+            id =  await databaseFunctions.getScoutId(email);
+            rol = 'ojeador';
             if(databaseFunctions.checkScoutCount(email) < 1) {
-                const authError = new Error('Token no válido1');
+                const authError = new Error('Token no válido, la cuenta para entrar aquí dede ser el ojeador propietario de la cuenta');
                 authError.status = 401;
                 next(authError);
                 return;
             }
         } else if (decodedToken.role === 'familia') {
-            if(databaseFunctions.checkPlayerCount(email) < 1) {
-                const authError = new Error('Token no válido2');
+            id = await databaseFunctions.getPlayerId(email);
+            rol = 'familia';
+            if (databaseFunctions.checkPlayerCount(email) < 1) {
+                const authError = new Error('Token no válido, la cuenta para entrar aquí debe ser ls familia propietaria de la cuenta');
                 authError.status = 401;
                 next(authError);
                 return;
             }
         }
-        if (email !== decodedToken.email) {
-            const authError = new Error('Token no válido3');
+        if (id !== decodedToken.id || rol !== decodedToken.role) {
+            console.log(rol, decodedToken.role)
+            console.log(id, decodedToken.id)
+            const authError = new Error('Token no válido, el token tiene que corresponder con el id y el rol del ususario del perfil');
             authError.status = 401;
             next(authError);
             return;
         }
     } catch(e) {
-        const authError = new Error('Token no válido4');
-        console.log(e)
+        const authError = new Error('Token no válido, hubo algún fallo con el token');
         authError.status = 401;
+        console.log(e)
         next(authError);
         return;
     }

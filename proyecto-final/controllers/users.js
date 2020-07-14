@@ -29,7 +29,7 @@ const registerScout = async (req, res, next) => {
     }
 
     //calculamos la edad del ojeador
-    let age = functions.ageDiff(new Date(birthDate), new Date());
+    let age = functions.ageDiff(birthDate);
 
     //si el ojeador es menor de edad, mete un email no válido, las contraseñas no coinciden o la contraseña no es válida, error
     if (isNaN(age) || age < 18) {
@@ -140,7 +140,7 @@ const registerFamily = async (req, res, next) => {
     }
 
      //calculamos la edad del jugador
-    let age = functions.ageDiff(new Date(birthDate), new Date());
+    let age = functions.ageDiff(birthDate);
 
     //si el jugador es mayor de edad, mete un email no válido, las contraseñas no coinciden o la contraseña no es válida, error
     if (age > 18 || isNaN(age)) {
@@ -248,7 +248,6 @@ const loginFamily = async (req, res, next) => {
     const tokenPayload = {
         id: responseDTO.id,
         role: responseDTO.rol,
-        email: responseDTO.email
     }
     //si el usuario no logra entrar correctamente en la cuenta, el token estará vacío; si logra entrar, asignaremos el token
     let token = '';
@@ -266,12 +265,10 @@ const loginScout = async (req, res, next) => {
     const rol = 'ojeador';
 
     const responseDTO = await databaseFunctions.login(email, password, rol);
-    console.log(responseDTO.description)
     
     const tokenPayload = {
         id: responseDTO.id,
         role: responseDTO.rol,
-        email: responseDTO.email
     }
     //si el usuario no logra entrar correctamente en la cuenta, el token estará vacío; si logra entrar, asignaremos el token
     let token = '';
@@ -313,10 +310,10 @@ const searchUsers = (req, res) => {
         listaUsuarios = listaUsuarios.filter( usuario => (usuario.province).toLowerCase() === provincia);
     }
     if ( edadMinima ) {
-        listaUsuarios = listaUsuarios.filter( usuario => parseInt(functions.ageDiff(new Date(usuario.birthDate), new Date())) >= parseInt(edadMinima));
+        listaUsuarios = listaUsuarios.filter( usuario => parseInt(functions.ageDiff(usuario.birthDate)) >= parseInt(edadMinima));
     }
     if ( edadMaxima ) {
-        listaUsuarios = listaUsuarios.filter( usuario => parseInt(functions.ageDiff(new Date(usuario.birthDate), new Date())) <= parseInt(edadMaxima));
+        listaUsuarios = listaUsuarios.filter( usuario => parseInt(functions.ageDiff(usuario.birthDate)) <= parseInt(edadMaxima));
     }
     if ( posicion ) { //teniendo en cuenta que posicion puede o no ser un array (dependiendo del numero de filtros que pase el usuario) y que lista de usuarios también, hice un bucle anidado
         listaUsuarios = listaUsuarios.filter( usuario => {

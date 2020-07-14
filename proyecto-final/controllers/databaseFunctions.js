@@ -1,18 +1,46 @@
 const database = require('../database.js');
 
-//obtener el id del usuario
-const getIdUser = async (email) => {
-    const sql = `SELECT id FROM jugadores WHERE email_tutor=${email}`;
+//obtener el id del jugador
+const getPlayerId = async (email) => {
+    const sql = `SELECT id from jugadores WHERE email_tutor=?`;
     const connection = await database.connection();
-    await connection.execute(sql, [email]);
+    let [rows] = await connection.execute(sql, [email]);
 
+    return rows[0].id;
+}
+
+//obtener el id del ojeador
+const getScoutId = async (email) => {
+    const sql = 'SELECT id from ojeadores WHERE email=?';
+    const connection = await database.connection();
+    let [rows] = await connection.execute(sql, [email]);
+
+    return rows[0].id;
+}
+
+//obtener el email del jugador
+const getPlayerEmail = async (id) => {
+    const sql = 'SELECT email_tutor from jugadores WHERE id=?';
+    const connection = await database.connection();
+    let [rows] = await connection.execute(sql, [id]);
+
+    return rows[0].email_tutor;
+}
+
+//obtener el email del ojeador
+const getScoutEmail = async (id) => {
+    const sql = 'SELECT email from ojeadores WHERE id=?';
+    const connection = await database.connection();
+    let [rows] = await connection.execute(sql, [id]);
+
+    return rows[0].email;
 }
 
 //obtener todos los datos del ojeador
-const getScout = async (email) => {
-    const sql = 'SELECT rol, nombre, apellidos, email, sexo, provincia, fecha_nacimiento, club_actual, categoria_busca, posicion_principal_busca, pierna_buena_busca, avatar FROM ojeadores WHERE email=?';
+const getScout = async (id) => {
+    const sql = 'SELECT rol, nombre, apellidos, email, sexo, provincia, fecha_nacimiento, club_actual, categoria_busca, posicion_principal_busca, pierna_buena_busca, avatar FROM ojeadores WHERE id=?';
     const connection = await database.connection();
-    let [rows] = await connection.execute(sql, [email]);
+    let [rows] = await connection.execute(sql, [id]);
     rows[0]['code'] = 200;
     rows[0]['description'] = 'ojeador encontrado correctamente';
 
@@ -20,10 +48,10 @@ const getScout = async (email) => {
 }
 
 //obtener todos los datos de la familia
-const getPlayer = async (email) => {
-    const sql = 'SELECT rol, nombre_jugador, apellidos_jugador, nombre_tutor, apellidos_tutor, email_tutor, sexo, provincia, fecha_nacimiento, club_actual, categoria, posicion_principal, pierna_buena, avatar FROM jugadores WHERE email_tutor=?';
+const getPlayer = async (id) => {
+    const sql = 'SELECT rol, nombre_jugador, apellidos_jugador, nombre_tutor, apellidos_tutor, email_tutor, sexo, provincia, fecha_nacimiento, club_actual, categoria, posicion_principal, pierna_buena, avatar FROM jugadores WHERE id=?';
     const connection = await database.connection();
-    let [rows] = await connection.execute(sql, [email]);
+    let [rows] = await connection.execute(sql, [id]);
     rows[0]['code'] = 200;
     rows[0]['description'] = 'familia encontrada correctamente';
 
@@ -97,7 +125,7 @@ const checkScoutCount = async (email) => {
 
 //guardamos la familia en la tabla de jugadores
 const saveFamily = async (family) => {
-    const sql = 'INSERT INTO jugadores (rol, nombre_jugador, apellidos_jugador, nombre_tutor, apellidos_tutor, email_tutor, sexo, provincia, fecha_nacimiento, club_actual, categoria, posicion_principal, pierna_buena,avatar, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, SHA1(?))'
+    const sql = 'INSERT INTO jugadores (rol, nombre_jugador, apellidos_jugador, nombre_tutor, apellidos_tutor, email_tutor, sexo, provincia, fecha_nacimiento, club_actual, categoria, posicion_principal, pierna_buena, avatar, contrasena) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, SHA1(?))'
     const connection = await database.connection();
     await connection.execute(sql, Object.values(family));
 
@@ -113,17 +141,35 @@ const saveScout = async (scout) => {
     return true;
 }
 
+const updateProfileFamily = async(family, id) => {
+    const sql = 'UPDATE jugadores SET nombre_jugador=?, apellidos_jugador=?, nombre_tutor=?, apellidos_tutor=?, email_tutor=?, sexo=?, provincia=?, fecha_nacimiento=?, club_actual=?, categoria=?, posicion_principal=?, pierna_buena=?, avatar=? WHERE id=?';
+    const connection = await database.connection();
+    await connection.execute(sql, [family.nombreJugador, family.apellidosJugador, family.nombreTutor, family.apellidosTutor, family.emailTutor, family.sexo, family.provincia, family.fechaNacimiento, family.clubActual, family.categoria, family.posicion, family.piernaBuena, family.avatar, id]);
 
+    return true;
+}
 
+const updateProfileScout = async(scout, id) => {
+    const sql = 'UPDATE ojeadores SET nombre=?, apellidos=?, email=?, sexo=?, provincia=?, fecha_nacimiento=?, club_actual=?, categoria_busca=?, posicion_principal_busca=?, pierna_buena_busca=?, avatar=? WHERE id=?';
+    const connection = await database.connection();
+    await connection.execute(sql, [scout.nombre, scout.apellidos, scout.email, scout.sexo, scout.provincia, scout.fechaNacimiento, scout.clubActual, scout.categoriaBusca, scout.posicionBusca, scout.piernaBuenaBusca, scout.avatar, id]);
+
+    return true;
+}
 
 module.exports = {
     checkPlayerCount,
     checkScoutCount,
     checkUserExists,
-    getIdUser,
     getPlayer,
+    getPlayerEmail,
+    getScoutEmail,
+    getPlayerId,
+    getScoutId,
     getScout,
     login,
     saveFamily,
-    saveScout
+    saveScout,
+    updateProfileFamily,
+    updateProfileScout
 }

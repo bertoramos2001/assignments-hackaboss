@@ -10,8 +10,9 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const showProfile = async (req, res, next) => {
     const email = req.params.email;
     const role = req.params.role;
+    let id;
 
-    if (databaseFunctions.checkUserExists(email) < 1) {
+    if (await databaseFunctions.checkUserExists(email) < 1) {
         const userNotFoundError = new Error('usuario no encontrado');
         userNotFoundError.status = 404;
         next(userNotFoundError)
@@ -24,7 +25,8 @@ const showProfile = async (req, res, next) => {
         return;
     }
     if (role === 'ojeador') {
-        if (databaseFunctions.checkScoutCount(email) === 0) {
+        id = await databaseFunctions.getScoutId(email);
+        if (await databaseFunctions.checkScoutCount(email) === 0) {
             const accountTypeError = new Error(`No existe ninguna cuenta registrada como ojeador con este email`);
             accountTypeError.status = 404;
             next(accountTypeError);
@@ -32,7 +34,8 @@ const showProfile = async (req, res, next) => {
         }
     }
     if (role === 'familia') {
-        if (databaseFunctions.checkPlayerCount(email) === 0) {
+        id = await databaseFunctions.getPlayerId(email);
+        if (await databaseFunctions.checkPlayerCount(email) === 0) {
             const accountTypeError = new Error(`No existe ninguna cuenta registrada como familia con este email`);
             accountTypeError.status = 404;
             next(accountTypeError);
@@ -42,10 +45,10 @@ const showProfile = async (req, res, next) => {
 
     let responseDTO;
     if (role === 'ojeador') {
-        responseDTO = await databaseFunctions.getScout(email);
+        responseDTO = await databaseFunctions.getScout(id);
         
     } else if (role === 'familia') {
-        responseDTO = await databaseFunctions.getPlayer(email);
+        responseDTO = await databaseFunctions.getPlayer(id);
     }
 
     res.json(responseDTO)
@@ -54,22 +57,38 @@ const showProfile = async (req, res, next) => {
 const modifyProfileFamily = async (req, res, next) => {
     const { name, surname, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, position, strongLeg } = req.body;
     const email = req.params.email;
-    const user = bd.getUser(email); 
+    let id;
+
+    try {
+        id = await databaseFunctions.getPlayerId(email);
+        if (id === undefined) {
+            const accountError = new Error('error al encontrar la cuenta correspondiente al email introducido');
+            accountError.status = 400;
+            next(accountError);
+        }
+    } catch(e) {
+        const accountError = new Error('ha ocurrido algún error encontrando la cuenta');
+        accountError.status = 400;
+        console.log(e)
+        next(accountError);
+    }
 
     let avatarPerfil = '';
 
-    if (!req.file) {
-        const profileImageError = new Error('Debes añadir una foto de perfil');
-        profileImageError.status = 400;
-        next(profileImageError);
-    } else {
+    if (req.file) {
         avatarPerfil = req.file.path;
     }
-
-    if (!user) {
+    if (await databaseFunctions.checkUserExists(email) < 1) {
         const userNotFoundError = new Error('usuario no encontrado');
         userNotFoundError.status = 404;
         next(userNotFoundError)
+        return;
+    }
+
+    if (await databaseFunctions.checkPlayerCount(emailTutor) > 0) {
+        const duplicateEmailError = new Error('ya existe otra familia registrada con el mismo email');
+        duplicateEmailError.status = 400;
+        next(duplicateEmailError)
         return;
     }
 
@@ -80,14 +99,14 @@ const modifyProfileFamily = async (req, res, next) => {
         return;
     }
 
-    if (user.role === 'ojeador') {
-        const accountTypeError = new Error('No existe ninguna cuenta registrada como ojeador con este email');
+    if (await databaseFunctions.checkPlayerCount(email) < 1) {
+        const accountTypeError = new Error('No existe ninguna cuenta registrada como familia con este email');
         accountTypeError.status = 404;
         next(accountTypeError);
         return;
     }
 
-    let age = functions.ageDiff(new Date(birthDate), new Date());
+    let age = functions.ageDiff(birthDate);
 
     if (age > 18 || isNaN(age)) {
         const invalidParamsError = new Error('el jugador debe ser menor de edad');
@@ -108,30 +127,88 @@ const modifyProfileFamily = async (req, res, next) => {
         console.log('email enviado')
     }
 
-    bd.updateProfileFamily(user, functions.normalizeName(name), functions.normalizeName(surname), functions.normalizeName(nameTutor), functions.normalizeName(surnameTutor), emailTutor, gender, province, birthDate, actualClub, category, functions.parseBodyToArray(position), functions.parseBodyToArray(strongLeg), avatarPerfil);
+    const family = {
+        'nombreJugador': functions.normalizeName(name),
+        'apellidosJugador': functions.normalizeName(surname),
+        'nombreTutor': functions.normalizeName(nameTutor),
+        'apellidosTutor': functions.normalizeName(surnameTutor),
+        'emailTutor': emailTutor,
+        'sexo': gender,
+        'provincia': province,
+        'fechaNacimiento': birthDate,
+        'clubActual': actualClub,
+        'categoria': category,
+        'posicion': position,
+        'piernaBuena': strongLeg,
+        'avatar': avatarPerfil
+    }
+    let responseDTO;
+    if ( await databaseFunctions.updateProfileFamily(family, id)) {
+        responseDTO = {
+            'code': 200,
+            'description': 'Cuenta de familia actualizada correctamente',
+            'rol': 'familia',
+            'nombreJugador': functions.normalizeName(name),
+            'apellidosJugador': functions.normalizeName(surname),
+            'nombreTutor': functions.normalizeName(nameTutor),
+            'apellidosTutor': functions.normalizeName(surnameTutor),
+            'emailTutor': emailTutor,
+            'sexo': gender,
+            'provincia': province,
+            'fechaNacimiento': birthDate,
+            'clubActual': actualClub,
+            'categoria': category,
+            'posicion': position,
+            'piernaBuena': strongLeg,
+            'avatar': avatarPerfil
+        };
+    } else {
+        responseDTO = {
+            'code': 200,
+            'description': 'No se ha podido actualizar la cuenta de familia'
+        };
+    }
 
-    res.send();
+    //databaseFunctions.updateProfileFamily(family, id);
+
+    return res.status(responseDTO.code).json(responseDTO);
 }
 
 const modifyProfileScout = async (req, res, next) => {
     const { name, surname, email, gender, province, birthDate, actualClub, category, position, strongLeg } = req.body;
     const emailParams = req.params.email;
-    const user = bd.getUser(emailParams);
+    let id;
+
+    try {
+        id = await databaseFunctions.getScoutId(emailParams);
+        if (id === undefined) {
+            const accountError = new Error('error al encontrar la cuenta correspondiente al email introducido');
+            accountError.status = 400;
+            next(accountError);
+        }
+    } catch(e) {
+        const accountError = new Error('error al encontrar la cuenta correspondiente al email introducido');
+        accountError.status = 400;
+        next(accountError);
+    }
 
     let avatarPerfil = '';
 
-    if (!req.file) {
-        const profileImageError = new Error('Debes añadir una foto de perfil');
-        profileImageError.status = 400;
-        next(profileImageError);
-    } else {
+    if (req.file) {
         avatarPerfil = req.file.path;
     }
 
-    if (!user) {
+    if (await databaseFunctions.checkUserExists(emailParams) < 1) {
         const userNotFoundError = new Error('usuario no encontrado');
         userNotFoundError.status = 404;
         next(userNotFoundError)
+        return;
+    }
+
+    if (await databaseFunctions.checkScoutCount(email) > 0) {
+        const duplicateEmailError = new Error('ya existe otra familia registrada con el mismo email');
+        duplicateEmailError.status = 400;
+        next(duplicateEmailError)
         return;
     }
 
@@ -142,14 +219,14 @@ const modifyProfileScout = async (req, res, next) => {
         return;
     }
 
-    if (user.role === 'familia') {
-        const accountTypeError = new Error('No existe ninguna cuenta registrada como familia con este email');
+    if (await databaseFunctions.checkScoutCount(emailParams) < 1) {
+        const accountTypeError = new Error('No existe ninguna cuenta registrada como ojeador con este email');
         accountTypeError.status = 404;
         next(accountTypeError);
         return;
     }
 
-    let age = functions.ageDiff(new Date(birthDate), new Date());
+    let age = functions.ageDiff(birthDate);
 
     if (age < 18 || isNaN(age)) {
         const invalidParamsError = new Error('el ojeador debe ser mayor de edad');
@@ -170,9 +247,44 @@ const modifyProfileScout = async (req, res, next) => {
         console.log('email enviado')
     }
 
-    bd.updateProfileScout(user, functions.normalizeName(name), functions.normalizeName(surname), email, gender, province, birthDate, actualClub, functions.parseBodyToArray(category), functions.parseBodyToArray(position), functions.parseBodyToArray(strongLeg), avatarPerfil);
-
-    res.send()
+    const scout = {
+        'nombre': functions.normalizeName(name),
+        'apellidos': functions.normalizeName(surname),
+        'email': email,
+        'sexo': gender,
+        'provincia': province,
+        'fechaNacimiento': birthDate,
+        'clubActual': actualClub,
+        'categoriaBusca': category,
+        'posicionBusca': position,
+        'piernaBuenaBusca': strongLeg,
+        'avatar': avatarPerfil
+    }
+    let responseDTO;
+    if ( await databaseFunctions.updateProfileScout(scout, id)) {
+        responseDTO = {
+            'code': 200,
+            'description': 'Cuenta de familia actualizada correctamente',
+            'rol': 'ojeador',
+            'nombre': functions.normalizeName(name),
+            'apellidos': functions.normalizeName(surname),
+            'emailTutor': email,
+            'sexo': gender,
+            'provincia': province,
+            'fechaNacimiento': birthDate,
+            'clubActual': actualClub,
+            'categoria': category,
+            'posicion': position,
+            'piernaBuena': strongLeg,
+            'avatar': avatarPerfil
+        };
+    } else {
+        responseDTO = {
+            'code': 200,
+            'description': 'No se ha podido actualizar la cuenta de ojeador'
+        };
+    }
+    return res.status(responseDTO.code).json(responseDTO);
 }
 
 const changePassword = async (req, res, next) => {

@@ -9,13 +9,18 @@
 -- jugador_ojeador (#id, -id_jugador, -id_ojeador)
 
 
+SELECT * FROM ojeadores, jugadores;
+UPDATE jugadores SET nombre_jugador='ramon' WHERE email_tutor='randomexample@gmail.com';
 SELECT * FROM ojeadores;
 DELETE FROM jugadores WHERE sexo='male';
+SELECT * FROM jugadores WHERE email_tutor='randomexample@gmail.com';
 SELECT id FROM jugadores WHERE email_tutor='randomexample@gmail.com';
 SELECT COUNT(*) FROM jugadores WHERE email_tutor='randomexample@gmail.com' UNION SELECT COUNT(*) FROM ojeadores WHERE email='randomexample@gmail.com';
 SELECT COUNT(*) FROM jugadores WHERE email_tutor='randomexample@gmail.com';
 SELECT COUNT(*) FROM jugadores JUG, ojeadores OJ WHERE JUG.email_tutor='randomexample@gmail.com' OR OJ.email='examplerandom@gmail.com';
 SELECT id FROM jugadores WHERE email_tutor = 'randomexample@gmail.com' AND contrasena = SHA2('Salgue2001', 512);
+SELECT id from jugadores WHERE email_tutor='randomexample@gmail.com';
+SELECT sexo, COUNT(*) FROM ojeadores GROUP BY sexo;
 
 USE proyectoHAB;
 SET FOREIGN_KEY_CHECKS = 0;
