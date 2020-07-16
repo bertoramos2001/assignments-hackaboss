@@ -2,8 +2,10 @@ const bd = require("./bd_mock");
 const bcrypt = require('bcrypt');
 const functions = require('./functions');
 const sgMail = require('@sendgrid/mail');
+const jwt = require('jsonwebtoken');
 
 const databaseFunctions = require('./databaseFunctions');
+const database = require("../database");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -168,8 +170,6 @@ const modifyProfileFamily = async (req, res, next) => {
             'description': 'No se ha podido actualizar la cuenta de familia'
         };
     }
-
-    //databaseFunctions.updateProfileFamily(family, id);
 
     return res.status(responseDTO.code).json(responseDTO);
 }
@@ -341,57 +341,121 @@ const changePassword = async (req, res, next) => {
     res.send();
 }
 
-const addExperience = (req, res, next) => {
-    const { email } = req.params;
+const addExperience = async (req, res, next) => {
+    const { email, role } = req.params;
     const { nombreEquipo, anoInicio, anoFin, resumen } = req.body;
-    const user = bd.getUser(email);
 
-    if (!user) {
+    const { authorization } = req.headers;
+    const decodedToken = jwt.verify(authorization, process.env.SECRET);
+    req.auth = decodedToken;
+
+    if (await databaseFunctions.checkUserExists(email) < 1) {
         const userNotFoundError = new Error('usuario no encontrado');
         userNotFoundError.status = 404;
         next(userNotFoundError)
         return;
     }
+
     if (!nombreEquipo || !anoInicio || !anoFin || !resumen ) {
         const invalidParamsError = new Error('Debes rellenar todos los campos para añadir una experiencia');
         invalidParamsError.status = 400;
         next(invalidParamsError);
         return;
     }
-    const id = user.id;
 
-    bd.saveExperience(id, nombreEquipo, anoInicio, anoFin, resumen);
+    let responseDTO;
+    try {
+        if (role === 'ojeador') {
+            if (await databaseFunctions.saveExperienceScout(nombreEquipo, anoInicio, anoFin, resumen, decodedToken.id)) {
+                responseDTO = {
+                    'code': 200,
+                    'description': 'Experiencia añadida correctamente',
+                    'nombreEquipo': nombreEquipo,
+                    'anoInicio': anoInicio,
+                    'anoFin': anoFin,
+                    'resumen': resumen,
+                };
+            } else {
+                responseDTO = {
+                    'code': 200,
+                    'description': 'No se ha podido añadir la experiencia'
+                };
+            }
+        }
+        else if (role === 'familia') {
+            if (await databaseFunctions.saveExperiencePlayer(nombreEquipo, anoInicio, anoFin, resumen, decodedToken.id)) {
+                responseDTO = {
+                    'code': 200,
+                    'description': 'Experiencia añadida correctamente',
+                    'nombreEquipo': nombreEquipo,
+                    'anoInicio': anoInicio,
+                    'anoFin': anoFin,
+                    'resumen': resumen,
+                };
+            } else {
+                responseDTO = {
+                    'code': 200,
+                    'description': 'No se ha podido añadir la experiencia'
+                };
+            }
+        }
+    } catch(e) {
+        const experienceError = new Error('Ha habido algún error añadiendo la experiencia');
+        experienceError.status = 400;
+        next(experienceError);
+        return
+    }
 
-    res.send();
 
+    return res.status(responseDTO.code).json(responseDTO);
 }
 
-const showExperience = (req, res, next) => {
+const showExperience = async (req, res, next) => {
     const { email, role } = req.params;
     const user = bd.getUser(email);
-
-    if (!user) {
+    let userId;
+    //funcion que comb¡prueba si el usuario existe en la base de datos
+    if (await databaseFunctions.checkUserExists(email) < 1) {
         const userNotFoundError = new Error('usuario no encontrado');
         userNotFoundError.status = 404;
         next(userNotFoundError)
         return;
     }
-
+    //funcion que comprueba que el rol del usuario es familia u ojeador
     if (role !== 'familia' && role !== 'ojeador') {
         const differentAccountError = new Error(`No existe el tipo de cuenta ${role}`);
         differentAccountError.status = 400;
         next(differentAccountError);
         return;
     }
-
-    else if (role !== user.role) {
-        const accountTypeError = new Error(`No existe ninguna cuenta registrada como ${role} con este email`);
-        accountTypeError.status = 404;
-        next(accountTypeError);
-        return;
+    //dependiendo del tipo de cuenta del usuario, acudimos a una funcion u otra para conseguir su id
+    if (role === 'ojeador') {
+        userId = await databaseFunctions.getScoutId(email);
+    } else if (role === 'familia') {
+        userId = await databaseFunctions.getPlayerId(email);
     }
 
-    res.json(bd.getListOfExperiences(user.id));
+    let responseDTO;
+    //dependiendo del tipo de cuenta del usuario, acudimos a una funcion u otra para mostrar las experiencias (ya que no sabemos si el id es de ojeador o de familia a no ser que lo comprobemos)
+    try {
+
+        if (role === 'ojeador') {
+            responseDTO = await databaseFunctions.showScoutExperiences(userId);
+            responseDTO['code'] = 200;
+        } else if (role === 'familia') {
+            responseDTO = await databaseFunctions.showPlayerExperiences(userId);
+            responseDTO['code'] = 200;
+        }
+
+    } catch(e) {
+        console.log(e)
+        const experienceError = new Error('Ha habido algún error mostrando las experiencias');
+        experienceError.status = 400;
+        next(experienceError);
+        return
+    }
+
+    return res.status(responseDTO.code).json(responseDTO);
 }
 
 const deleteExperience = (req, res, next) => {

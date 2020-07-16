@@ -141,7 +141,7 @@ const saveScout = async (scout) => {
     return true;
 }
 
-const updateProfileFamily = async(family, id) => {
+const updateProfileFamily = async (family, id) => {
     const sql = 'UPDATE jugadores SET nombre_jugador=?, apellidos_jugador=?, nombre_tutor=?, apellidos_tutor=?, email_tutor=?, sexo=?, provincia=?, fecha_nacimiento=?, club_actual=?, categoria=?, posicion_principal=?, pierna_buena=?, avatar=? WHERE id=?';
     const connection = await database.connection();
     await connection.execute(sql, [family.nombreJugador, family.apellidosJugador, family.nombreTutor, family.apellidosTutor, family.emailTutor, family.sexo, family.provincia, family.fechaNacimiento, family.clubActual, family.categoria, family.posicion, family.piernaBuena, family.avatar, id]);
@@ -149,12 +149,44 @@ const updateProfileFamily = async(family, id) => {
     return true;
 }
 
-const updateProfileScout = async(scout, id) => {
+const updateProfileScout = async (scout, id) => {
     const sql = 'UPDATE ojeadores SET nombre=?, apellidos=?, email=?, sexo=?, provincia=?, fecha_nacimiento=?, club_actual=?, categoria_busca=?, posicion_principal_busca=?, pierna_buena_busca=?, avatar=? WHERE id=?';
     const connection = await database.connection();
     await connection.execute(sql, [scout.nombre, scout.apellidos, scout.email, scout.sexo, scout.provincia, scout.fechaNacimiento, scout.clubActual, scout.categoriaBusca, scout.posicionBusca, scout.piernaBuenaBusca, scout.avatar, id]);
 
     return true;
+}
+
+const saveExperienceScout = async (nombreEquipo, anoInicio, anoFin, resumen, idUser) => {
+    const sql = 'INSERT INTO experiencias (nombre_equipo, ano_inicio, ano_fin, resumen, id_ojeador) VALUES (?, ?, ?, ?, ?)';
+    const connection = await database.connection();
+    await connection.execute(sql, [nombreEquipo, anoInicio, anoFin, resumen, idUser]);
+
+    return true;
+}
+
+const saveExperiencePlayer = async (nombreEquipo, anoInicio, anoFin, resumen, idUser) => {
+    const sql = 'INSERT INTO experiencias (nombre_equipo, ano_inicio, ano_fin, resumen, id_jugador) VALUES (?, ?, ?, ?, ?)';
+    const connection = await database.connection();
+    await connection.execute(sql, [nombreEquipo, anoInicio, anoFin, resumen, idUser]);
+
+    return true;
+}
+
+const showScoutExperiences = async (idUser) => {
+    const sql = 'SELECT nombre_equipo, ano_inicio, ano_fin FROM experiencias WHERE id_ojeador=?'
+    const connection = await database.connection();
+    const [rows] = await connection.execute(sql, [idUser]);
+
+    return rows;
+}
+
+const showPlayerExperiences = async (idUser) => {
+    const sql = 'SELECT nombre_equipo, ano_inicio, ano_fin FROM experiencias WHERE id_jugador=?'
+    const connection = await database.connection();
+    const [rows] = await connection.execute(sql, [idUser]);
+
+    return rows;
 }
 
 module.exports = {
@@ -169,7 +201,11 @@ module.exports = {
     getScout,
     login,
     saveFamily,
+    saveExperienceScout,
+    saveExperiencePlayer,
     saveScout,
+    showPlayerExperiences,
+    showScoutExperiences,
     updateProfileFamily,
     updateProfileScout
 }

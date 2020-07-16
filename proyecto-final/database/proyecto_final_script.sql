@@ -11,7 +11,7 @@
 
 SELECT * FROM ojeadores, jugadores;
 UPDATE jugadores SET nombre_jugador='ramon' WHERE email_tutor='randomexample@gmail.com';
-SELECT * FROM ojeadores;
+SELECT * FROM jugadores;
 DELETE FROM jugadores WHERE sexo='male';
 SELECT * FROM jugadores WHERE email_tutor='randomexample@gmail.com';
 SELECT id FROM jugadores WHERE email_tutor='randomexample@gmail.com';
@@ -21,6 +21,8 @@ SELECT COUNT(*) FROM jugadores JUG, ojeadores OJ WHERE JUG.email_tutor='randomex
 SELECT id FROM jugadores WHERE email_tutor = 'randomexample@gmail.com' AND contrasena = SHA2('Salgue2001', 512);
 SELECT id from jugadores WHERE email_tutor='randomexample@gmail.com';
 SELECT sexo, COUNT(*) FROM ojeadores GROUP BY sexo;
+INSERT INTO experiencias (nombre_equipo, ano_inicio, ano_fin, resumen) VALUES ('Real Madrid', 2015, 2017, 'Entrené al equipo juvenil del real madrid durante dos años, consiguiendo ganar la liga en una ocasion y llegando a la final de la copa del rey en otra');
+SELECT * FROM experiencias;
 
 USE proyectoHAB;
 SET FOREIGN_KEY_CHECKS = 0;

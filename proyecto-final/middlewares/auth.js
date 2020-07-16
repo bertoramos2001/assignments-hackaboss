@@ -48,7 +48,7 @@ const canUpdateProfile = async (req, res, next) => {
             id = await databaseFunctions.getPlayerId(email);
             rol = 'familia';
             if (databaseFunctions.checkPlayerCount(email) < 1) {
-                const authError = new Error('Token no válido, la cuenta para entrar aquí debe ser ls familia propietaria de la cuenta');
+                const authError = new Error('Token no válido, la cuenta para entrar aquí debe ser la familia propietaria de la cuenta');
                 authError.status = 401;
                 next(authError);
                 return;
