@@ -1,7 +1,7 @@
 <template>
   <div>
       <vue-headful title="Top Artistas"/>
-      <h1>Los 50 artistas más escuchados en España</h1>
+      <h1>🎶 Los 50 artistas más escuchados en España 🎶</h1>
       <topartists :artists="artists"/>
   </div>
 </template>
@@ -29,5 +29,7 @@ export default {
 </script>
 
 <style scoped>
-
+h1 {
+    padding: 0 25px 25px 25px;
+}
 </style>

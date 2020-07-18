@@ -6,7 +6,8 @@
           <table>
               <tr>
                 <td class="posicion">
-                    <span class="numero">{{index + 1 }}</span>
+                    <!-- diferenciamos la longitud de los numeros para que el fondo quede lo mas aproximado a un circulo, ya que cada uno tiene diferente anchura -->
+                    <span :class="{ tinyNumber:index < 9, smallNumber:index > 8, bigNumber:index > 38}" class="numero">{{ index + 1 }}</span>
                 </td>
                 <td>
                     <p><span class="title">TAG:</span> {{ tag.name }}</p>
@@ -46,11 +47,20 @@ li {
     max-width: 54px;
 }
 .numero {
-    padding: 1rem 1.75rem 1rem 1.75rem;
+    padding: 1rem 2rem 1rem 2rem;
     color: #42b983;
     background-color: #1D232A;
     border: 0.35rem solid #42b983;
     border-radius: 50%;
+}
+.tinyNumber {
+    padding: 1rem 2.15rem 1rem 2.15rem;
+}
+.smallNumber {
+    padding: 1rem 1.5rem 1rem 1.5rem;
+}
+.bigNumber {
+    padding: 1rem 1.15rem 1rem 1.15rem;
 }
 .title {
     font-weight: 600;

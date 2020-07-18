@@ -1,4 +1,6 @@
 # hackamusic
+# Información importante sobre la entrega👇
+En la vista de artistas, al haber ordenado todo por index en lugar de por id (ya qu no tienen id), cuando buscamos un artista, este no aparecerá con su posición original, sino que aparecerá con su posición en la nueva lista.
 
 ## Project setup
 ```

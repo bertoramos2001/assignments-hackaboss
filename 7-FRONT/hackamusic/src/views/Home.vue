@@ -2,7 +2,7 @@
 <!-- En el div de vue, añadimos los componentes que queremos que se vean en la vista -->
   <div class="home">
     <vue-headful title="Top Etiquetas | Home"/>
-    <h1>Las etiquetas más utilizadas</h1>
+    <h1>🎧 Las etiquetas más utilizadas 🎧</h1>
     <toptags :tags="tags"/>
   </div>
 </template>
@@ -28,3 +28,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+h1 {
+  padding: 0 25px 25px 25px;
+}
+</style>

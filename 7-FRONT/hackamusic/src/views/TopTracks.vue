@@ -1,7 +1,7 @@
 <template>
   <div>
       <vue-headful title="Top Canciones"/>
-      <h1>Las 50 canciones más escuchadas en España</h1>
+      <h1>🎵 Las 50 canciones más escuchadas en España 🎵</h1>
       <toptracks :tracks="tracks"/>
   </div>
 </template>
@@ -29,5 +29,7 @@ export default {
 </script>
 
 <style scoped>
-
+h1 {
+    padding: 0 25px 25px 25px;
+}
 </style>
