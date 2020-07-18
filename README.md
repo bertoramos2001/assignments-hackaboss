@@ -34,3 +34,6 @@ Plataforma donde conectamos jóvenes futbolistas con ojeadores,  teniendo los pr
 
  ## 6.MySQL
  -**entrega 1:** Base de datos de web que gestiona reservas en restaurantes durante la pandemia
+
+ ## 7.VUE.JS
+ -**entrega 1:** Plataforma 'Hack a Music', en la que recibimos datos de la API de Lastfm y los mostramos en diferentes vistas. Entre los datos mostrados se encuentran las canciones y artistas más escuchados en España o los tags de música más utilizados a nivel globals
