@@ -9,7 +9,7 @@
 -- jugador_ojeador (#id, -id_jugador, -id_ojeador)
 
 
-SELECT * FROM ojeadores, jugadores;
+SELECT * FROM jugadores;
 UPDATE jugadores SET nombre_jugador='ramon' WHERE email_tutor='randomexample@gmail.com';
 SELECT * FROM jugadores;
 DELETE FROM jugadores WHERE sexo='male';
@@ -23,6 +23,10 @@ SELECT id from jugadores WHERE email_tutor='randomexample@gmail.com';
 SELECT sexo, COUNT(*) FROM ojeadores GROUP BY sexo;
 INSERT INTO experiencias (nombre_equipo, ano_inicio, ano_fin, resumen) VALUES ('Real Madrid', 2015, 2017, 'Entrené al equipo juvenil del real madrid durante dos años, consiguiendo ganar la liga en una ocasion y llegando a la final de la copa del rey en otra');
 SELECT * FROM experiencias;
+DELETE FROM experiencias WHERE id=8 AND id_jugador=8;
+SELECT COUNT(*) FROM jugadores WHERE email_tutor='randomexample@gmail.comm' AND contrasena=SHA1('salgue2001');
+SELECT COUNT(*) FROM jugadores WHERE contrasena=SHA1('salgue2001');
+
 
 USE proyectoHAB;
 SET FOREIGN_KEY_CHECKS = 0;

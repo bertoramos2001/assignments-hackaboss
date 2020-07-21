@@ -189,10 +189,60 @@ const showPlayerExperiences = async (idUser) => {
     return rows;
 }
 
+const deletePlayerExperience = async (idUser, idExperience) => {
+    const sql = 'DELETE FROM experiencias WHERE id=? AND id_jugador=?'
+    const connection = await database.connection();
+    await connection.execute(sql, [idExperience, idUser]);
+
+    return true;
+}
+
+const deleteScoutExperience = async (idUser, idExperience) => {
+    const sql = 'DELETE FROM experiencias WHERE id=? AND id_ojeador=?'
+    const connection = await database.connection();
+    await connection.execute(sql, [idExperience, idUser]);
+
+    return true;
+}
+
+const playerPasswordEqualsCount = async (email, oldPassword) => {
+    const sql = 'SELECT COUNT(*) FROM jugadores WHERE email_tutor = ? AND contrasena = SHA1(?)'
+    const connection = await database.connection();
+    const [rows] = await connection.execute(sql, [email, oldPassword]);
+
+    return (rows[0]['COUNT(*)']);
+}
+
+const scoutPasswordEqualsCount = async (email, oldPassword) => {
+    const sql = 'SELECT COUNT(*) FROM ojeadores WHERE email = ? AND contrasena = SHA1(?)'
+    const connection = await database.connection();
+    const [rows] = await connection.execute(sql, [email, oldPassword]);
+
+    return (rows[0]['COUNT(*)']);
+}
+
+const updatePasswordFamily = async (newPassword, email) => {
+    const sql = 'UPDATE jugadores SET contrasena=SHA1(?) WHERE email_tutor=?'
+    const connection = await database.connection();
+    await connection.execute(sql, [newPassword, email])
+
+    return true;
+}
+
+const updatePasswordScout = async (newPassword, email) => {
+    const sql = 'UPDATE ojeadores SET contrasena=SHA1(?) WHERE email=?'
+    const connection = await database.connection();
+    await connection.execute(sql, [newPassword, email])
+
+    return true;
+}
+
 module.exports = {
     checkPlayerCount,
     checkScoutCount,
     checkUserExists,
+    deletePlayerExperience,
+    deleteScoutExperience,
     getPlayer,
     getPlayerEmail,
     getScoutEmail,
@@ -200,6 +250,8 @@ module.exports = {
     getScoutId,
     getScout,
     login,
+    playerPasswordEqualsCount,
+    scoutPasswordEqualsCount,
     saveFamily,
     saveExperienceScout,
     saveExperiencePlayer,
@@ -207,5 +259,7 @@ module.exports = {
     showPlayerExperiences,
     showScoutExperiences,
     updateProfileFamily,
-    updateProfileScout
+    updateProfileScout,
+    updatePasswordFamily,
+    updatePasswordScout
 }

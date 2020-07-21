@@ -88,7 +88,7 @@ app.put('/perfil/editar/ojeador/:email/home', isAuthenticated, canUpdateProfile,
 app.get('/perfil/:role/:email/experiencia', showExperience);
 app.post('/perfil/editar/:role/:email/experiencia', isAuthenticated, canUpdateProfile, addExperience);
 app.delete('/perfil/editar/:role/:email/experiencia/:idExperiencia', isAuthenticated, canUpdateProfile, deleteExperience);
-app.patch('/perfil/editar/:role/:email/cambioContrasena', isAuthenticated, canUpdateProfile, changePassword);
+app.patch('/perfil/editar/:role/:email/cambio-contrasena', isAuthenticated, canUpdateProfile, changePassword);
 app.post('/perfil/editar/familia/:email/videos', isAuthenticated, canUpdateProfile, uploadVideo.single('videoFamilia'), postVideo);
 app.get('/perfil/familia/:email/videos', showVideos);
 app.delete('/perfil/editar/familia/:email/videos/:idVideo', isAuthenticated, canUpdateProfile, deleteVideo);
