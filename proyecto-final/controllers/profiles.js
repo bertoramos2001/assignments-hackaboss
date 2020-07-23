@@ -1,12 +1,9 @@
 //importando las librerias de npm usadas en este archivo, asi como las rutas a otros archivos
-const bd = require("./bd_mock");
-const bcrypt = require('bcrypt');
 const functions = require('./functions');
 const sgMail = require('@sendgrid/mail');
 const jwt = require('jsonwebtoken');
 
 const databaseFunctions = require('./databaseFunctions');
-const database = require("../database");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 //funcion que muestra el perfil, llamando al sql de familia u ojeador segun el caso
@@ -294,7 +291,6 @@ const modifyProfileScout = async (req, res, next) => {
 // funcion para cambiar la contraseña
 const changePassword = async (req, res, next) => {
     const { email, role } = req.params;
-    const user = bd.getUser(email);
     const { oldPassword, newPassword, confirmNewPassword } = req.body;
     let responseDTO;
 
@@ -395,6 +391,7 @@ const addExperience = async (req, res, next) => {
     const { authorization } = req.headers;
     const decodedToken = jwt.verify(authorization, process.env.SECRET);
     req.auth = decodedToken;
+
        //comprobando que el usuario existe en nuestra base de datos
     if (await databaseFunctions.checkUserExists(email) < 1) {
         const userNotFoundError = new Error('usuario no encontrado');
@@ -566,6 +563,11 @@ const deleteExperience = async (req, res, next) => {
             if(await databaseFunctions.deleteScoutExperience(userId, idExperiencia)) {
                 responseDTO = {
                     'descripcion': 'Se ha borrado correctamente la experiencia',
+                    'code': 200
+                }
+            }  else {
+                responseDTO = {
+                    'descripcion': 'No se ha podido borrar correctamente la experiencia',
                     'code': 200
                 }
             }

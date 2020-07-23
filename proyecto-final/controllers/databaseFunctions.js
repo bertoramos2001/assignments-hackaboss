@@ -237,12 +237,37 @@ const updatePasswordScout = async (newPassword, email) => {
     return true;
 }
 
+const saveVideo = async (titulo, descripcion, videoFamilia, id) => {
+    const sql = 'INSERT INTO videos (titulo, descripcion, url_video, id_jugador) VALUES (?, ?, ?, ?)'
+    const connection = await database.connection();
+    await connection.execute(sql, [titulo, descripcion, videoFamilia, id]);
+
+    return true;
+}
+
+const showVideos = async (idJugador) => {
+    const sql = 'SELECT titulo, descripcion, url_video FROM videos WHERE id_jugador=?'
+    const connection = await database.connection();
+    const [rows] = await connection.execute(sql, [idJugador]);
+
+    return rows;
+}
+
+const deleteVideo = async (idJugador, idVideo) => {
+    const sql = 'DELETE FROM videos WHERE id_jugador=? AND id=?'
+    const connection = await database.connection();
+    await connection.execute(sql, [idJugador, idVideo]);
+
+    return true;
+}
+
 module.exports = {
     checkPlayerCount,
     checkScoutCount,
     checkUserExists,
     deletePlayerExperience,
     deleteScoutExperience,
+    deleteVideo,
     getPlayer,
     getPlayerEmail,
     getScoutEmail,
@@ -256,8 +281,10 @@ module.exports = {
     saveExperienceScout,
     saveExperiencePlayer,
     saveScout,
+    saveVideo,
     showPlayerExperiences,
     showScoutExperiences,
+    showVideos,
     updateProfileFamily,
     updateProfileScout,
     updatePasswordFamily,
