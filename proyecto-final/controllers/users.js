@@ -281,108 +281,83 @@ const loginScout = async (req, res, next) => {
     res.status(responseDTO.code).json({responseDTO, token})
 }
 
-const searchUsers = (req, res) => {
-    const nombre = req.query['nombre'];
-    const apellido = req.query['apellido'];
-    const genero = req.query['genero'];
+const searchUsers = async (req, res, next) => { // en esta funcion, dependiendo de si el usuario es ojeador o familia se hacen unas llamadas u otras, debido a que algunas variables tienen nombres distintos en las tablas de ojeadores y jugadores
     const rol = req.query['rol'];
+    const nombre = req.query['nombre'];
+    const apellidos = req.query['apellidos'];
+    const genero = req.query['genero'];
     const provincia = req.query['provincia'];
     const edadMinima = req.query['edadMinima'];
     const edadMaxima = req.query['edadMaxima'];
     const posicion = req.query['posicion'];
     const categoria = req.query['categoria'];
     const strongLeg = req.query['piernaBuena'];
-    let listaUsuarios = bd.readList();
+    let listaUsuarios;
 
-    if ( nombre ) { //si existe nombre
-        listaUsuarios = listaUsuarios.filter( usuario => (((usuario.name).trim()).toLowerCase()).replace(' ', '-') === nombre);
-    }
-    if ( apellido ) {
-        listaUsuarios = listaUsuarios.filter( usuario => (((usuario.surname).trim()).toLowerCase()).replace(' ', '-') === apellido);
-    }
-    if ( genero ) {
-        listaUsuarios = listaUsuarios.filter( usuario => usuario.gender === genero);
-    }
     if ( rol ) {
-        listaUsuarios = listaUsuarios.filter( usuario => usuario.role === rol);
+        if (rol === 'familia') {
+            listaUsuarios = await databaseFunctions.getPlayerList();
+        } 
+        if (rol === 'ojeador') {
+            listaUsuarios = await databaseFunctions.getScoutList();
+        } else if ( rol !== 'ojeador' && rol !=='familia') {
+            const rolError = new Error('No existe el rol que estás buscando')
+            rolErrlr.status = 404
+            next(rolError)
+            return;
+        }
+    } else if ( !rol ) {
+        const noRoleError = new Error('Es necesario especificar el rol para poder buscar usuarios');
+        noRoleError.status = 400;
+        next(noRoleError)
+        return;
     }
-    if ( provincia ) {
-        listaUsuarios = listaUsuarios.filter( usuario => (usuario.province).toLowerCase() === provincia);
+    if ( nombre ) { //si existe nombre
+        if ( rol === 'familia') {
+            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.nombre_jugador).trim()).toLowerCase()).replace(' ', '-') === nombre);
+        } else if (rol === 'ojeador') {
+            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.nombre).trim()).toLowerCase()).replace(' ', '-') === nombre);
+        }
     }
-    if ( edadMinima ) {
-        listaUsuarios = listaUsuarios.filter( usuario => parseInt(functions.ageDiff(usuario.birthDate)) >= parseInt(edadMinima));
+    if ( apellidos ) { //si existe apellido
+        if ( rol === 'familia') {
+            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.apellidos_jugador).trim()).toLowerCase()).replace(' ', '-') === apellidos);
+        } else if (rol === 'ojeador') {
+            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.apellidos).trim()).toLowerCase()).replace(' ', '-') === apellidos);
+        }
     }
-    if ( edadMaxima ) {
-        listaUsuarios = listaUsuarios.filter( usuario => parseInt(functions.ageDiff(usuario.birthDate)) <= parseInt(edadMaxima));
+    if ( genero ) { //si existe generp
+        listaUsuarios = listaUsuarios.filter( usuario => usuario.sexo === genero);
     }
-    if ( posicion ) { //teniendo en cuenta que posicion puede o no ser un array (dependiendo del numero de filtros que pase el usuario) y que lista de usuarios también, hice un bucle anidado
-        listaUsuarios = listaUsuarios.filter( usuario => {
-            if (Array.isArray(posicion)) {
-                let count = 0;
-                for ( let i = 0; i < (usuario.position).length; i++ ) {
-                    for ( let j = 0; j < posicion.length; j++) {
-                        if (((((usuario.position[i]).trim()).toLowerCase()).replace(' ','-')) === posicion[j]) {
-                            count++;
-                        }
-                    }
-                }
-                return (count > 0);
-            } else {
-                let count = 0;
-                for ( let i = 0; i < (usuario.position).length; i++ ) {
-                    if (((((usuario.position[i]).trim()).toLowerCase()).replace(' ','-')) === posicion) {
-                        count++;
-                    }
-                }
-                return (count > 0);
-            }
-        })
+    if ( provincia ) { //si existe provincia
+        listaUsuarios = listaUsuarios.filter( usuario => (usuario.provincia).toLowerCase() === provincia);
     }
-    if ( strongLeg ) { //teniendo en cuenta que pierna buena puede o no ser un array (dependiendo del numero de filtros que pase el usuario) y que lista de usuarios también, hice un bucle anidado
-        listaUsuarios = listaUsuarios.filter( usuario => {
-            if (Array.isArray(strongLeg)) {
-                let count = 0;
-                for ( let i = 0; i < (usuario.strongLeg).length; i++ ) {
-                    for ( let j = 0; j < strongLeg.length; j++) {
-                        if (((((usuario.strongLeg[i]).trim()).toLowerCase()).replace(' ','-')) === strongLeg[j]) {
-                            count++;
-                        }
-                    }
-                }
-                return (count > 0);
-            } else {
-                let count = 0;
-                for ( let i = 0; i < (usuario.strongLeg).length; i++ ) {
-                    if (((((usuario.strongLeg[i]).trim()).toLowerCase()).replace(' ','-')) === strongLeg) {
-                        count++;
-                    }
-                }
-                return (count > 0);
-            }
-        })
+    if ( edadMinima ) { //si existe edad minima
+        listaUsuarios = listaUsuarios.filter( usuario => parseInt(functions.ageDiff(usuario.fecha_nacimiento)) >= parseInt(edadMinima));
     }
-    if (categoria) { //teniendo en cuenta que categoria puede o no ser un array (dependiendo del numero de filtros que pase el usuario) y que lista de usuarios también, hice un bucle anidado
-        listaUsuarios = listaUsuarios.filter( usuario => {
-            if (Array.isArray(categoria)) {
-                let count = 0;
-                for ( let i = 0; i < (usuario.category).length; i++ ) {
-                    for ( let j = 0; j < categoria.length; j++) {
-                        if (((((usuario.category[i]).trim()).toLowerCase()).replace(' ','-')) === categoria[j]) {
-                            count++;
-                        }
-                    }
-                }
-                return (count > 0);
-            } else {
-                let count = 0;
-                for ( let i = 0; i < (usuario.category).length; i++ ) {
-                    if (((((usuario.category[i]).trim()).toLowerCase()).replace(' ','-')) === categoria) {
-                        count++;
-                    }
-                }
-                return (count > 0);
-            }
-        })
+    if ( edadMaxima ) { //si existe edad maxima
+        listaUsuarios = listaUsuarios.filter( usuario => parseInt(functions.ageDiff(usuario.fecha_nacimiento)) <= parseInt(edadMaxima));
+    }
+    if ( posicion ) {  //si existe posicion
+        if ( rol === 'familia') {
+            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.posicion_principal).trim()).toLowerCase()).replace(' ', '-') === posicion);
+        } else if (rol === 'ojeador') {
+            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.posicion_principal_busca).trim()).toLowerCase()).replace(' ', '-') === posicion);
+        }
+    }
+    if ( strongLeg ) { //si existe pierna fuerte
+        if ( rol === 'familia') {
+            listaUsuarios = listaUsuarios.filter( usuario => usuario.pierna_buena === strongLeg);
+        } else if (rol === 'ojeador') {
+            listaUsuarios = listaUsuarios.filter( usuario => usuario.pierna_buena_busca === strongLeg);
+        }
+    }
+    if (categoria) {  //si existe categoria
+        if ( rol === 'familia') {
+            listaUsuarios = listaUsuarios.filter( usuario => usuario.categoria === categoria);
+        } else if (rol === 'ojeador') {
+            listaUsuarios = listaUsuarios.filter( usuario => usuario.categoria_busca === categoria);
+        }
     }
 
     res.json(listaUsuarios);

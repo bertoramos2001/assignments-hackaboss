@@ -140,7 +140,7 @@ const saveScout = async (scout) => {
 
     return true;
 }
-
+//actualizar el perfil de familia (sin cambio de contraseña)
 const updateProfileFamily = async (family, id) => {
     const sql = 'UPDATE jugadores SET nombre_jugador=?, apellidos_jugador=?, nombre_tutor=?, apellidos_tutor=?, email_tutor=?, sexo=?, provincia=?, fecha_nacimiento=?, club_actual=?, categoria=?, posicion_principal=?, pierna_buena=?, avatar=? WHERE id=?';
     const connection = await database.connection();
@@ -148,7 +148,7 @@ const updateProfileFamily = async (family, id) => {
 
     return true;
 }
-
+//actualizar el perfil de ojeador (sin cambio de contraseña)
 const updateProfileScout = async (scout, id) => {
     const sql = 'UPDATE ojeadores SET nombre=?, apellidos=?, email=?, sexo=?, provincia=?, fecha_nacimiento=?, club_actual=?, categoria_busca=?, posicion_principal_busca=?, pierna_buena_busca=?, avatar=? WHERE id=?';
     const connection = await database.connection();
@@ -156,7 +156,7 @@ const updateProfileScout = async (scout, id) => {
 
     return true;
 }
-
+//guardar experiencia de ojeador
 const saveExperienceScout = async (nombreEquipo, anoInicio, anoFin, resumen, idUser) => {
     const sql = 'INSERT INTO experiencias (nombre_equipo, ano_inicio, ano_fin, resumen, id_ojeador) VALUES (?, ?, ?, ?, ?)';
     const connection = await database.connection();
@@ -164,7 +164,7 @@ const saveExperienceScout = async (nombreEquipo, anoInicio, anoFin, resumen, idU
 
     return true;
 }
-
+//guardad experiencia de jugador
 const saveExperiencePlayer = async (nombreEquipo, anoInicio, anoFin, resumen, idUser) => {
     const sql = 'INSERT INTO experiencias (nombre_equipo, ano_inicio, ano_fin, resumen, id_jugador) VALUES (?, ?, ?, ?, ?)';
     const connection = await database.connection();
@@ -172,7 +172,7 @@ const saveExperiencePlayer = async (nombreEquipo, anoInicio, anoFin, resumen, id
 
     return true;
 }
-
+//mostrar experiencias de ojeador
 const showScoutExperiences = async (idUser) => {
     const sql = 'SELECT nombre_equipo, ano_inicio, ano_fin FROM experiencias WHERE id_ojeador=?'
     const connection = await database.connection();
@@ -180,7 +180,7 @@ const showScoutExperiences = async (idUser) => {
 
     return rows;
 }
-
+//mostrar experiencias de jugador
 const showPlayerExperiences = async (idUser) => {
     const sql = 'SELECT nombre_equipo, ano_inicio, ano_fin FROM experiencias WHERE id_jugador=?'
     const connection = await database.connection();
@@ -188,7 +188,7 @@ const showPlayerExperiences = async (idUser) => {
 
     return rows;
 }
-
+//borrar experiencias de jugador
 const deletePlayerExperience = async (idUser, idExperience) => {
     const sql = 'DELETE FROM experiencias WHERE id=? AND id_jugador=?'
     const connection = await database.connection();
@@ -196,7 +196,7 @@ const deletePlayerExperience = async (idUser, idExperience) => {
 
     return true;
 }
-
+//borrar experiencias de ojeador
 const deleteScoutExperience = async (idUser, idExperience) => {
     const sql = 'DELETE FROM experiencias WHERE id=? AND id_ojeador=?'
     const connection = await database.connection();
@@ -204,7 +204,7 @@ const deleteScoutExperience = async (idUser, idExperience) => {
 
     return true;
 }
-
+//comprobar la cuenta de jugadores que coincide la contraseña por la introducida
 const playerPasswordEqualsCount = async (email, oldPassword) => {
     const sql = 'SELECT COUNT(*) FROM jugadores WHERE email_tutor = ? AND contrasena = SHA1(?)'
     const connection = await database.connection();
@@ -212,7 +212,7 @@ const playerPasswordEqualsCount = async (email, oldPassword) => {
 
     return (rows[0]['COUNT(*)']);
 }
-
+//comprobar la cuenta de ojeadores que coincide la contraseña por la introducida
 const scoutPasswordEqualsCount = async (email, oldPassword) => {
     const sql = 'SELECT COUNT(*) FROM ojeadores WHERE email = ? AND contrasena = SHA1(?)'
     const connection = await database.connection();
@@ -220,7 +220,7 @@ const scoutPasswordEqualsCount = async (email, oldPassword) => {
 
     return (rows[0]['COUNT(*)']);
 }
-
+//actualizar contraseña de jugador
 const updatePasswordFamily = async (newPassword, email) => {
     const sql = 'UPDATE jugadores SET contrasena=SHA1(?) WHERE email_tutor=?'
     const connection = await database.connection();
@@ -228,7 +228,7 @@ const updatePasswordFamily = async (newPassword, email) => {
 
     return true;
 }
-
+//actualizar contraseña de ojeador
 const updatePasswordScout = async (newPassword, email) => {
     const sql = 'UPDATE ojeadores SET contrasena=SHA1(?) WHERE email=?'
     const connection = await database.connection();
@@ -236,7 +236,7 @@ const updatePasswordScout = async (newPassword, email) => {
 
     return true;
 }
-
+// guardad video en la bd
 const saveVideo = async (titulo, descripcion, videoFamilia, id) => {
     const sql = 'INSERT INTO videos (titulo, descripcion, url_video, id_jugador) VALUES (?, ?, ?, ?)'
     const connection = await database.connection();
@@ -244,7 +244,7 @@ const saveVideo = async (titulo, descripcion, videoFamilia, id) => {
 
     return true;
 }
-
+//mostrar videos de cierta familia (especificando el id)
 const showVideos = async (idJugador) => {
     const sql = 'SELECT titulo, descripcion, url_video FROM videos WHERE id_jugador=?'
     const connection = await database.connection();
@@ -252,13 +252,29 @@ const showVideos = async (idJugador) => {
 
     return rows;
 }
-
+// borrar video (especificando el id del video a borrar)
 const deleteVideo = async (idJugador, idVideo) => {
     const sql = 'DELETE FROM videos WHERE id_jugador=? AND id=?'
     const connection = await database.connection();
     await connection.execute(sql, [idJugador, idVideo]);
 
     return true;
+}
+// obtener toda la lista de jugadores
+const getPlayerList = async () => {
+    const sql = 'SELECT * FROM jugadores'
+    const connection = await database.connection();
+    const [rows] = await connection.execute(sql)
+
+    return rows;
+}
+//obtener toda la lista de ojeadores
+const getScoutList = async () => {
+    const sql = 'SELECT * FROM ojeadores'
+    const connection = await database.connection();
+    const [rows] = await connection.execute(sql)
+
+    return rows;
 }
 
 module.exports = {
@@ -271,7 +287,9 @@ module.exports = {
     getPlayer,
     getPlayerEmail,
     getScoutEmail,
+    getScoutList,
     getPlayerId,
+    getPlayerList,
     getScoutId,
     getScout,
     login,

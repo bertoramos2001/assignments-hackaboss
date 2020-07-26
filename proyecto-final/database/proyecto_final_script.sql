@@ -24,9 +24,11 @@ SELECT sexo, COUNT(*) FROM ojeadores GROUP BY sexo;
 INSERT INTO experiencias (nombre_equipo, ano_inicio, ano_fin, resumen) VALUES ('Real Madrid', 2015, 2017, 'Entrené al equipo juvenil del real madrid durante dos años, consiguiendo ganar la liga en una ocasion y llegando a la final de la copa del rey en otra');
 SELECT * FROM experiencias;
 DELETE FROM experiencias WHERE id=8 AND id_jugador=8;
-SELECT COUNT(*) FROM jugadores WHERE email_tutor='randomexample@gmail.comm' AND contrasena=SHA1('salgue2001');
-SELECT COUNT(*) FROM jugadores WHERE contrasena=SHA1('salgue2001');
-
+SELECT COUNT(*) FROM jugadores WHERE email_tutor='randomexample@gmail.comm' AND contrasena=SHA1('Salgue2001');
+SELECT COUNT(*) FROM jugadores WHERE contrasena=SHA1('Salgue2001');
+INSERT INTO videos (titulo, descripcion, url_video) VALUES ('Video profesional', 'Video muy profesional en el que marco gol', 'dashkjajhkasdhkjlahjk');
+SELECT * FROM videos;
+SELECT * FROM jugadores WHERE sexo='';
 
 USE proyectoHAB;
 SET FOREIGN_KEY_CHECKS = 0;
