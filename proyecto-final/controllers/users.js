@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const validator = require('validator');
 const sgMail = require('@sendgrid/mail');
@@ -7,7 +6,6 @@ const databaseFunctions = require('./databaseFunctions');
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const bd = require('./bd_mock');   //empleamos un archivo de js temporalmente como si fuera la base de datos
 const functions = require('./functions')
 
 const registerScout = async (req, res, next) => {

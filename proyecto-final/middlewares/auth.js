@@ -1,4 +1,3 @@
-const bd = require('./../controllers/bd_mock');
 const databaseFunctions = require('./../controllers/databaseFunctions');
 
 require('dotenv').config();

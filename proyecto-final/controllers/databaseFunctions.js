@@ -276,6 +276,30 @@ const getScoutList = async () => {
 
     return rows;
 }
+//añadir un contrato a la tabla de contratos de nuestra base de datos
+const saveContract = async (mensaje, idOjeador, idFamilia) => {
+    const sql = 'INSERT INTO contratos (mensaje, id_ojeador, id_jugador) VALUES (?, ?, ?)'
+    const connection = await database.connection();
+    await connection.execute(sql, [mensaje, idOjeador, idFamilia])
+
+    return true;
+}
+//mostrar los mensajes recibidos por las familias
+const showReceivedContracts = async (idJugador) => {
+    const sql = 'SELECT * FROM contratos WHERE id_jugador=?'
+    const connection = await database.connection();
+    const [rows] = await connection.execute(sql, [idJugador])
+
+    return rows;
+}
+//mostrar los mensajes recibidos por los ojeadores
+const showSentContracts = async (idOjeador) => {
+    const sql = 'SELECT * FROM contratos WHERE id_ojeador=?'
+    const connection = await database.connection();
+    const [rows] = await connection.execute(sql, [idOjeador])
+
+    return rows;
+}
 
 module.exports = {
     checkPlayerCount,
@@ -295,13 +319,16 @@ module.exports = {
     login,
     playerPasswordEqualsCount,
     scoutPasswordEqualsCount,
+    saveContract,
     saveFamily,
     saveExperienceScout,
     saveExperiencePlayer,
     saveScout,
     saveVideo,
     showPlayerExperiences,
+    showReceivedContracts,
     showScoutExperiences,
+    showSentContracts,
     showVideos,
     updateProfileFamily,
     updateProfileScout,

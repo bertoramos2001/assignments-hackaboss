@@ -1,12 +1,17 @@
-const bd = require('./bd_mock');
+const databaseFunctions = require('./databaseFunctions');
 
-const sendContract = (req, res, next) => {
+const sendContract = async (req, res, next) => {
     const { email } = req.params;
-    const decodedToken = req.auth;
-    const user = bd.getUser(email);
     const { mensaje } = req.body;
-
-    if (!user) {
+    const decodedToken = req.auth;
+    //comprobamos casos de error (el rol debe ser ojeador, debe existir la cuenta y debe haber mensaje)
+    if (decodedToken.role !== 'ojeador') {
+        const notScoutError = new Error('Debes ser ojeador para enviar un contrato');
+        notScoutError.status = 400;
+        next(notScoutError)
+        return;
+    }
+    if (await databaseFunctions.checkPlayerCount(email) < 1) {
         const userNotFoundError = new Error('usuario no encontrado');
         userNotFoundError.status = 404;
         next(userNotFoundError)
@@ -18,14 +23,39 @@ const sendContract = (req, res, next) => {
         next(emptyMessage)
         return;
     }
+    //buscamos el id que les pertenece a esta cuenta de familia dependiendo de su email
+    const idFamilia = await databaseFunctions.getPlayerId(email);
+    // creamoe este objeto para almacenar la informacion que nos llega y que enviamos a la base de datos
+    let responseDTO;
 
-    bd.saveContract(decodedToken.id, decodedToken.email, user.id, user.email, mensaje);
-
-    res.send();
+    try {
+        if(await databaseFunctions.saveContract(mensaje, decodedToken.id, idFamilia)) {
+            responseDTO = {
+                'code': 200,
+                'description': 'Contrato enviado correctamente',
+                'mensaje': mensaje,
+                'idOjeador': decodedToken.id,
+                'idFamilia': idFamilia
+            }
+        } else {
+            respnseDTO = {
+                'code': 200,
+                'description': 'No ha sido posible enviar el contrato'
+            }
+        }
+    } catch (e) {
+        console.log(e)
+        const contractError = new Error('Ha habido algún error añadiendo la experiencia');
+        contractError.status = 400;
+        next(contractError);
+        return
+    }
+    return res.status(responseDTO.code).json(responseDTO);
 }
 
-const showReceivedContracts = (req, res, next) => {
+const showReceivedContracts = async (req, res, next) => {
     const decodedToken = req.auth;
+    const { email } = req.params;
 
     if(!decodedToken || decodedToken.role !== 'familia') {
         const AuthError = new Error('Debes estar registrado como familia para poder ver los mensajes que te llegan');
@@ -33,14 +63,31 @@ const showReceivedContracts = (req, res, next) => {
         next(AuthError)
         return;
     }
+    if (await databaseFunctions.checkPlayerCount(email) < 1) {
+        const userNotFoundError = new Error('usuario no encontrado');
+        userNotFoundError.status = 404;
+        next(userNotFoundError)
+        return;
+    }
+    // creamoe este objeto para almacenar la informacion que nos llega y que enviamos a la base de datos
+    let responseDTO;
 
-    const listaContratosRecibidos = bd.listReceivedContracts(decodedToken.id);
+    try {
+        responseDTO = await databaseFunctions.showReceivedContracts(decodedToken.id);
+        responseDTO['code'] = 200;
+    } catch(e) {
+        const contractError = new Error('Ha habido algún error mostrando los mensajes');
+        contractError.status = 400;
+        next(contractError);
+        return
+    }
 
-    res.json(listaContratosRecibidos);
+    return res.status(responseDTO.code).json(responseDTO);
 }
 
-const showSentContracts = (req, res, next) => {
+const showSentContracts = async (req, res, next) => {
     const decodedToken = req.auth;
+    const { email } = req.params;
 
     if(!decodedToken || decodedToken.role !== 'ojeador') {
         const AuthError = new Error('Debes estar registrado como ojeador para poder ver los mensajes que has enviado');
@@ -48,10 +95,26 @@ const showSentContracts = (req, res, next) => {
         next(AuthError)
         return;
     }
+    if (await databaseFunctions.checkScoutCount(email) < 1) {
+        const userNotFoundError = new Error('usuario no encontrado');
+        userNotFoundError.status = 404;
+        next(userNotFoundError)
+        return;
+    }
+    // creamoe este objeto para almacenar la informacion que nos llega y que enviamos a la base de datos
+    let responseDTO;
 
-    const listaContratosEnviados = bd.listSentContracts(decodedToken.id);
+    try {
+        responseDTO = await databaseFunctions.showSentContracts(decodedToken.id);
+        responseDTO['code'] = 200;
+    } catch(e) {
+        const contractError = new Error('Ha habido algún error mostrando los mensajes');
+        contractError.status = 400;
+        next(contractError);
+        return
+    }
 
-    res.json(listaContratosEnviados);
+    return res.status(responseDTO.code).json(responseDTO);
 }
 
 module.exports = {
