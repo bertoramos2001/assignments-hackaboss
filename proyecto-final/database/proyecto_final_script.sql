@@ -14,7 +14,7 @@ UPDATE jugadores SET nombre_jugador='ramon' WHERE email_tutor='randomexample@gma
 SELECT * FROM jugadores;
 DELETE FROM jugadores WHERE sexo='male';
 SELECT * FROM jugadores WHERE email_tutor='randomexample@gmail.com';
-SELECT id FROM jugadores WHERE email_tutor='randomexample@gmail.com';
+SELECT id FROM jugadores WHERE email_tutor='randomexample@gmail.comm';
 SELECT COUNT(*) FROM jugadores WHERE email_tutor='randomexample@gmail.com' UNION SELECT COUNT(*) FROM ojeadores WHERE email='randomexample@gmail.com';
 SELECT COUNT(*) FROM jugadores WHERE email_tutor='randomexample@gmail.com';
 SELECT COUNT(*) FROM jugadores JUG, ojeadores OJ WHERE JUG.email_tutor='randomexample@gmail.com' OR OJ.email='examplerandom@gmail.com';
@@ -27,8 +27,8 @@ DELETE FROM experiencias WHERE id=8 AND id_jugador=8;
 SELECT COUNT(*) FROM jugadores WHERE email_tutor='randomexample@gmail.comm' AND contrasena=SHA1('Salgue2001');
 SELECT COUNT(*) FROM jugadores WHERE contrasena=SHA1('Salgue2001');
 INSERT INTO videos (titulo, descripcion, url_video) VALUES ('Video profesional', 'Video muy profesional en el que marco gol', 'dashkjajhkasdhkjlahjk');
-SELECT * FROM videos;
-SELECT * FROM jugadores WHERE sexo='';
+SELECT * FROM contratos;
+SELECT * FROM jugadores WHERE sexo='male';
 
 USE proyectoHAB;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -82,9 +82,10 @@ CREATE TABLE videos (
 CREATE TABLE contratos(
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     mensaje TEXT NOT NULL,
-    email_receptor VARCHAR(50),
     id_ojeador INT UNSIGNED,
-    FOREIGN KEY (id_ojeador) REFERENCES ojeadores(id)
+    FOREIGN KEY (id_ojeador) REFERENCES ojeadores(id),
+    id_jugador INT UNSIGNED,
+    FOREIGN KEY (id_jugador) REFERENCES jugadores(id)
 );
 
 CREATE TABLE experiencias(
