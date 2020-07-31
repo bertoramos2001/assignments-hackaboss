@@ -96,3 +96,18 @@ app.delete('/delete/:id', (req, res) => {
         console.log('Cliente borrado')
     })
 })
+
+//RECOGER TODOS LOS PRODUCTOS DE LA BD
+app.get('/productos', (req, res) => {
+    //secuencia sql
+    const sql = 'SELECT * FROM listaproductos'
+    //conexion a la bd
+    connection.query(sql, (error, results) => {
+        if(error) throw error
+        if(results.length > 0) {
+            res.json(results)
+        } else {
+            console.log('No hay productos que mostrar')
+        }
+    })
+})

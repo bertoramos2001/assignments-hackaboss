@@ -79,16 +79,14 @@ button{
     cursor: pointer;
     padding: 0.3em 1.2em;
     margin: 0 0.1em 0.1em 0;
-    background-color: goldenrod;
+    background-color: rebeccapurple;
     border-radius: 2em;
     font-weight: 600;
-    color:#2e4e6e;
+    color:goldenrod;
     transition: all ease-in-out 0.2s;
     border: none;
 }
 button:hover{
-    background-color: rebeccapurple;
-    color: goldenrod;
     transform: scale(1.10)
 }
 #botonEditar {

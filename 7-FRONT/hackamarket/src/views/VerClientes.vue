@@ -89,7 +89,7 @@ export default {
         console.log(error)
       })
       Swal.fire({
-        title: '¡Nota editada!',
+        title: '¡Cliente modificado!',
         text: 'Tu cliente se ha editado correctamente',
         icon: 'success',
         confirmButtonNext: 'OK',
