@@ -1,4 +1,3 @@
-const bd = require('./bd_mock');
 const databaseFunctions = require('./databaseFunctions');
 const { response } = require('express');
 // funcion para publicar videos (familias)
