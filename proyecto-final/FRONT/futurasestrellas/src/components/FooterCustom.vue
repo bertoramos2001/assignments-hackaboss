@@ -14,10 +14,13 @@ export default {
 
 <style scoped>
 footer {
-    position: relative;
-    margin-top: 5%;
+    position: absolute;
+    height: 20px;
     bottom: 0;
     left: 0;
-    right: 0
+    right: 0;
+    padding: 1rem;
+    overflow: hidden;
+    
 }
 </style>

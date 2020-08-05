@@ -101,6 +101,7 @@ app.get('/mensajes/ojeador/:email', isAuthenticated, canUpdateProfile, showSentC
 
 
 app.use((error, req, res, next) => {  //middleware generico para la gestion de errores (si algun middleware da error, se ejecuta este)
+    console.log(error)
     res
         .status(error.status || 500)
         .send({status: 'error', message: error.message})

@@ -122,7 +122,7 @@ const registerScout = async (req, res, next) => {
 const registerFamily = async (req, res, next) => {
     //recoger los datos de registro
     const { name, surname, nameTutor, surnameTutor, emailTutor, gender, province, birthDate, actualClub, category, position, strongLeg, password, confirmPassword } = req.body;
-    
+
     //comprobar que los datos de registo son válidos
     if ( !name || !surname || !nameTutor || !surnameTutor || !emailTutor || !gender || !province || !birthDate || !actualClub || !category || !position || !strongLeg || !password || !confirmPassword) {
         const missingParamsError = new Error('No se han introducido todos los parámetros obligatorios');
