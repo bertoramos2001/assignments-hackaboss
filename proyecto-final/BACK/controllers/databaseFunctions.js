@@ -280,9 +280,9 @@ const getScoutList = async () => {
 }
 //añadir un contrato a la tabla de contratos de nuestra base de datos
 const saveContract = async (mensaje, idOjeador, idFamilia, emailOjeador, emailFamilia) => {
-    const sql = 'INSERT INTO contratos (mensaje, id_ojeador, id_jugador) VALUES (?, ?, ?)'
+    const sql = 'INSERT INTO contratos (mensaje, id_ojeador, id_jugador, email_ojeador, email_jugador) VALUES (?, ?, ?, ?, ?)'
     const connection = await database.connection();
-    await connection.execute(sql, [mensaje, idOjeador, idFamilia])
+    await connection.execute(sql, [mensaje, idOjeador, idFamilia, emailOjeador, emailFamilia])
 
     return true;
 }

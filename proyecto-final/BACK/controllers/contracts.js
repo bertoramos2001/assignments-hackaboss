@@ -25,17 +25,21 @@ const sendContract = async (req, res, next) => {
     }
     //buscamos el id que les pertenece a esta cuenta de familia dependiendo de su email
     const idFamilia = await databaseFunctions.getPlayerId(email);
+    //buscamos el email al que pertenece le id del ojeador
+    const emailOjeador = await databaseFunctions.getScoutEmail(decodedToken.id)
     // creamoe este objeto para almacenar la informacion que nos llega y que enviamos a la base de datos
     let responseDTO;
 
     try {
-        if(await databaseFunctions.saveContract(mensaje, decodedToken.id, idFamilia)) {
+        if(await databaseFunctions.saveContract(mensaje, decodedToken.id, idFamilia, emailOjeador, email)) {
             responseDTO = {
                 'code': 200,
                 'description': 'Contrato enviado correctamente',
                 'mensaje': mensaje,
                 'idOjeador': decodedToken.id,
-                'idFamilia': idFamilia
+                'idFamilia': idFamilia,
+                'emailOjeador': emailOjeador,
+                'emailJugador': email
             }
         } else {
             respnseDTO = {
@@ -45,7 +49,7 @@ const sendContract = async (req, res, next) => {
         }
     } catch (e) {
         console.log(e)
-        const contractError = new Error('Ha habido algún error añadiendo la experiencia');
+        const contractError = new Error('Ha habido algún error añadiendo el contrato');
         contractError.status = 400;
         next(contractError);
         return

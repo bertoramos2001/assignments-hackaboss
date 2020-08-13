@@ -4,6 +4,8 @@
       <h1>CONTRATOS RECIBIDOS JUGADORES</h1>
       <ul v-for="mensaje in mensajes" :key="mensaje.id">
           <li>
+              <p>De: {{mensaje.email_ojeador}}</p>
+              <p>Para: {{mensaje.email_jugador}}</p>
               {{mensaje.mensaje}}
           </li>
       </ul>
@@ -13,6 +15,7 @@
 <script>
 import menucustom from '@/components/MenuCustom.vue'
 import axios from 'axios'
+import databaseFunctions from './../../../../BACK/controllers/databaseFunctions.js'
 
 export default {
     name: 'ContratosRecibidosJugadores',
