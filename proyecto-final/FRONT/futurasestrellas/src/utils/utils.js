@@ -74,7 +74,7 @@ export async function iniciarSesionFamilia(email, contrasena) {
   }
 //funcion para guardar el jsonwebtoken en el local storage
 export function setAuthToken(token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    axios.defaults.headers.common['Authorization'] = token
     localStorage.setItem('AUTH_TOKEN_KEY', token)
 }
 //funcion que guarda el id en localstorage

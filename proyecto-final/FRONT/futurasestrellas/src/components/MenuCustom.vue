@@ -37,6 +37,18 @@
                   <i class="ion-ios-person"/>
               </router-link>
           </li>
+          <li v-show="scout" @mouseenter="$event.currentTarget.style.background = '#ddd'" @mouseleave="$event.currentTarget.style.background = '#fff'">
+              <router-link :to="{name:'ContratosEnviadosOjeadores', params: {email: getEmail()}}">
+                  Contratos enviados
+                  <i class="ion-ios-chatbubbles"/>
+              </router-link>
+          </li>
+          <li v-show="family" @mouseenter="$event.currentTarget.style.background = '#ddd'" @mouseleave="$event.currentTarget.style.background = '#fff'">
+              <router-link :to="{name:'ContratosRecibidosJugadores', params: {email: getEmail()}}">
+                  Contratos recibidos
+                  <i class="ion-ios-chatbubbles"/>
+              </router-link>
+          </li>
           <li id="logoutButton" v-show="logged" @mouseenter="$event.currentTarget.style.background = '#ddd'" @mouseleave="$event.currentTarget.style.background = '#fff'">
             <button @click="logoutUser()">Logout</button>
           </li>
@@ -82,10 +94,10 @@ export default {
         },
         logoutUser() {
           logout()
-          this.$router.push('/')
+          this.$router.push('/').catch(()=>{});
         },
         loginUser() {
-            this.$router.push('/landing')
+            this.$router.push('/landing').catch(()=>{});
         },
         getEmail() {
             return localStorage.getItem('EMAIL')

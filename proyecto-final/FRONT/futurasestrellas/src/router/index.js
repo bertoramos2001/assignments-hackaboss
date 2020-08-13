@@ -87,6 +87,22 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/mensajes/familia/:email',
+    name: 'ContratosRecibidosJugadores',
+    component: () => import('../views/ContratosRecibidosJugadores.vue'),
+    meta: {
+      allowAnon: false
+    }
+  },
+  {
+    path: '/mensajes/ojeador/:email',
+    name: 'ContratosEnviadosOjeadores',
+    component: () => import('../views/ContratosEnviadosOjeadores.vue'),
+    meta: {
+      allowAnon: false
+    }
+  },
+  {
     path: '*',
     name: 'Error',
     component: () => import('../views/Error.vue'),
