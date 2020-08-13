@@ -9,7 +9,6 @@
               {{mensaje.mensaje}}
           </li>
       </ul>
-
   </div>
 </template>
 <script>
