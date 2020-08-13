@@ -24,6 +24,8 @@ const registerScout = async (req, res, next) => {
 
     if (req.file) {
         avatarPerfil = req.file.path;
+    } else {
+        avatarPerfil = 'uploads/avatars/noAvatar.png'
     }
 
     //calculamos la edad del ojeador
@@ -135,6 +137,8 @@ const registerFamily = async (req, res, next) => {
 
     if (req.file) {
         avatarPerfil = req.file.path;
+    } else {
+        avatarPerfil = 'uploads/avatars/noAvatar.png'
     }
 
      //calculamos la edad del jugador
@@ -312,16 +316,16 @@ const searchUsers = async (req, res, next) => { // en esta funcion, dependiendo 
     }
     if ( nombre ) { //si existe nombre
         if ( rol === 'familia') {
-            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.nombre_jugador).trim()).toLowerCase()).replace(' ', '-') === nombre);
+            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.nombre_jugador).trim()).toLowerCase()).replace(' ', '-') === ((nombre.trim()).toLowerCase()).replace(' ','-'));
         } else if (rol === 'ojeador') {
-            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.nombre).trim()).toLowerCase()).replace(' ', '-') === nombre);
+            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.nombre).trim()).toLowerCase()).replace(' ', '-') === ((nombre.trim()).toLowerCase()).replace(' ','-'));
         }
     }
     if ( apellidos ) { //si existe apellido
         if ( rol === 'familia') {
-            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.apellidos_jugador).trim()).toLowerCase()).replace(' ', '-') === apellidos);
+            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.apellidos_jugador).trim()).toLowerCase()).replace(' ', '-') === ((apellidos.trim()).toLowerCase()).replace(' ','-'));
         } else if (rol === 'ojeador') {
-            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.apellidos).trim()).toLowerCase()).replace(' ', '-') === apellidos);
+            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.apellidos).trim()).toLowerCase()).replace(' ', '-') === ((apellidos.trim()).toLowerCase()).replace(' ','-'));
         }
     }
     if ( genero ) { //si existe generp
@@ -338,9 +342,9 @@ const searchUsers = async (req, res, next) => { // en esta funcion, dependiendo 
     }
     if ( posicion ) {  //si existe posicion
         if ( rol === 'familia') {
-            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.posicion_principal).trim()).toLowerCase()).replace(' ', '-') === posicion);
+            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.posicion_principal).trim()).toLowerCase()).replace(' ', '-') === ((posicion.trim()).toLowerCase()).replace(' ','-'));
         } else if (rol === 'ojeador') {
-            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.posicion_principal_busca).trim()).toLowerCase()).replace(' ', '-') === posicion);
+            listaUsuarios = listaUsuarios.filter( usuario => (((usuario.posicion_principal_busca).trim()).toLowerCase()).replace(' ', '-') === ((posicion.trim()).toLowerCase()).replace(' ','-'));
         }
     }
     if ( strongLeg ) { //si existe pierna fuerte

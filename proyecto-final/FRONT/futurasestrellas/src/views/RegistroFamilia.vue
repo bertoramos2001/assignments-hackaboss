@@ -1,8 +1,8 @@
 <template>
   <div>
     <h1>REGISTRO DE FAMILIAS</h1>
-    <p v-show="missingParamsMsg" id="camposVacios">Hay algún campo vacío</p>
-    <div id="formularioRegistro" class="mensajeError">
+    <p v-show="missingParamsMsg" id="camposVacios" class="mensajeError">Hay algún campo vacío</p>
+    <div id="formularioRegistro">
       <label for="nombreJugador">Nombre del/la jugador/a:</label>
       <input type="text" name="nombreJugador" v-model="nombreJugador" placeholder="Nombre">
 
@@ -20,64 +20,64 @@
 
       <label for="sexo">Sexo del/la jugador/a:</label>
       <select v-model="sexo" name="sexo" id="sexo">
-        <option value="male">Hombre</option>
-        <option value="female">Mujer</option>
+        <option value="Hombre">Hombre</option>
+        <option value="Mujer">Mujer</option>
       </select>
 
       <label for="provincia">Seleccione la provincia de residencia:</label>
       <select v-model="provincia" name="provincia" id="provincia">
-        <option value='alava'>Álava</option>
-        <option value='albacete'>Albacete</option>
-        <option value='alicante'>Alicante/Alacant</option>
-        <option value='almeria'>Almería</option>
-        <option value='asturias'>Asturias</option>
-        <option value='avila'>Ávila</option>
-        <option value='badajoz'>Badajoz</option>
-        <option value='barcelona'>Barcelona</option>
-        <option value='burgos'>Burgos</option>
-        <option value='caceres'>Cáceres</option>
-        <option value='cadiz'>Cádiz</option>
-        <option value='cantabria'>Cantabria</option>
-        <option value='castellon'>Castellón/Castelló</option>
-        <option value='ceuta'>Ceuta</option>
-        <option value='ciudadreal'>Ciudad Real</option>
-        <option value='cordoba'>Córdoba</option>
-        <option value='cuenca'>Cuenca</option>
-        <option value='girona'>Girona</option>
-        <option value='laspalmas'>Las Palmas</option>
-        <option value='granada'>Granada</option>
-        <option value='guadalajara'>Guadalajara</option>
-        <option value='guipuzcoa'>Guipúzcoa</option>
-        <option value='huelva'>Huelva</option>
-        <option value='huesca'>Huesca</option>
-        <option value='illesbalears'>Illes Balears</option>
-        <option value='jaen'>Jaén</option>
-        <option value='acoruña'>A Coruña</option>
-        <option value='larioja'>La Rioja</option>
-        <option value='leon'>León</option>
-        <option value='lleida'>Lleida</option>
-        <option value='lugo'>Lugo</option>
-        <option value='madrid'>Madrid</option>
-        <option value='malaga'>Málaga</option>
-        <option value='melilla'>Melilla</option>
-        <option value='murcia'>Murcia</option>
-        <option value='navarra'>Navarra</option>
-        <option value='ourense'>Ourense</option>
-        <option value='palencia'>Palencia</option>
-        <option value='pontevedra'>Pontevedra</option>
-        <option value='salamanca'>Salamanca</option>
-        <option value='segovia'>Segovia</option>
-        <option value='sevilla'>Sevilla</option>
-        <option value='soria'>Soria</option>
-        <option value='tarragona'>Tarragona</option>
-        <option value='santacruztenerife'>Santa Cruz de Tenerife</option>
-        <option value='teruel'>Teruel</option>
-        <option value='toledo'>Toledo</option>
-        <option value='valencia'>Valencia/Valéncia</option>
-        <option value='valladolid'>Valladolid</option>
-        <option value='vizcaya'>Vizcaya</option>
-        <option value='zamora'>Zamora</option>
-        <option value='zaragoza'>Zaragoza</option>
+        <option value='Álava'>Álava</option>
+        <option value='Albacete'>Albacete</option>
+        <option value='Alicante/Alacant'>Alicante/Alacant</option>
+        <option value='Almería'>Almería</option>
+        <option value='Asturias'>Asturias</option>
+        <option value='Ávila'>Ávila</option>
+        <option value='Badajoz'>Badajoz</option>
+        <option value='Barcelona'>Barcelona</option>
+        <option value='Burgos'>Burgos</option>
+        <option value='Cáceres'>Cáceres</option>
+        <option value='Cádiz'>Cádiz</option>
+        <option value='Cantabria'>Cantabria</option>
+        <option value='Castellón/Castelló'>Castellón/Castelló</option>
+        <option value='Ceuta'>Ceuta</option>
+        <option value='Ciudad Real'>Ciudad Real</option>
+        <option value='Córdoba'>Córdoba</option>
+        <option value='Cuenca'>Cuenca</option>
+        <option value='Girona'>Girona</option>
+        <option value='Las Palmas'>Las Palmas</option>
+        <option value='Granada'>Granada</option>
+        <option value='Guadalajara'>Guadalajara</option>
+        <option value='Guipúzcoa'>Guipúzcoa</option>
+        <option value='Huelva'>Huelva</option>
+        <option value='Huesca'>Huesca</option>
+        <option value='Illes Balears'>Illes Balears</option>
+        <option value='Jaén'>Jaén</option>
+        <option value='A Coruña'>A Coruña</option>
+        <option value='La Rioja'>La Rioja</option>
+        <option value='León'>León</option>
+        <option value='Lleida'>Lleida</option>
+        <option value='Lugo'>Lugo</option>
+        <option value='Madrid'>Madrid</option>
+        <option value='Málaga'>Málaga</option>
+        <option value='Melilla'>Melilla</option>
+        <option value='Murcia'>Murcia</option>
+        <option value='Navarra'>Navarra</option>
+        <option value='Ourense'>Ourense</option>
+        <option value='Palencia'>Palencia</option>
+        <option value='Pontevedra'>Pontevedra</option>
+        <option value='Salamanca'>Salamanca</option>
+        <option value='Segovia'>Segovia</option>
+        <option value='Sevilla'>Sevilla</option>
+        <option value='Soria'>Soria</option>
+        <option value='Tarragona'>Tarragona</option>
+        <option value='Santa Cruz de Tenerife'>Santa Cruz de Tenerife</option>
+        <option value='Teruel'>Teruel</option>
+        <option value='Toledo'>Toledo</option>
+        <option value='Valencia/Valéncia'>Valencia/Valéncia</option>
+        <option value='Valladolid'>Valladolid</option>
+        <option value='Vizcaya'>Vizcaya</option>
+        <option value='Zamora'>Zamora</option>
+        <option value='Zaragoza'>Zaragoza</option>
       </select>
 
       <p v-show="ageErrorMsg" id="edadInvalida" class="mensajeError">Los jugadores deben ser menores de edad</p>
@@ -89,34 +89,34 @@
 
       <label for="categoria">Categoría actual del/la jugador/a:</label>
       <select v-model="categoria" name="categoria" id="categoria">
-        <option value="prebenjamin">Prebenjamín</option>
-        <option value="benjamin">Benjamín</option>
-        <option value="alevin">Alevín</option>
-        <option value="infantil">Infantil</option>
-        <option value="cadete">Cadete</option>
-        <option value="juvenil">Juvenil</option>
+        <option value="Prebenjamín">Prebenjamín</option>
+        <option value="Benjamín">Benjamín</option>
+        <option value="Alevín">Alevín</option>
+        <option value="Infantil">Infantil</option>
+        <option value="Cadete">Cadete</option>
+        <option value="Juvenil">Juvenil</option>
       </select>
 
       <label for="posicionPrincipal">Posición principal del/la jugador/a:</label>
       <select v-model="posicion" name="posicionPrincipal" id="posicionPrincipal">
-        <option value="portero">Portero</option>
-        <option value="lateralDerecho">Lateral Derecho</option>
-        <option value="lateralIzquierdo">Lateral Izquierdo</option>
-        <option value="centralDerecho">Central Derecho</option>
-        <option value="centralIzquierdo">Central Izquierdo</option>
-        <option value="mediocentroDefensivo">MediocentroDefensivo</option>
-        <option value="medioccentroCreador">Mediocentro Creador</option>
-        <option value="mediocentroOfensivo">Mediocentro Ofensivo</option>
-        <option value="extremoDerecho">Extremo Derecho</option>
-        <option value="extremoIzquierdo">Extremo Izquierdo</option>
-        <option value="delantero">Delantero</option>
+        <option value="Portero">Portero</option>
+        <option value="Lateral Derecho">Lateral Derecho</option>
+        <option value="Lateral Izquierdo">Lateral Izquierdo</option>
+        <option value="Central Derecho">Central Derecho</option>
+        <option value="Central Izquierdo">Central Izquierdo</option>
+        <option value="Mediocentro Defensivo">Mediocentro Defensivo</option>
+        <option value="Mediocentro Creador">Mediocentro Creador</option>
+        <option value="Mediocentro Ofensivo">Mediocentro Ofensivo</option>
+        <option value="Extremo Derecho">Extremo Derecho</option>
+        <option value="Extremo Izquierdo">Extremo Izquierdo</option>
+        <option value="Delantero">Delantero</option>
       </select>
 
       <label for="piernaBuena">Pierna buena del/la jugador/a:</label>
       <select v-model="piernaBuena" name="piernaBuena" id="piernaBuena">
-        <option value="derecha">Derecha</option>
-        <option value="izquierda">Izquierda</option>
-        <option value="ambas">Ambas</option>
+        <option value="Derecha">Derecha</option>
+        <option value="Izquierda">Izquierda</option>
+        <option value="Ambas">Ambas</option>
       </select>
 
       <label for="avatar">Avatar de perfil:</label>
@@ -171,7 +171,7 @@ export default {
         this.missingParamsMsg = true;
         Swal.fire({
             title: 'No puede haber campos vacíos!',
-            text: 'Debes rellenar todos los campos para poder añadir un nuevo cliente',
+            text: 'Debes rellenar todos los campos para poder añadir un nuevo jugador',
             icon: 'error',
             confirmButtonText: 'OK',
         })
@@ -256,6 +256,7 @@ export default {
       self.contrasena = '',
       self.confirmarContrasena = '',
       self.selectedFile = null
+      this.$router.push('/loginfamilia')
     }
   }
 };

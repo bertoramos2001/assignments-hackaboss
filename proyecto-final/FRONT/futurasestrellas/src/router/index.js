@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Landing from '../views/Landing.vue'
+import {isLoggedIn} from '@/utils/utils.js'
 
 Vue.use(VueRouter)
 
@@ -8,47 +9,105 @@ Vue.use(VueRouter)
   {
     path: '/landing',
     name: 'Landing',
-    component: Landing
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import('../views/About.vue')
+    component: Landing,
+    meta: {
+      allowAnon: true
+    }
   },
   {
     path: '/registrofamilia',
     name: 'RegistroFamilia',
-    component: () => import('../views/RegistroFamilia.vue')
+    component: () => import('../views/RegistroFamilia.vue'),
+    meta: {
+      allowAnon: true
+    }
   },
   {
     path: '/registroojeador',
     name: 'RegistroOjeador',
-    component: () => import('../views/RegistroOjeador.vue')
+    component: () => import('../views/RegistroOjeador.vue'),
+    meta: {
+      allowAnon: true
+    }
   },
   {
     path: '/loginfamilia',
     name: 'LoginFamilia',
-    component: () => import('../views/LoginFamilia.vue')
+    component: () => import('../views/LoginFamilia.vue'),
+    meta: {
+      allowAnon: true
+    }
   },
   {
     path: '/loginojeador',
     name: 'LoginOjeador',
-    component: () => import('../views/LoginOjeador.vue')
+    component: () => import('../views/LoginOjeador.vue'),
+    meta: {
+      allowAnon: true
+    }
   },
   {
     path: '/',
     name: 'Home',
-    component: () => import('../views/Home.vue')
+    component: () => import('../views/Home.vue'),
+    meta: {
+      allowAnon: true
+    }
+  },
+  {
+    path: '/buscar',
+    name: 'BuscarUsuarios',
+    component: () => import('../views/BuscarUsuarios.vue'),
+    meta: {
+      allowAnon: true
+    }
+  },
+  {
+    path: '/perfil/ojeador/:email',
+    name: 'PerfilHomeOjeadores',
+    component: () => import('../views/PerfilHomeOjeadores.vue'),
+    meta: {
+      allowAnon: true
+    }
+  },
+  {
+    path: '/perfil/familia/:email',
+    name: 'PerfilHomeFamilias',
+    component: () => import('../views/PerfilHomeFamilias.vue'),
+    meta: {
+      allowAnon: true
+    }
+  },
+  {
+    path: '/perfil/familia/:email/videos',
+    name: 'PerfilVideosFamilias',
+    component: () => import('../views/PerfilVideosFamilias.vue'),
+    meta: {
+      allowAnon: true
+    }
   },
   {
     path: '*',
     name: 'Error',
-    component: () => import('../views/Error.vue')
+    component: () => import('../views/Error.vue'),
+    meta: {
+      allowAnon: true
+    }
   }
 ]
 
 const router = new VueRouter({
   routes
+})
+// esta funcion se ejecuta cada vez que entras en cualquier ruta
+router.beforeEach((to, from, next) => {
+  if (!to.meta.allowAnon && !isLoggedIn()) { //si la pagina no permite anonimos y tu no estas logeado, no puedes entrar
+    next({
+      path: '/error'
+    })
+  } else { //si se da otro caso, si puedes entrar
+    next()
+  }
 })
 
 export default router

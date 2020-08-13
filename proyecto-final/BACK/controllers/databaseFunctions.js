@@ -81,12 +81,14 @@ const login = async (email, password, rol) => {
         let description;
         if (!rows[0]) {
             description = 'Usuario/contraseña incorrectos';
+            code = 200
         } else {
             description = 'Login correcto';
+            code = 200
         }
 
         let responseDTO = {
-            'code': 200,
+            'code': code,
             'description': description,
         };
 
@@ -174,7 +176,7 @@ const saveExperiencePlayer = async (nombreEquipo, anoInicio, anoFin, resumen, id
 }
 //mostrar experiencias de ojeador
 const showScoutExperiences = async (idUser) => {
-    const sql = 'SELECT nombre_equipo, ano_inicio, ano_fin FROM experiencias WHERE id_ojeador=?'
+    const sql = 'SELECT nombre_equipo, ano_inicio, ano_fin, resumen FROM experiencias WHERE id_ojeador=?'
     const connection = await database.connection();
     const [rows] = await connection.execute(sql, [idUser]);
 
@@ -182,7 +184,7 @@ const showScoutExperiences = async (idUser) => {
 }
 //mostrar experiencias de jugador
 const showPlayerExperiences = async (idUser) => {
-    const sql = 'SELECT nombre_equipo, ano_inicio, ano_fin FROM experiencias WHERE id_jugador=?'
+    const sql = 'SELECT nombre_equipo, ano_inicio, ano_fin, resumen FROM experiencias WHERE id_jugador=?'
     const connection = await database.connection();
     const [rows] = await connection.execute(sql, [idUser]);
 

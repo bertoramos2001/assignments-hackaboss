@@ -1,5 +1,6 @@
 <template>
   <nav>
+      <div id="fondoMobile"></div>
       <show-at :breakpoints="{small: 759, medium: 1280, large: 1600}" breakpoint="small">
         <img :src="require('./../assets/logo.png')" class="logo" id="logoMobile" alt="Logo" height="40px" width="40px">
       </show-at>
@@ -12,15 +13,35 @@
                 <i class="ion-ios-menu" id="iconoMenu"/>
               </hide-at>
           </figure>
-          <li 
-          v-for="(link, index) in navLinks" :key="index" 
-          @mouseenter="$event.currentTarget.style.background = '#ddd'"
-          @mouseleave="$event.currentTarget.style.background = '#fff'"
-          >
-              <router-link :to="link.path">
-                  {{ link.text }}
-                  <i :class="link.icon"/>
+          <li @mouseenter="$event.currentTarget.style.background = '#ddd'" @mouseleave="$event.currentTarget.style.background = '#fff'">
+              <router-link :to="{name:'Home'}">
+                  Home
+                  <i class="ion-ios-home"/>
               </router-link>
+          </li>
+          <li @mouseenter="$event.currentTarget.style.background = '#ddd'" @mouseleave="$event.currentTarget.style.background = '#fff'">
+              <router-link :to="{name:'BuscarUsuarios'}">
+                  Buscar
+                  <i class="ion-ios-search"/>
+              </router-link>
+          </li>
+          <li v-show="family" @mouseenter="$event.currentTarget.style.background = '#ddd'" @mouseleave="$event.currentTarget.style.background = '#fff'">
+              <router-link :to="{name:'PerfilHomeFamilias', params: {email: getEmail()}}">
+                  Perfil
+                  <i class="ion-ios-person"/>
+              </router-link>
+          </li>
+          <li v-show="scout" @mouseenter="$event.currentTarget.style.background = '#ddd'" @mouseleave="$event.currentTarget.style.background = '#fff'">
+              <router-link :to="{name:'PerfilHomeOjeadores', params: {email: getEmail()}}">
+                  Perfil
+                  <i class="ion-ios-person"/>
+              </router-link>
+          </li>
+          <li id="logoutButton" v-show="logged" @mouseenter="$event.currentTarget.style.background = '#ddd'" @mouseleave="$event.currentTarget.style.background = '#fff'">
+            <button @click="logoutUser()">Logout</button>
+          </li>
+          <li id="loginButton" v-show="notLogged" @mouseenter="$event.currentTarget.style.background = '#ddd'" @mouseleave="$event.currentTarget.style.background = '#fff'">
+            <button @click="loginUser()">Iniciar sesión / Registrarse</button>
           </li>
       </ul>
   </nav>
@@ -28,6 +49,8 @@
 
 <script>
 import {showAt, hideAt} from 'vue-breakpoints'
+import { logout, isLoggedIn, isFamily, isScout } from '@/utils/utils.js'
+
 export default {
     components: {
         hideAt,
@@ -36,25 +59,42 @@ export default {
     props: ['imagePath'],
       data (){
           return {
-              navLinks: [
-                  {
-                    text: 'Home',
-                    path: '/',
-                    icon: 'ion-ios-home'
-                  },
-                  {
-                    text: 'About',
-                    path: '/about',
-                    icon: 'ion-ios-information-circle'
-                  }
-              ]
+              logged: false,
+              notLogged: false,
+              famliy: false,
+              scout: false
           }
       },
     methods: {
         toggleNav() {
             const nav = this.$refs.nav.classList
             nav.contains('active') ? nav.remove('active') : nav.add('active')
+        },
+        getLogin() {
+            this.logged = isLoggedIn()
+            this.notLogged = !isLoggedIn()
+        },
+        getIsFamily() {
+            this.family = isFamily()
+        },
+        getIsScout() {
+            this.scout = isScout()
+        },
+        logoutUser() {
+          logout()
+          this.$router.push('/')
+        },
+        loginUser() {
+            this.$router.push('/landing')
+        },
+        getEmail() {
+            return localStorage.getItem('EMAIL')
         }
+    },
+    created() {
+        this.getLogin()
+        this.getIsFamily()
+        this.getIsScout()
     }
 }
 </script>
@@ -118,17 +158,25 @@ nav ul li a {
 .logo {
     cursor: pointer;
 }
+#logoutButton {
+    position: absolute;
+    right: 0;
+}
+#loginButton {
+    position: absolute;
+    right: 0;
+}
 
 @media screen and (max-width: 759px) {
 
     nav {
         height: 60px;
-        position:fixed;
+        position:top;
         top: 0;
     }
     nav ul {
         position: fixed;
-        z-index: 1;
+        z-index: 2;
         width: 300px;
         flex-direction: column;
         padding: 0;
@@ -150,16 +198,33 @@ nav ul li a {
         justify-content: space-between;
         margin-right: 13px;
     }
-    nav ul figure {
+    #iconoMenu {
+        font-size: 200%;
+        padding-left: 1rem;
         position: fixed;
         z-index: 1;
         top: 10px;
         left: 2px;
+        z-index: 3;
     }
     #logoMobile {
         position: fixed;
-        right: 50%;
-        top: 10px;
+        margin-left: -20px;
+        margin-top: 10px;
+        z-index:3;
+    }
+    #fondoMobile {
+        height: 60px;
+        width:100%;
+        position: fixed;
+        box-shadow: 2px 2px 2px #CCC;
+        background-color: #fff;z-index:2;
+    }
+    #logoutButton {
+        position: relative;
+    }
+    #loginButton {
+        position: relative;
     }
 }
 </style>
