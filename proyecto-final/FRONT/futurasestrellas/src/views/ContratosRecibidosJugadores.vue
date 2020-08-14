@@ -4,9 +4,11 @@
       <h1>CONTRATOS RECIBIDOS JUGADORES</h1>
       <ul v-for="mensaje in mensajes" :key="mensaje.id">
           <li>
-              <p>De: {{mensaje.email_ojeador}}</p>
-              <p>Para: {{mensaje.email_jugador}}</p>
-              {{mensaje.mensaje}}
+              <div class="personasMensajes">
+                  <span>De: <button @click="redirectPerfilOjeador(mensaje.email_ojeador)">{{mensaje.email_ojeador}}</button></span> <br>
+                  <span class="emailJugador">Para: <button @click="redirectPerfilFamilia(mensaje.email_jugador)">{{mensaje.email_jugador}}</button></span>
+              </div>
+              <p class="textoMensaje">{{mensaje.mensaje}}</p>
           </li>
       </ul>
   </div>
@@ -14,7 +16,6 @@
 <script>
 import menucustom from '@/components/MenuCustom.vue'
 import axios from 'axios'
-import databaseFunctions from './../../../../BACK/controllers/databaseFunctions.js'
 
 export default {
     name: 'ContratosRecibidosJugadores',
@@ -41,10 +42,36 @@ export default {
       .catch(function(error) {
         console.log(error)
       })
+    },
+    methods: {
+        redirectPerfilOjeador(email) {
+            this.$router.push(`/perfil/ojeador/${email}`).catch(()=>{});
+        },
+        redirectPerfilFamilia(email) {
+            this.$router.push(`/perfil/familia/${email}`).catch(()=>{});
+        }
     }
 }
 </script>
 
 <style scoped>
-
+ul {
+    list-style: none;
+}
+.personasMensajes {
+    position: relative;
+    left: 0;
+    background-color: orange;
+    width: 400px;
+    border-radius: .5rem .5rem 0 0;
+}
+.textoMensaje {
+    background-color: whitesmoke;
+    border-radius: 0 .5rem .5rem .5rem;
+    padding: 1rem;
+    margin: 0 2rem 3rem 0;
+}
+.emailJugador {
+    margin-bottom: 0;
+}
 </style>
