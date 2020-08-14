@@ -103,6 +103,14 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/perfil/editar/familia/:email',
+    name: 'editarPerfilHomeFamilias',
+    component: () => import('../views/editarPerfilHomeFamilias.vue'),
+    meta: {
+      allowAnon: false
+    }
+  },
+  {
     path: '*',
     name: 'Error',
     component: () => import('../views/Error.vue'),

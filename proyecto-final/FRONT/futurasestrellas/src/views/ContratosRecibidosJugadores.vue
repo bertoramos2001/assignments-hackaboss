@@ -36,7 +36,6 @@ export default {
         }
     })
       .then(function(response) {
-        console.log(response)
         self.mensajes = response.data
       })
       .catch(function(error) {
@@ -66,7 +65,7 @@ ul {
     border-radius: .5rem .5rem 0 0;
 }
 .textoMensaje {
-    background-color: whitesmoke;
+    background-color: rgba(255, 185, 55, 0.671);
     border-radius: 0 .5rem .5rem .5rem;
     padding: 1rem;
     margin: 0 2rem 3rem 0;

@@ -6,6 +6,7 @@
        <img class="imagenAvatar" :src="userWithAvatar.avatar" alt="avatar de perfil">
        <h2>INFORMACIÓN TÉCNICA</h2>
        <div id="fichaTecnica"> <!--mostramos la informacion general de la familia en pantalla -->
+       <button @click="redirectEditarPerfil(infoGeneral)" id="editarInfo" v-show="owner">Editar Perfil</button>
            <p id="nombreJugador"><span class="titulo">Nombre Jugador:</span> {{infoGeneral.nombre_jugador}} {{infoGeneral.apellidos_jugador}}</p>
            <p id="nombreTutor"><span class="titulo">Nombre Tutor:</span> {{infoGeneral.nombre_tutor}} {{infoGeneral.apellidos_tutor}}</p>
            <p id="email"><span class="titulo">Email Tutor:</span> {{infoGeneral.email_tutor}}</p>
@@ -37,6 +38,7 @@ import axios from 'axios'
 import menucustom from '@/components/MenuCustom.vue'
 import menuperfilfamilias from '@/components/MenuPerfilFamilias.vue'
 import moment from 'moment'
+import {isOwner} from '@/utils/utils.js'
 
 import { iniciarSesionFamilia } from '../utils/utils'
 export default {
@@ -48,7 +50,8 @@ export default {
     data() {
     return {
       infoGeneral: {}, //guardamos la informacion general de la familia en este objeto
-      infoExperiencias: [] //guardamos la información de experiencias del jugador
+      infoExperiencias: [], //guardamos la información de experiencias del jugador
+      owner: false //si el usuario no es el propietario del perfil, este no podrá editar el perfil
     }
     },
     created (){
@@ -56,8 +59,8 @@ export default {
         //llamada al back para obtener la informacion general de la familia
         axios.get(`http://localhost:7000/perfil/familia/${this.$route.params.email}/home`)
         .then(function(response) {
-            console.log(response)
             self.infoGeneral = response.data
+            self.getIsOwner(self.infoGeneral.email_tutor)
         })
         .catch(function(error) {
             console.log(error)
@@ -65,7 +68,6 @@ export default {
         //llamada al back para obtener las experiencias del jugador
         axios.get(`http://localhost:7000/perfil/familia/${this.$route.params.email}/experiencia`)
         .then(function(response) {
-            console.log(response)
             self.infoExperiencias = response.data
         })
         .catch(function(error) {
@@ -84,6 +86,12 @@ export default {
     methods: {
         formatDate(fecha) {
             return moment(fecha).format('DD/MM/YYYY')
+        },
+        redirectEditarPerfil(infoGeneral) {
+            this.$router.push({path: `/perfil/editar/familia/${infoGeneral.email_tutor}`, params: infoGeneral}).catch(()=>{});
+        },
+        getIsOwner(emailTutor) {
+            this.owner = isOwner(emailTutor)
         }
     }
 }
@@ -164,6 +172,12 @@ export default {
 }
 .titulo {
     font-weight: 800;
+}
+#editarInfo {
+    position: absolute;
+    right: 230px;
+    top: 442px;
+
 }
 @media screen and (max-width: 480px) {
     #experiencia {

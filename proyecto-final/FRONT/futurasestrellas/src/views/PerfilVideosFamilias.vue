@@ -34,7 +34,6 @@ export default {
         //llamada al back para obtener los vídeos de la familia
         axios.get(`http://localhost:7000/perfil/familia/${this.$route.params.email}/videos`)
         .then(function(response) {
-            console.log(response)
             self.videos = response.data
         })
         .catch(function(error) {

@@ -120,6 +120,10 @@ export function isLoggedIn() {
 export function getRole() {
     return localStorage.getItem('ROL')
 }
+//funcion para recuperar el email desde localstorage
+export function getEmail() {
+  return localStorage.getItem('EMAIL')
+}
 //funcion que comprueba si la persona es una familia
 export function isFamily() {
     let authToken = getAuthToken()
@@ -142,4 +146,13 @@ export function logout() {
     localStorage.removeItem('ID')
     localStorage.removeItem('ROL')
     localStorage.removeItem('EMAIL')
+}
+//funcion para comprobar si un usuario es el dueño del perfil
+export function isOwner(emailUsuario) {
+  let authToken = getAuthToken()
+  let email = getEmail()
+  console.log(emailUsuario)
+  console.log(email)
+
+  return !!authToken && !isExpired(authToken) && email === emailUsuario
 }

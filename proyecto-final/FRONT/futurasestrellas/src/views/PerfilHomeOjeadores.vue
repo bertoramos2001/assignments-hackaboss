@@ -51,7 +51,6 @@ export default {
     //llamada al back para obtener la informacion general del ojeador
     axios.get(`http://localhost:7000/perfil/ojeador/${this.$route.params.email}/home`)
       .then(function(response) {
-        console.log(response)
         self.infoGeneral = response.data
       })
       .catch(function(error) {
@@ -60,7 +59,6 @@ export default {
       //llamada al back para obtener las experiencias del ojeador
         axios.get(`http://localhost:7000/perfil/ojeador/${this.$route.params.email}/experiencia`)
         .then(function(response) {
-            console.log(response)
             self.infoExperiencias = response.data
         })
         .catch(function(error) {

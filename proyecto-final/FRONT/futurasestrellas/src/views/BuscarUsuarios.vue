@@ -214,7 +214,6 @@ export default {
             axios.get(`http://localhost:7000/search?rol=${self.rol}&nombre=${self.nombre}&apellidos=${self.apellidos}&genero=${self.sexo}&provincia=${self.provincia}&edadMinima=${self.edadMinima}&edadMaxima=${self.edadMaxima}&posicion=${self.posicion}&categoria=${self.categoria}&piernaBuena=${self.piernaBuena}&`)
             .then(function(response) {
                 self.users = response.data
-                console.log(response)
             })
             .catch(function(error) {
                 console.log(error)
