@@ -12,10 +12,10 @@
         </select>
 
       <label for="nombre">Que se llame...</label>
-      <input type="text" name="nombre" v-model="nombre" placeholder="Nombre">
+      <input type="search" name="nombre" v-model="nombre" placeholder="Nombre">
 
       <label for="apellidos">Que se apellide...</label>
-      <input type="text" name="apellidos" v-model="apellidos" placeholder="Apellidos">
+      <input type="search" name="apellidos" v-model="apellidos" placeholder="Apellidos">
 
       <label for="rol">Que sea...</label>
         <select v-model="rol" name="rol" id="rol">

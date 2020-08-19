@@ -5,8 +5,12 @@
       <h1>PERFIL HOME FAMILIAS</h1>
        <img class="imagenAvatar" :src="userWithAvatar.avatar" alt="avatar de perfil">
        <h2>INFORMACIÓN TÉCNICA</h2>
-       <div id="fichaTecnica"> <!--mostramos la informacion general de la familia en pantalla -->
+       <router-link v-show="owner" :to="{name:'EditarPerfilHomeFamilias', params: infoGeneral.email, query: infoGeneral}">
+            Editar perfil
+            <i class="ion-ios-pencil"/>
+        </router-link>
        <button @click="redirectEditarPerfil(infoGeneral)" id="editarInfo" v-show="owner">Editar Perfil</button>
+       <div id="fichaTecnica"> <!--mostramos la informacion general de la familia en pantalla -->
            <p id="nombreJugador"><span class="titulo">Nombre Jugador:</span> {{infoGeneral.nombre_jugador}} {{infoGeneral.apellidos_jugador}}</p>
            <p id="nombreTutor"><span class="titulo">Nombre Tutor:</span> {{infoGeneral.nombre_tutor}} {{infoGeneral.apellidos_tutor}}</p>
            <p id="email"><span class="titulo">Email Tutor:</span> {{infoGeneral.email_tutor}}</p>
@@ -139,6 +143,9 @@ export default {
 #sexo {
     grid-area: sexo;
 }
+#editarInfo {
+    width: 50px;
+}
 #fichaTecnica {
     display: grid;
     justify-content: center;
@@ -173,12 +180,6 @@ export default {
 .titulo {
     font-weight: 800;
 }
-#editarInfo {
-    position: absolute;
-    right: 230px;
-    top: 442px;
-
-}
 @media screen and (max-width: 480px) {
     #experiencia {
     background-color: rgba(255, 209, 101, 0.493);
@@ -199,6 +200,7 @@ export default {
     #fichaTecnica {
     display: flex;
     flex-direction: column;
+    align-items: center;
     }
     .imagenAvatar {
     border-radius: 50%;
@@ -217,6 +219,7 @@ export default {
     #fichaTecnica {
     display: flex;
     flex-direction: column;
+    align-items: center;
     }
     .imagenAvatar {
     border-radius: 50%;

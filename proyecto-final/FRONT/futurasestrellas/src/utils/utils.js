@@ -16,7 +16,6 @@ export async function iniciarSesionFamilia(email, contrasena) {
         if(response.data.token === '') {
             throw error;
         }
-        console.log(response)
         //guardo el token
         setAuthToken(response.data.token)
         //guardo el email
@@ -50,7 +49,6 @@ export async function iniciarSesionFamilia(email, contrasena) {
         if(response.data.token === '') {
             throw error;
         }
-        console.log(response)
         //guardo el token
         setAuthToken(response.data.token)
         //guardo el id
@@ -151,8 +149,6 @@ export function logout() {
 export function isOwner(emailUsuario) {
   let authToken = getAuthToken()
   let email = getEmail()
-  console.log(emailUsuario)
-  console.log(email)
 
   return !!authToken && !isExpired(authToken) && email === emailUsuario
 }
