@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 
 const isAuthenticated = (req, res, next) => { 
     const { authorization } = req. headers;
-    console.log(authorization)
 
     try {
         const decodedToken = jwt.verify(authorization, process.env.SECRET);
@@ -55,8 +54,6 @@ const canUpdateProfile = async (req, res, next) => {
             }
         }
         if (id !== decodedToken.id || rol !== decodedToken.role) {
-            console.log(rol, decodedToken.role)
-            console.log(id, decodedToken.id)
             const authError = new Error('Token no válido, el token tiene que corresponder con el id y el rol del ususario del perfil');
             authError.status = 401;
             next(authError);

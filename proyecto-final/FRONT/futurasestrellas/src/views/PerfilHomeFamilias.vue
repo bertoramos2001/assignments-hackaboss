@@ -5,11 +5,7 @@
       <h1>PERFIL HOME FAMILIAS</h1>
        <img class="imagenAvatar" :src="userWithAvatar.avatar" alt="avatar de perfil">
        <h2>INFORMACIÓN TÉCNICA</h2>
-       <router-link v-show="owner" :to="{name:'EditarPerfilHomeFamilias', params: infoGeneral.email, query: infoGeneral}">
-            Editar perfil
-            <i class="ion-ios-pencil"/>
-        </router-link>
-       <button @click="redirectEditarPerfil(infoGeneral)" id="editarInfo" v-show="owner">Editar Perfil</button>
+       <button v-show="owner" @click="redirectEditProfileFamily(infoGeneral)">Editar Perfil <i class="ion-ios-pencil"/></button>
        <div id="fichaTecnica"> <!--mostramos la informacion general de la familia en pantalla -->
            <p id="nombreJugador"><span class="titulo">Nombre Jugador:</span> {{infoGeneral.nombre_jugador}} {{infoGeneral.apellidos_jugador}}</p>
            <p id="nombreTutor"><span class="titulo">Nombre Tutor:</span> {{infoGeneral.nombre_tutor}} {{infoGeneral.apellidos_tutor}}</p>
@@ -91,11 +87,11 @@ export default {
         formatDate(fecha) {
             return moment(fecha).format('DD/MM/YYYY')
         },
-        redirectEditarPerfil(infoGeneral) {
-            this.$router.push({path: `/perfil/editar/familia/${infoGeneral.email_tutor}`, params: infoGeneral}).catch(()=>{});
-        },
         getIsOwner(emailTutor) {
             this.owner = isOwner(emailTutor)
+        },
+        redirectEditProfileFamily(infoGeneral) {
+            this.$router.push({name:'EditarPerfilHomeFamilias', params: infoGeneral.email, query: infoGeneral}).catch(()=>{});
         }
     }
 }

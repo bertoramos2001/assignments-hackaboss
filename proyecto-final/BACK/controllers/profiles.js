@@ -80,19 +80,14 @@ const modifyProfileFamily = async (req, res, next) => {
 
     if (req.file) {
         avatarPerfil = req.file.path;
+    } else {
+        avatarPerfil = 'uploads/avatars/noAvatar.png'
     }
        //comprobando que el usuario existe en nuestra base de datos
     if (await databaseFunctions.checkUserExists(email) < 1) {
         const userNotFoundError = new Error('usuario no encontrado');
         userNotFoundError.status = 404;
         next(userNotFoundError)
-        return;
-    }
-    //comprobamos que el email no esta siendo utilizado con ninguna otra cuenta de jugador
-    if (await databaseFunctions.checkPlayerCount(emailTutor) > 0) {
-        const duplicateEmailError = new Error('ya existe otra familia registrada con el mismo email');
-        duplicateEmailError.status = 400;
-        next(duplicateEmailError)
         return;
     }
     // comprobamos que se introducen todos los valores necesarios en esta pagina
@@ -117,18 +112,6 @@ const modifyProfileFamily = async (req, res, next) => {
         invalidParamsError.status = 400;
         next(invalidParamsError);
         return;
-    }
-    //enviamos un email de confirmacion a la familia
-    if (emailTutor !== email) { //esto del envio de email esta comentado porque la version gratuita permite un maximo de 100 emails diarios y haciendo las pruebas superaba estos limites
-        // try {
-        //     await sgMail.send(functions.createEmailChangeFamily(emailTutor, functions.normalizeName(surname)));
-        //     console.log('Message sent');
-        // } catch(e) {
-        //     const emailError = new Error('error al enviar el email');
-        //     emailError.status = 400;
-        //     next(emailError);
-        // }
-        console.log('email enviado')
     }
     // objeto con toda la informacion introducida
     const family = {
@@ -198,19 +181,14 @@ const modifyProfileScout = async (req, res, next) => {
 
     if (req.file) {
         avatarPerfil = req.file.path;
+    } else {
+        avatarPerfil = 'uploads/avatars/noAvatar.png'
     }
        //comprobando que el usuario existe en nuestra base de datos
     if (await databaseFunctions.checkUserExists(emailParams) < 1) {
         const userNotFoundError = new Error('usuario no encontrado');
         userNotFoundError.status = 404;
         next(userNotFoundError)
-        return;
-    }
-    // comprobando que no existe ningun otro ojeador registrado con ese email
-    if (await databaseFunctions.checkScoutCount(email) > 0) {
-        const duplicateEmailError = new Error('ya existe otro ojeador registrada con el mismo email');
-        duplicateEmailError.status = 400;
-        next(duplicateEmailError)
         return;
     }
     // comprobando que todos los parametros obligatorios han sido cubiertos
@@ -236,18 +214,6 @@ const modifyProfileScout = async (req, res, next) => {
         next(invalidParamsError);
         return;
     }
-    // enviamos un email al ojeador
-    if (email !== emailParams) { //esto del envio de email esta comentado porque la version gratuita permite un maximo de 100 emails diarios y haciendo las pruebas superaba estos limites
-        // try {
-        //     await sgMail.send(functions.createEmailChangeScout(email, functions.normalizeName(name)));
-        //     console.log('Message sent');
-        // } catch(e) {
-        //     const emailError = new Error('error al enviar el email');
-        //     emailError.status = 400;
-        //     next(emailError);
-        // }
-        console.log('email enviado')
-    }
     // objeto con toda la informacion introducida en el registro
     const scout = {
         'nombre': functions.normalizeName(name),
@@ -270,7 +236,7 @@ const modifyProfileScout = async (req, res, next) => {
             'rol': 'ojeador',
             'nombre': functions.normalizeName(name),
             'apellidos': functions.normalizeName(surname),
-            'emailTutor': email,
+            'email': email,
             'sexo': gender,
             'provincia': province,
             'fechaNacimiento': birthDate,
