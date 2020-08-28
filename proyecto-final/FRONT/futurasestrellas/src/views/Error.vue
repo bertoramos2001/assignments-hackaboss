@@ -1,5 +1,6 @@
 <template>
   <div>
+      <vue-headful title="Error | FuturasEstrellas"/>
       <h1>404 - FUERA DE JUEGO</h1>
       <br>
       <img src="./../assets/imagenesWeb/gifOffside.gif" alt="fuera de juego"/>

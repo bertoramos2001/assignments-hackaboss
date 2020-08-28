@@ -2,7 +2,13 @@ const database = require('../database.js');
 
 //obtener el id del jugador
 const getPlayerId = async (email) => {
-    const sql = `SELECT id from jugadores WHERE email_tutor=?`;
+    const sql = `SELECT id from jugadores WHERE email_tutor= ?`;
+
+    // return await connection.query(sql, (error, results) => {
+    //     if(error) throw error
+    //     return (results[0].id)
+    // })
+
     const connection = await database.connection();
     let [rows] = await connection.execute(sql, [email]);
 
@@ -49,7 +55,16 @@ const getScout = async (id) => {
 
 //obtener todos los datos de la familia
 const getPlayer = async (id) => {
-    const sql = 'SELECT rol, nombre_jugador, apellidos_jugador, nombre_tutor, apellidos_tutor, email_tutor, sexo, provincia, fecha_nacimiento, club_actual, categoria, posicion_principal, pierna_buena, avatar FROM jugadores WHERE id=?';
+    const sql = `SELECT rol, nombre_jugador, apellidos_jugador, nombre_tutor, apellidos_tutor, email_tutor, sexo, provincia, fecha_nacimiento, club_actual, categoria, posicion_principal, pierna_buena, avatar FROM jugadores WHERE id=?`;
+
+    // return await connection.query(sql, (error, results) => {
+    //     if(error) throw error
+    //     results[0]['code'] = 200;
+    //     results[0]['description'] = 'familia encontrada correctamente';
+
+    //     return (results[0])
+    // })
+
     const connection = await database.connection();
     let [rows] = await connection.execute(sql, [id]);
     rows[0]['code'] = 200;
@@ -60,7 +75,13 @@ const getPlayer = async (id) => {
 
 //comprobamos que el usuario existe tanto en la tabla de jugadores como en la de ojeadores
 const checkUserExists = async (email) => {
-    const sql = 'SELECT COUNT(*) FROM jugadores JUG, ojeadores OJ WHERE JUG.email_tutor = ? OR OJ.email = ?';
+    const sql = `SELECT COUNT(*) FROM jugadores JUG, ojeadores OJ WHERE JUG.email_tutor = ? OR OJ.email = ?`;
+
+    // return await connection.query(sql, (error, results) => {
+    //     if(error) throw error
+    //     return (results[0]['COUNT(*)'])
+    // })
+
     const connection = await database.connection();
     const [rows] = await connection.execute(sql, [email, email]);
 
@@ -109,7 +130,13 @@ const login = async (email, password, rol) => {
 
 //comprobamos cuantos jugadores hay registrados con ese mismo email
 const checkPlayerCount = async (email) => {
-    const sql = 'SELECT COUNT(*) FROM jugadores WHERE email_tutor = ?';
+    const sql = `SELECT COUNT(*) FROM jugadores WHERE email_tutor = ?`;
+
+    // return await connection.query(sql, (error, results) => {
+    //     if(error) throw error
+    //     return (results[0]['COUNT(*)'])
+    // })
+
     const connection = await database.connection();
     const [rows] = await connection.execute(sql, [email]);
 
@@ -176,7 +203,7 @@ const saveExperiencePlayer = async (nombreEquipo, anoInicio, anoFin, resumen, id
 }
 //mostrar experiencias de ojeador
 const showScoutExperiences = async (idUser) => {
-    const sql = 'SELECT nombre_equipo, ano_inicio, ano_fin, resumen FROM experiencias WHERE id_ojeador=?'
+    const sql = 'SELECT id, nombre_equipo, ano_inicio, ano_fin, resumen, id_ojeador FROM experiencias WHERE id_ojeador=?'
     const connection = await database.connection();
     const [rows] = await connection.execute(sql, [idUser]);
 
@@ -184,7 +211,13 @@ const showScoutExperiences = async (idUser) => {
 }
 //mostrar experiencias de jugador
 const showPlayerExperiences = async (idUser) => {
-    const sql = 'SELECT nombre_equipo, ano_inicio, ano_fin, resumen FROM experiencias WHERE id_jugador=?'
+    const sql = `SELECT id, nombre_equipo, ano_inicio, ano_fin, resumen, id_jugador FROM experiencias WHERE id_jugador=?`
+
+    // return await connection.query(sql, (error, results) => {
+    //     if(error) throw error
+    //     return results
+    // })
+
     const connection = await database.connection();
     const [rows] = await connection.execute(sql, [idUser]);
 
@@ -248,7 +281,7 @@ const saveVideo = async (titulo, descripcion, videoFamilia, id) => {
 }
 //mostrar videos de cierta familia (especificando el id)
 const showVideos = async (idJugador) => {
-    const sql = 'SELECT titulo, descripcion, url_video FROM videos WHERE id_jugador=?'
+    const sql = 'SELECT titulo, descripcion, url_video, id FROM videos WHERE id_jugador=?'
     const connection = await database.connection();
     const [rows] = await connection.execute(sql, [idJugador]);
 

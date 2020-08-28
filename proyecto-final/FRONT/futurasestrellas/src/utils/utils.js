@@ -146,9 +146,10 @@ export function logout() {
     localStorage.removeItem('EMAIL')
 }
 //funcion para comprobar si un usuario es el dueño del perfil
-export function isOwner(emailUsuario) {
+export function isOwner(emailUsuario, rolUsuario) {
   let authToken = getAuthToken()
   let email = getEmail()
+  let rol = getRole()
 
-  return !!authToken && !isExpired(authToken) && email === emailUsuario
+  return !!authToken && !isExpired(authToken) && email === emailUsuario && rol === rolUsuario
 }

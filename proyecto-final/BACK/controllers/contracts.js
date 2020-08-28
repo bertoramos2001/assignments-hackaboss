@@ -42,7 +42,7 @@ const sendContract = async (req, res, next) => {
                 'emailJugador': email
             }
         } else {
-            respnseDTO = {
+            responseDTO = {
                 'code': 200,
                 'description': 'No ha sido posible enviar el contrato'
             }

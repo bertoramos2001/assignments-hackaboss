@@ -1,5 +1,6 @@
 <template>
 <div>
+  <vue-headful title="Login Ojeadores | FuturasEstrellas"/>
     <h1>LOGIN OJEADORES</h1>
     <div id="formularioLogin">
         <p v-show="missingParamsMsg" class="errorMessages">Debes rellenar email y contraseña para acceder</p>

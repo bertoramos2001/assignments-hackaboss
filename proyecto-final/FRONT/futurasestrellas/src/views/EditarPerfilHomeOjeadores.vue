@@ -1,19 +1,24 @@
 <template>
   <div>
-    <vue-headful title="Registro Ojeadores | FuturasEstrellas"/>
-    <h1>REGISTRO DE OJEADORES</h1>
-    <p v-show="missingParamsMsg" id="camposVacios">Hay algún campo vacío</p>
-    <div id="formularioRegistro" class="mensajeError">
-      <label for="nombre">Nombre del/la ojeador/a:</label>
-      <input type="text" name="nombre" v-model="nombre" placeholder="Nombre">
+    <vue-headful title="Editar Perfil Ojeadores | FuturasEstrellas"/>
+      <menucustom/>
+      <h1>EDITAR PERFIL HOME OJEADORES</h1>
+      <p>{{infoGeneral}}</p>
+      <p v-show="missingParamsMsg" id="camposVacios" class="mensajeError">Hay algún campo vacío</p>
 
-      <label for="apellidos">Apellidos del/la ojeador/a:</label>
+    <div id="formularioEdicion">
+
+      <label for="nombre">Nombre:</label>
+      <input type="text" value="hola" name="nombre" v-model="nombre">
+
+      <label for="apellidos">Apellidos:</label>
       <input type="text" name="apellidos" v-model="apellidos" placeholder="Apellidos">
+
 
       <label for="email">Email:</label>
       <input type="text" name="email" v-model="email" placeholder="Email">
 
-      <label for="sexo">Sexo del/la ojeador/a:</label>
+      <label for="sexo">Sexo:</label>
       <select v-model="sexo" name="sexo" id="sexo">
         <option value="Hombre">Hombre</option>
         <option value="Mujer">Mujer</option>
@@ -35,7 +40,7 @@
         <option value='Cantabria'>Cantabria</option>
         <option value='Castellón/Castelló'>Castellón/Castelló</option>
         <option value='Ceuta'>Ceuta</option>
-        <option value='ciudadCiudad Realreal'>Ciudad Real</option>
+        <option value='Ciudad Real'>Ciudad Real</option>
         <option value='Córdoba'>Córdoba</option>
         <option value='Cuenca'>Cuenca</option>
         <option value='Girona'>Girona</option>
@@ -77,7 +82,7 @@
 
       <p v-show="ageErrorMsg" id="edadInvalida" class="mensajeError">Los ojeadores deben ser mayores de edad</p>
       <label for="fechaNacimiento">Fecha de nacimiento del/la ojeador/a: (debe ser mayor de edad)</label>
-      <input type="date" v-model="fechaNacimiento" placeholder="yyyy-mm-dd">
+      <input type="date" v-model="fechaNacimiento" placeholder="yyyy-mm-dd" value="04/05/2020">
 
       <label for="clubActual">Club actual del/la ojeador/a:</label>
       <input type="text" v-model="clubActual" placeholder="Club actual">
@@ -89,7 +94,7 @@
         <option value="Alevín">Alevín</option>
         <option value="Infantil">Infantil</option>
         <option value="Cadete">Cadete</option>
-        <option value="juveJuvenilnil">Juvenil</option>
+        <option value="Juvenil">Juvenil</option>
       </select>
 
       <label for="posicionPrincipal">Posición principal que busca el/la ojeador/a:</label>
@@ -116,55 +121,49 @@
 
       <label for="avatar">Avatar de perfil:</label>
       <input type="file" name="avatar" id="avatar" accept="image/x-png,image/jpeg" @change="avatarPerfil">
-
-      <p v-show="invalidPasswordMsg" id="contrasenaInvalida" class="mensajeError">La contraseña que has introducido no es válida</p>
-      <p v-show="passwordsDontMatchMsg" id="contrasenasDiferentes" class="mensajeError">Las contraseñas introducidas no coinciden</p>
-      <label for="contrasena">Introduzca una contraseña:</label>
-      <input type="password" name="password" v-model="contrasena" placeholder="contraseña">
-
-      <label for="confirmarContrasena">Confirmar contraseña:</label>
-      <input type="password" name="confirmPassword" v-model="confirmarContrasena" placeholder="contraseña">
     </div>
-    <button @click="validatingData()">Registrarse</button>
+    <button @click="validatingData()">Actualizar perfil</button>
   </div>
 </template>
 
 <script>
+import menucustom from '@/components/MenuCustom.vue'
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import moment from 'moment'
 
 export default {
-  name: "RegistroFamilia",
-  data() {
-    return {
-      nombre: '',
-      apellidos: '',
-      email: '',
-      sexo: '',
-      provincia: '',
-      fechaNacimiento: '',
-      clubActual: '',
-      categoria: '',
-      posicion: '',
-      piernaBuena: '',
-      contrasena: '',
-      confirmarContrasena: '',
-      selectedFile: null,
-      missingParamsMsg: false,
-      invalidPasswordMsg: false,
-      passwordsDontMatchMsg: false,
-      ageErrorMsg: false
-
-    }
-  },
-  methods: {
+    name: 'editarPerfilHomeOjeadores',
+    components: {
+        menucustom
+    },
+    data() {
+        return {
+            infoGeneral: this.$route.query,
+            nombre: this.$route.query.nombre,
+            apellidos: this.$route.query.apellidos,
+            email: this.$route.query.email,
+            sexo: this.$route.query.sexo,
+            provincia: this.$route.query.provincia,
+            fechaNacimiento: this.$route.query.fecha_nacimiento.slice(0,10),
+            clubActual: this.$route.query.club_actual,
+            categoria: this.$route.query.categoria_busca,
+            posicion: this.$route.query.posicion_principal_busca,
+            piernaBuena: this.$route.query.pierna_buena_busca,
+            selectedFile: this.$route.query.avatar,
+            missingParamsMsg: false,
+            invalidPasswordMsg: false,
+            passwordsDontMatchMsg: false,
+            ageErrorMsg: false
+        }
+    },
+    methods: {
     validatingData() {
-      if(this.nombre === '' || this.apellidos === '' || this.email === '' || this.sexo === '' || this.provincia === '' || this.fechaNacimiento === '' || this.clubActual === '' || this.categoria === '' || this.posicion === '' || this.piernaBuena === '' || this.contrasena === '' || this.confirmarContrasena === '') {
+      if(this.nombre === '' || this.apellidos === '' || this.sexo === '' || this.provincia === '' || this.fechaNacimiento === '' || this.clubActual === '' || this.categoria === '' || this.posicion === '' || this.piernaBuena === '') {
         this.missingParamsMsg = true;
         Swal.fire({
             title: 'No puede haber campos vacíos!',
-            text: 'Debes rellenar todos los campos para poder añadir un nuevo cliente',
+            text: 'Debes rellenar todos los campos para poder editar tu perfil',
             icon: 'error',
             confirmButtonText: 'OK',
         })
@@ -172,28 +171,12 @@ export default {
           this.ageErrorMsg = true;
           Swal.fire({
             title: 'El ojeador debe ser mayor de edad!',
-            text: 'Debes ser mayor de edad para registrarte como ojeador',
-            icon: 'error',
-            confirmButtonText: 'OK',
-        })
-      } else if(this.contrasena.length < 8 || this.contrasena.toLowerCase() === this.contrasena || /\d/.test(this.contrasena) === false) {
-          this.invalidPasswordMsg = true;
-          Swal.fire({
-            title: 'Tu contraseña no es válida!',
-            text: 'La contraseña debe tener al menos 8 caracteres, una mayúscula y un número',
-            icon: 'error',
-            confirmButtonText: 'OK',
-        })
-      } else if (this.contrasena !== this.confirmarContrasena){
-        this.passwordsDontMatchMsg = true
-        Swal.fire({
-            title: 'Tus contraseñas no coinciden!',
-            text: 'Las contraseñas deben ser iguales',
+            text: 'Debes ser mayor de edad para poder tener una cuenta de ojeador',
             icon: 'error',
             confirmButtonText: 'OK',
         })
       } else {
-        this.registrarOjeador();
+        this.editarOjeador(this.infoGeneral);
         this.missingParamsMsg = false;
         this.invalidPasswordMsg = false;
         this.passwordsDontMatchMsg = false;
@@ -203,8 +186,9 @@ export default {
     avatarPerfil(event) {
       this.selectedFile = event.target.files[0]
     },
-    registrarOjeador () {
+    editarOjeador(infoGeneral) {
       let self = this;
+
       let fd = new FormData();
       fd.set('name', self.nombre)
       fd.set('surname', self.apellidos)
@@ -216,14 +200,13 @@ export default {
       fd.set('category', self.categoria)
       fd.set('position', self.posicion)
       fd.set('strongLeg', self.piernaBuena)
-      fd.set('password', self.contrasena)
-      fd.set('confirmPassword', self.confirmarContrasena)
       fd.append('avatarPerfil', self.selectedFile)
-      axios.post('http://localhost:7000/registroOjeador',
+      axios.put(`http://localhost:7000/perfil/editar/ojeador/${this.infoGeneral.email}/home`,
       fd,
       {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          Authorization: localStorage.getItem('AUTH_TOKEN_KEY')
         }
       })
       .then(res => {
@@ -242,17 +225,16 @@ export default {
       self.categoria = '',
       self.posicion = '',
       self.piernaBuena = '',
-      self.contrasena = '',
-      self.confirmarContrasena = '',
       self.selectedFile = null
-      this.$router.push('/loginojeador')
+      this.$router.push({name: 'PerfilHomeOjeadores', params: infoGeneral.email}).catch(()=>{});
+      location.reload()
     }
   }
-};
+}
 </script>
 
 <style scoped>
-#formularioRegistro {
+#formularioEdicion {
   display: flex;
   flex-direction: column;
   align-items: center;

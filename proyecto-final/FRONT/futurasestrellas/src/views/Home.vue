@@ -1,5 +1,6 @@
 <template>
   <div>
+    <vue-headful title="Home | FuturasEstrellas"/>
     <menucustom/>
     <slider/>
     <h2>ESTO ES FUTURAS ESTRELLAS</h2>

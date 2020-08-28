@@ -1,5 +1,6 @@
 <template>
   <div>
+      <vue-headful title="Buscar Usuarios | FuturasEstrellas"/>
       <menucustom/>
       <h1>BUSCAR USUARIOS</h1>
       <!-- div del formulario de busqueda de usuarios -->

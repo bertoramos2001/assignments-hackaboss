@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <vue-headful title="Landing | FuturasEstrellas"/>
     <h1>BIENVENIDOS A FUTURAS ESTRELLAS</h1>
     <h2>Selecciona el tipo de cuenta</h2>
     <div id="landingRegistros">

@@ -1,12 +1,13 @@
 <template>
   <div>
+    <vue-headful title="Editar Perfil Familias | FuturasEstrellas"/>
       <menucustom/>
       <h1>EDITAR PERFIL HOME FAMILIAS</h1>
       <p>{{infoGeneral}}</p>
       <p v-show="missingParamsMsg" id="camposVacios" class="mensajeError">Hay algún campo vacío</p>
     <div id="formularioEdicion">
       <label for="nombreJugador">Nombre del/la jugador/a:</label>
-      <input type="text" value="hola" name="nombreJugador" v-model="nombreJugador">
+      <input type="text" name="nombreJugador" v-model="nombreJugador">
 
       <label for="apellidosJugador">Apellidos del/la jugador/a:</label>
       <input type="text" name="apellidosJugador" v-model="apellidosJugador" placeholder="Apellidos">
@@ -14,10 +15,10 @@
       <label for="nombreTutor">Nombre del/la tutor/a:</label>
       <input type="text" name="nombreTutor" v-model="nombreTutor" placeholder="Nombre">
 
-      <label for="apellidosTutor">Email del/la tutor/a:</label>
+      <label for="apellidosTutor">Apellidos del/la tutor/a:</label>
       <input type="text" name="apellidosTutor" v-model="apellidosTutor" placeholder="Apellidos">
 
-      <label for="emailTutor">Apellidos del/la tutor/a:</label>
+      <label for="emailTutor">Email del/la tutor/a:</label>
       <input type="text" name="emailTutor" v-model="emailTutor" placeholder="email">
 
       <label for="sexo">Sexo del/la jugador/a:</label>
@@ -167,7 +168,7 @@ export default {
         this.missingParamsMsg = true;
         Swal.fire({
             title: 'No puede haber campos vacíos!',
-            text: 'Debes rellenar todos los campos para poder añadir un nuevo jugador',
+            text: 'Debes rellenar todos los campos para poder editar tu perfil',
             icon: 'error',
             confirmButtonText: 'OK',
         })

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <vue-headful title="Registro Familias | FuturasEstrellas"/>
     <h1>REGISTRO DE FAMILIAS</h1>
     <p v-show="missingParamsMsg" id="camposVacios" class="mensajeError">Hay algún campo vacío</p>
     <div id="formularioRegistro">
@@ -179,7 +180,7 @@ export default {
           this.ageErrorMsg = true;
           Swal.fire({
             title: 'El jugador debe ser menor de edad!',
-            text: 'Debes ser mayor de edad para registrarte como jugador',
+            text: 'Debes ser menor de edad para registrarte como jugador',
             icon: 'error',
             confirmButtonText: 'OK',
         })

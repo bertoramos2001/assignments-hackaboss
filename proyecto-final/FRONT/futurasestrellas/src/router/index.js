@@ -111,6 +111,14 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/perfil/editar/ojeador/:email',
+    name: 'EditarPerfilHomeOjeadores',
+    component: () => import('../views/EditarPerfilHomeOjeadores.vue'),
+    meta: {
+      allowAnon: false
+    }
+  },
+  {
     path: '*',
     name: 'Error',
     component: () => import('../views/Error.vue'),

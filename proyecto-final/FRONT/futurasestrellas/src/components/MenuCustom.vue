@@ -112,7 +112,6 @@ export default {
 </script>
 
 <style scoped>
-@import 'https://unpkg.com/ionicons@4.2.2/dist/css/ionicons.min.css';
 html, body {
     height: 100%;
     overflow: hidden;

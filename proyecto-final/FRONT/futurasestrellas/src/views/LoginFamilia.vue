@@ -1,5 +1,6 @@
 <template>
   <div>
+    <vue-headful title="Login Familias | FuturasEstrellas"/>
       <h1>LOGIN FAMILIAS</h1>
       <div id="formularioLogin">
         <p v-show="missingParamsMsg" class="errorMessages">Debes rellenar email y contraseña para acceder</p>

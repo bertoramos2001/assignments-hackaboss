@@ -1,5 +1,6 @@
 <template>
   <div>
+      <vue-headful title="Contratos Recibidos | FuturasEstrellas"/>
       <menucustom/>
       <h1>CONTRATOS RECIBIDOS JUGADORES</h1>
       <ul v-for="mensaje in mensajes" :key="mensaje.id">
