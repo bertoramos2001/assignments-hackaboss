@@ -2,11 +2,11 @@
   <div>
     <vue-headful title="Perfil Ojeadores | FuturasEstrellas"/>
     <menucustom />
-    <h1>PERFIL HOME OJEADORES</h1>
+    <h1>PERFIL</h1>
     <!--mostramos la informacion general del ojeador en pantalla -->
     <!--mostramos las experiencias del ojeador en pantalla -->
     <img class="imagenAvatar" :src="userWithAvatar.avatar" alt="avatar de perfil" />
-    <button @click="mostrarEditAvatar()" id="botonEditarFoto" v-show="owner">Editar Avatar <i class="ion-ios-construct"/></button>
+    <button @click="mostrarEditAvatar()" id="botonEditarFoto" v-show="owner"> <i class="ion-ios-construct"/></button>
     <h2>INFORMACIÓN TÉCNICA</h2>
     <button v-show="owner" @click="redirectEditProfileScout(infoGeneral)">
       Editar Perfil
@@ -27,6 +27,14 @@
         <span class="titulo">Sexo:</span>
         <br />
         {{infoGeneral.sexo}}
+      </p>
+      <p id="borde">
+        <span class="titulo">  </span>
+        <br />
+      </p>
+      <p id="borde2">
+        <span class="titulo">   </span>
+        <br />
       </p>
       <p id="provincia">
         <span class="titulo">Provincia de residencia:</span>
@@ -361,33 +369,83 @@ export default {
 }
 #nombre {
   grid-area: nombre;
-  margin-block-end: 5px;
+  background-color: #ffb383bb;
+  margin-bottom: 0;
+  padding: 1rem;
+  padding-top: 2rem;
+  border-radius: 2rem 2rem 0 0;
 }
 #email {
   grid-area: email;
-  margin-block-start: 5px;
-  margin-block-end: 2rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #ffb383bb;
+  padding-bottom: 1rem;
 }
 #nacimiento {
   grid-area: nacimiento;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #ffb383bb;
+  padding: 1rem;
 }
 #categoria {
   grid-area: categoria;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #ffb383bb;
+  padding: 1rem;
 }
 #posicionPrincipal {
   grid-area: posicionPrincipal;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #ffb383bb;
+  padding: 1rem;
 }
 #piernaBuena {
   grid-area: piernaBuena;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #ffb383bb;
+  padding: 1rem;
 }
 #provincia {
   grid-area: provincia;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #ffb383bb;
+  padding: 1rem;
 }
 #clubActual {
   grid-area: clubActual;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #ffb383bb;
+  padding: 1rem;
 }
 #sexo {
   grid-area: sexo;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #ffb383bb;
+  padding: 1rem 1rem 2rem 1rem
+}
+#borde {
+  grid-area: borde;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #ffb383bb;
+  padding: 1rem;
+  border-radius: 0 0 2rem 0;
+}
+#borde2 {
+  grid-area: borde2;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #ffb383bb;
+  padding: 1rem;
+  border-radius: 0 0 0 2rem;
 }
 #fichaTecnica {
   display: grid;
@@ -399,13 +457,17 @@ export default {
     ". email email email ."
     ". nacimiento categoria posicionPrincipal ."
     ". piernaBuena provincia clubActual ."
-    ". . sexo . .";
+    ". borde2 sexo borde .";
 }
 #experiencia {
   display: flex;
   align-items: center;
-  background-color: rgba(255, 209, 101, 0.493);
+  background-color: #ffb383bb;
   border-radius: 1rem;
+  transition: all .2s ease-in-out;
+}
+#experiencia:hover {
+  transform: scale(1.05);
 }
 #resumen {
   margin-left: auto;
@@ -414,6 +476,7 @@ export default {
 .borrarExperiencia {
     margin: 1rem;
     margin-left: auto;
+    padding: 1rem 1.25rem 1rem 1.25rem;
 }
 #datosExperiencia {
   padding: 1rem;
@@ -445,6 +508,37 @@ export default {
   border-radius: 1rem;
   position: fixed;
 }
+.modalBox button {
+  margin: 1rem;
+}
+.modalBox input {
+  padding: .5rem;
+  border: 1px solid #f08848;
+  background-color: #fff;
+  border-radius: .2rem;
+  width: 100%;
+  transition: all .3s ease-in-out
+}
+.modalBox input:focus {
+  background-color: #abd2fb8f;
+}
+.modalBox input:hover {
+  background-color: #abd2fb8f;
+}
+.modalBox textarea {
+  padding: .5rem;
+  border: 1px solid #f08848;
+  background-color: #fff;
+  border-radius: .2rem;
+  width: 100%;
+  transition: all .3s ease-in-out
+}
+.modalBox textarea:focus {
+  background-color: #abd2fb8f;
+}
+.modalBox textarea:hover {
+  background-color: #abd2fb8f;
+}
 #inputResumen {
   margin-bottom: 1rem;
   width: 100%;
@@ -456,6 +550,28 @@ i {
 #botonEditarFoto {
     position: absolute;
 }
+button {
+  color: #35495E;
+  font-weight: 700;
+  padding: .5rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #78a6d6;
+  border-radius: .5rem;
+  display: inline-block;
+  border: none;
+  transition: all 0.4s ease 0s
+}
+button:hover  {
+  text-shadow: 0px 0px 6px #8dc4ff;
+  box-shadow: 4px 4px 1px 1px #4e79a7;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+  background-color: #8dc4ff;
+}
+h1 {
+  margin: 2rem;
+}
 @media screen and (max-width: 480px) {
   #experiencia {
     margin: 1rem;
@@ -466,7 +582,6 @@ i {
     align-items: center;
   }
   #resumen {
-    padding-bottom: 2rem;
     width: auto;
     margin-left: auto;
     margin-right: auto;
@@ -474,6 +589,7 @@ i {
   #fichaTecnica {
     display: flex;
     flex-direction: column;
+    margin: 1rem;
   }
   .imagenAvatar {
     border-radius: 50%;
@@ -481,6 +597,54 @@ i {
     height: 100px;
     object-fit: cover;
   }
+  #resumenExperiencia {
+    padding: 0 1rem 0 1rem;
+  }
+  #datosExperiencia {
+    display: inline-block;
+    border-radius: 1rem;
+    padding: 1rem 1rem 0 1rem;
+  }
+  .borrarExperiencia {
+    position: relative;
+    top: -35px;
+    margin-bottom: -20px;
+  }
+  button {
+    color: #35495E;
+    font-size: 70%;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: #6b93be;
+    padding: .5rem;
+    border-radius: 50px;
+    display: inline-block;
+    border: none;
+    transition: all 0.4s ease 0s;
+}
+#borde {
+  position: absolute;
+  top: 0;
+}
+#borde2 {
+  position: absolute;
+  top: 0;
+}
+#sexo {
+  grid-area: sexo;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #ffb383bb;
+  padding: 1rem;
+
+}
+#piernaBuena {
+  border-radius: 0 0 2rem 2rem;
+}
+i {
+    font-size: 15px;
+}
 }
 @media screen and (min-width: 481px) and (max-width: 767px) {
   #experiencia {
@@ -489,7 +653,6 @@ i {
     width: auto;
   }
   #resumen {
-    padding-bottom: 2rem;
     width: auto;
     margin-left: auto;
     margin-right: auto;
@@ -497,6 +660,7 @@ i {
   #fichaTecnica {
     display: flex;
     flex-direction: column;
+    margin: 1rem;
   }
   .imagenAvatar {
     border-radius: 50%;
@@ -512,10 +676,40 @@ i {
     margin: 1rem;
   }
   #datosExperiencia {
-    padding: 1rem;
     display: inline-block;
     border-radius: 1rem;
+    padding: 1rem 1rem 0 1rem;
   }
+  #resumenExperiencia {
+    padding: 0 1rem 0 1rem;
+  }
+  .borrarExperiencia {
+    position: relative;
+    top: -35px;
+    margin-bottom: -20px;
+  }
+  #borde {
+  position: absolute;
+  top: 0;
+}
+#borde2 {
+  position: absolute;
+  top: 0;
+}
+#sexo {
+  grid-area: sexo;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #ffb383bb;
+  padding: 1rem;
+
+}
+#piernaBuena {
+  border-radius: 0 0 2rem 2rem;
+}
+i {
+    font-size: 15px;
+}
 }
 @media screen and (min-width: 768px) and (max-width: 1024px) {
   #experiencia {

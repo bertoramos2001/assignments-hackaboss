@@ -3,7 +3,7 @@
     <vue-headful title="Home | FuturasEstrellas"/>
     <menucustom/>
     <slider/>
-    <h2>ESTO ES FUTURAS ESTRELLAS</h2>
+    <img :src="require('./../assets/logoGrande.png')" id="logo" alt="Logo">
     <div id="gridHome">
       <p id="texto1">Conecta con jugadores y ojeadores de tu zona. Además, gracias a nuestros filtros podrás encontrar tu candidato perfecto, ya que podrás buscar usuarios en función de su edad, posición principal, provincia de residencia y muchos más.</p>
       <img class="images" id="img1" src="@/assets/imagenesWeb/imagenHome1.jpeg" alt="pie pisando balón de fútbol">
@@ -29,20 +29,35 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+
+h2 {
+  font-family: 'Luckiest Guy', cursive;
+  font-size: 175%;
+}
 .images {
   height: 100%;
   width: 100%;
   object-fit: cover;
-  border-radius: 2rem;
+  border-radius: 1rem;
   margin: 1rem;
 }
 #texto1 {
   grid-area: texto1;
-  padding: 1rem;
+  padding: 6rem 1rem 6rem 1rem;
+  margin: 1rem;
+  width: 90%;
+  background-color:#f0884863;
+  border-radius: 1rem
 }
 #texto2 {
   grid-area: texto2;
   padding: 1rem;
+  padding: 6rem 1rem 6rem 1rem;
+  margin: 1rem;
+  width: 90%;
+  background-color:#f0884863;
+  border-radius: 1rem
 }
 #img1 {
   grid-area: img1;
@@ -55,6 +70,11 @@ export default {
 }
 #texto3 {
   grid-area: texto3;
+  padding: 8rem 1rem 8rem 1rem;
+  margin: 1rem;
+  width: 90%;
+  background-color:#f0884863;
+  border-radius: 1rem
 }
 #gridHome {
   justify-content: center;
@@ -69,12 +89,15 @@ export default {
     "img1 texto1 img2"
     "texto2 img3 texto3";
 }
+#logo {
+  width: 700px;
+}
 @media screen and (max-width: 480px) {
   .images {
   width: 100%;
   height: 300px;
   object-fit: cover;
-  border-radius: 2rem;
+  border-radius: 1rem;
   margin: 1rem;
   }
   #gridHome {
@@ -82,6 +105,34 @@ export default {
   flex-direction: column;
   padding: 0 3rem 1rem 3rem;
   }
+  #texto1 {
+  grid-area: texto1;
+  padding: 1rem;
+  margin: 1rem;
+  width: 90%;
+  background-color:#f0884863;
+  border-radius: 1rem
+}
+#texto2 {
+  grid-area: texto2;
+  padding: 1rem;
+  padding: 1rem;
+  margin: 1rem;
+  width: 90%;
+  background-color:#f0884863;
+  border-radius: 1rem
+}
+  #texto3 {
+  grid-area: texto3;
+  padding: 1rem;
+  margin: 1rem;
+  width: 90%;
+  background-color:#f0884863;
+  border-radius: 1rem
+}
+#logo {
+  width: 300px;
+}
 }
 @media screen and (min-width: 481px) and (max-width: 767px) {
   #gridHome {
@@ -93,12 +144,71 @@ export default {
   width: 100%;
   height: 400px;
   object-fit: cover;
-  border-radius: 2rem;
+  border-radius: 1rem;
   margin: 1rem;
   }
+  #texto1 {
+  grid-area: texto1;
+  padding: 1rem;
+  margin: 1rem;
+  width: 90%;
+  background-color:#f0884863;
+  border-radius: 1rem
+}
+#texto2 {
+  grid-area: texto2;
+  padding: 1rem;
+  padding: 1rem;
+  margin: 1rem;
+  width: 90%;
+  background-color:#f0884863;
+  border-radius: 1rem
+}
+  #texto3 {
+  grid-area: texto3;
+  padding: 1rem;
+  margin: 1rem;
+  width: 90%;
+  background-color:#f0884863;
+  border-radius: 1rem
+}
+#logo {
+  width: 450px;
+}
 }
 @media screen and (min-width: 768px) and (max-width: 1024px) {
-  
+  .images {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 1rem;
+  margin: 1rem;
+  }
+  #texto1 {
+  grid-area: texto1;
+  padding: 3rem 1rem 3rem 1rem;
+  margin: 1rem;
+  width: 90%;
+  background-color:#f0884863;
+  border-radius: 1rem
+}
+#texto2 {
+  grid-area: texto2;
+  padding: 3rem 1rem 3rem 1rem;
+  padding: 1rem;
+  margin: 1rem;
+  width: 90%;
+  background-color:#f0884863;
+  border-radius: 1rem
+}
+  #texto3 {
+  grid-area: texto3;
+  padding: 5rem 1rem 5rem 1rem;
+  margin: 1rem;
+  width: 90%;
+  background-color:#f0884863;
+  border-radius: 1rem
+}
 }
 @media screen and (min-width: 1025px) and (max-width: 1280px) {
   
@@ -109,10 +219,10 @@ export default {
   width: 100%;
   height: 350px;
   object-fit: cover;
-  border-radius: 2rem;
+  border-radius: 1rem;
   margin: 1rem;
   }
-  
+
 }
 
 </style>

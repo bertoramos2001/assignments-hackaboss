@@ -152,10 +152,10 @@ img {
     top:15%;
     left: 5%;
     text-align: left;
-    font-weight: 700;
+    font-weight: 900;
     font-size: 300%;
     color: white;
-    text-shadow: 1px 1px 1px black;
+    text-shadow: 1px 1px 10px black;
 }
 .prev:hover, .next:hover {
   background-color: rgba(0,0,0,0.9);
@@ -185,10 +185,10 @@ img {
     top:5%;
     left: 5%;
     text-align: left;
-    font-weight: 700;
+    font-weight: 900;
     font-size: 200%;
     color: white;
-    text-shadow: 1px 1px 1px black;
+    text-shadow: 1px 1px 10px black;
 }
 }
 </style>

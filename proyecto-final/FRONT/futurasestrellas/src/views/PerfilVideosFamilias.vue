@@ -3,10 +3,10 @@
       <vue-headful title="Videos Familia | FuturasEstrellas"/>
       <menucustom/>
       <menuperfilfamilias/>
-      <h1>PERFIL VIDEOS FAMILIAS</h1>
-      <button id="botonAnadirVideo" @click="mostrarAddVideo()">Añadir vídeo</button>
+      <h1>VIDEOS</h1>
+      <button v-show="owner" id="botonAnadirVideo" @click="mostrarAddVideo()">Añadir vídeo</button>
       <div v-for="videoInfo in videos" :key="videoInfo.id">
-          <p id="tituloVideo">{{videoInfo.titulo}} <button @click="borrarVideo(videoInfo.id)" class="deleteVideoButton">Borrar</button></p>
+          <p id="tituloVideo">{{videoInfo.titulo}} <button v-show="owner" @click="borrarVideo(videoInfo.id)" class="deleteVideoButton"><i class="ion-ios-trash" /></button></p>
           <div class="videoInfo">
           <p id="descripcionVideo">{{videoInfo.descripcion}}</p>
           <div class="divVideo">
@@ -41,6 +41,7 @@
 import axios from 'axios'
 import menucustom from '@/components/MenuCustom.vue'
 import menuperfilfamilias from '@/components/MenuPerfilFamilias.vue'
+import { isOwner } from "@/utils/utils.js";
 import Swal from 'sweetalert2'
 
 export default {
@@ -54,6 +55,7 @@ export default {
             videos: [],
             seeModal: false,
             tituloVideo: '',
+            owner: false,
             descripcionVideo: '',
             selectedVideo: null
         }
@@ -64,6 +66,7 @@ export default {
         axios.get(`http://localhost:7000/perfil/familia/${this.$route.params.email}/videos`)
         .then(function(response) {
             self.videos = response.data
+            self.getIsOwner(this.$route.params.email, localStorage.getItem('ROL'));
         })
         .catch(function(error) {
             console.log(error)
@@ -75,6 +78,9 @@ export default {
         },
         mostrarAddVideo() {
             this.seeModal = true;
+        },
+        getIsOwner(emailTutor, rol) {
+            this.owner = isOwner(emailTutor, rol);
         },
         videoFamilia(event) {
             console.log(event)
@@ -178,21 +184,23 @@ video {
     margin: 1rem;
 }
 .divVideo {
-    background-color: rgba(76, 235, 250, 0.596);
+    background-color: #fff;
     border-radius: 0 0 1rem 1rem;
     margin: 0 auto 2rem auto;
+    box-shadow: 0px 4px 5px grey;
 }
 #tituloVideo {
     font-weight: 800;
     padding: 1rem;
     margin: 0 auto;
-    background-color: rgb(98, 98, 255);
+    background-color: #fda46c;
     border-radius: 1rem 1rem 0 0;
 }
 #descripcionVideo {
     padding: 1rem;
     margin: 0 auto;
-    background-color: rgba(76, 235, 250, 0.596);
+    background-color: #fff;
+    box-shadow: 0px 2.5px 5px grey;
 }
 #botonAnadirVideo {
     margin: 1rem;
@@ -217,7 +225,74 @@ video {
   border-radius: 1rem;
   position: fixed;
 }
-
+.modalBox {
+  position: absolute;
+  top: 250px;
+  z-index: 11;
+  background-color: whitesmoke;
+  width: auto;
+  padding: 2rem;
+  border-radius: 1rem;
+  position: fixed;
+}
+.modalBox button {
+  margin: 1rem;
+}
+.modalBox input {
+  padding: .5rem; 
+  border: 1px solid #f08848;
+  background-color: #fff;
+  border-radius: .2rem;
+  width: 100%;
+  transition: all .3s ease-in-out
+}
+.modalBox input:focus {
+  background-color: #abd2fb8f;
+}
+.modalBox input:hover {
+  background-color: #abd2fb8f;
+}
+.modalBox textarea {
+  padding: .5rem;
+  border: 1px solid #f08848;
+  background-color: #fff;
+  border-radius: .2rem;
+  width: 100%;
+  transition: all .3s ease-in-out
+}
+.modalBox textarea:focus {
+  background-color: #abd2fb8f;
+}
+.modalBox textarea:hover {
+  background-color: #abd2fb8f;
+}
+button {
+  color: #35495E;
+  font-weight: 700;
+  padding: .5rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #78a6d6;
+  border-radius: .5rem;
+  display: inline-block;
+  border: none;
+  transition: all 0.4s ease 0s
+}
+button:hover  {
+  text-shadow: 0px 0px 6px #8dc4ff;
+  box-shadow: 4px 4px 1px 1px #4e79a7;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+  background-color: #8dc4ff;
+}
+.deleteVideoButton {
+    position: relative;
+    left: 20px;
+}
+i {
+    font-size: 20px;
+    padding: 0 .5rem;
+}
 @media screen and (max-width: 480px) {
     video {
     width: 272px;
@@ -226,22 +301,27 @@ video {
     margin: 1rem;
     }
     .divVideo {
-    background-color: rgba(76, 235, 250, 0.596);
     border-radius: 0 0 1rem 1rem;
     width:95%;
     }
     #tituloVideo {
         font-weight: 800;
         padding: 1rem 0 1rem 0;
-        background-color: rgb(98, 98, 255);
         border-radius: 1rem 1rem 0 0;
         width:95%;
     }
     #descripcionVideo {
         padding: 1rem 0 1rem 0;
-        background-color: rgba(76, 235, 250, 0.596);
         width:95%;
     }
+    i {
+    font-size: 15px;
+    padding: 0 .3rem;
+}
+.deleteVideoButton {
+    position: relative;
+    left: 0;
+}
 }
 
 @media screen and (min-width: 481px) and (max-width: 767px) {
@@ -252,20 +332,17 @@ video {
     margin: 1rem;
     }
     .divVideo {
-    background-color: rgba(76, 235, 250, 0.596);
     border-radius: 0 0 1rem 1rem;
     width:95%;
     }
     #tituloVideo {
         font-weight: 800;
         padding: 1rem 0 1rem 0;
-        background-color: rgb(98, 98, 255);
         border-radius: 1rem 1rem 0 0;
         width:95%;
     }
     #descripcionVideo {
         padding: 1rem 0 1rem 0;
-        background-color: rgba(76, 235, 250, 0.596);
         width:95%;
     }
 }
@@ -278,20 +355,17 @@ video {
     margin: 1rem;
     }
     .divVideo {
-    background-color: rgba(76, 235, 250, 0.596);
     border-radius: 0 0 1rem 1rem;
     width:700px;
     }
     #tituloVideo {
         font-weight: 800;
         padding: 1rem 0 1rem 0;
-        background-color: rgb(98, 98, 255);
         border-radius: 1rem 1rem 0 0;
         width:700px;
     }
     #descripcionVideo {
         padding: 1rem 0 1rem 0;
-        background-color: rgba(76, 235, 250, 0.596);
         width:700px;
     }
 }
@@ -304,20 +378,17 @@ video {
     margin: 1rem;
     }
     .divVideo {
-    background-color: rgba(76, 235, 250, 0.596);
     border-radius: 0 0 1rem 1rem;
     width:800px;
     }
     #tituloVideo {
         font-weight: 800;
         padding: 1rem 0 1rem 0;
-        background-color: rgb(98, 98, 255);
         border-radius: 1rem 1rem 0 0;
         width:800px;
     }
     #descripcionVideo {
         padding: 1rem 0 1rem 0;
-        background-color: rgba(76, 235, 250, 0.596);
         width:800px;
     }
 }
@@ -330,20 +401,17 @@ video {
     margin: 1rem;
     }
     .divVideo {
-    background-color: rgba(76, 235, 250, 0.596);
     border-radius: 0 0 1rem 1rem;
     width:900px;
     }
     #tituloVideo {
         font-weight: 800;
         padding: 1rem 0 1rem 0;
-        background-color: rgb(98, 98, 255);
         border-radius: 1rem 1rem 0 0;
         width:900px;
     }
     #descripcionVideo {
         padding: 1rem 0 1rem 0;
-        background-color: rgba(76, 235, 250, 0.596);
         width:900px;
     }
 }

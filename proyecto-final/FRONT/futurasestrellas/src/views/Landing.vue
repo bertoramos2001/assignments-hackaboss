@@ -2,6 +2,7 @@
   <div class="home">
     <vue-headful title="Landing | FuturasEstrellas"/>
     <h1>BIENVENIDOS A FUTURAS ESTRELLAS</h1>
+    <img :src="require('./../assets/logoGrande.png')" id="logo" alt="Logo">
     <h2>Selecciona el tipo de cuenta</h2>
     <div id="landingRegistros">
       <div class="plantillaRegistro" id="registroFamilia">
@@ -21,8 +22,8 @@
         <button @click="pantallaRegistroOjeador()">Registro Ojeador</button>
       </div>
     </div>
-    <button id="botonLogin" @click="pantallaLoginOjeador()">Tengo cuenta de ojeador</button>
-    <button id="botonLogin" @click="pantallaLoginFamilia()">Tengo cuenta de familia</button>
+    <button id="botonLoginFamilia" @click="pantallaLoginFamilia()">Tengo cuenta de familia</button>
+    <button id="botonLoginOjeador" @click="pantallaLoginOjeador()">Tengo cuenta de ojeador</button>
     <br>
     <button id="botonInvitado" @click="pantallaHome()">Continuar como invitado</button>
   </div>
@@ -67,40 +68,77 @@ export default {
   transition: all ease-in-out .2s;
 }
 .plantillaRegistro:hover {
-  box-shadow: 15px 15px 1px rgba(118, 71, 238, .7);
+  box-shadow: 15px 15px 1px #f08848;
+  border: 1px solid grey;
 }
 p {
   padding: 1rem 0 1rem 0;
   font-weight: 500;
 }
-button{
-    cursor: pointer;
-    padding: 1rem;
-    margin: 0 0.1em 0.1em 0;
-    background-color: rgba(240, 136, 72, .5);
-    border-radius: 1em;
-    font-weight: 300;
-    color: #35495E;
-    font-weight:700;
-    font-size: 100%;
-    transition: all ease-in-out 0.2s;
-    border: none;
-    box-shadow: 1px 1px 5px #7647ee;
+button {
+  color: #35495E;
+  font-weight: 700;
+  padding: .5rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #78a6d6;
+  border-radius: .5rem;
+  display: inline-block;
+  border: none;
+  transition: all 0.4s ease 0s
 }
-button:hover{
-    background-color: #f08848;
-    transform: scale(1.10)
+button:hover  {
+  text-shadow: 0px 0px 6px #8dc4ff;
+  box-shadow: 4px 4px 1px 1px #4e79a7;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+  background-color: #8dc4ff;
 }
 h1, h2 {
   color: #f08848
 }
-#botonLogin {
+#botonLoginFamilia {
   margin: 1rem;
   background-color: transparent;
+  border: 2px solid #35495E;
+}
+#botonLoginOjeador {
+  margin: 1rem;
+  background-color: transparent;
+  border: 2px solid #35495E;
 }
 #botonInvitado {
   margin: 1rem;
-  background-color: transparent;
-  
+  margin-top: 3rem;
+  background: transparent;
+  border: 1px solid #35495E;
+  text-transform: lowercase;
+}
+#logo {
+  width: 700px;
+}
+#registroFamilia {
+  background-image: url('./../assets/imagenesWeb/imagenRegistroFamilia.jpeg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  color: #fff
+}
+#registroOjeador {
+  background-image: url('./../assets/imagenesWeb/imagenRegistroOjeador.jpeg');
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: cover;
+  color: #fff
+}
+@media screen and (max-width: 480px) {
+  #logo {
+  width: 300px;
+}
+}
+@media screen and (min-width: 481px) and (max-width: 767px) {
+#logo {
+  width: 450px;
+}
 }
 </style>

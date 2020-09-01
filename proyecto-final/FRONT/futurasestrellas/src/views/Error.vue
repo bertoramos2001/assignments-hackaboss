@@ -28,32 +28,36 @@ export default {
 
 <style scoped>
 img {
-    width: 60%;
+    width: 70%;
+    height: auto;
     border-radius: 1rem;
-}
-#varGif {
-    width: 80%
 }
 button {
-    border-radius: 1rem;
-    padding: .5rem 1rem .5rem 1rem;
-    background-color: #663399;
-    color: whitesmoke;
-    font-weight: 700;
-    cursor: pointer;
-    border: none;
-    transition: all ease-in-out 0.2s;
-    margin-bottom: 2%;
+  color: #35495E;
+  font-weight: 700;
+  padding: .5rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: #78a6d6;
+  border-radius: .5rem;
+  display: inline-block;
+  border: none;
+  transition: all 0.4s ease 0s
 }
-button:hover {
-    transform: scale(1.10);
-    box-shadow: #daa520 7px 7px 1px;
+button:hover  {
+  text-shadow: 0px 0px 6px #8dc4ff;
+  box-shadow: 4px 4px 1px 1px #4e79a7;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+  background-color: #8dc4ff;
 }
 #textoError {
     grid-area: texto;
 }
 #varGif {
     grid-area: gif;
+    width: 85%;
+    height: auto;
 }
 #botonVar {
     grid-area: boton;
@@ -61,10 +65,44 @@ button:hover {
 #bajoError {
     padding: 5% 20% 0 20%;
     display: grid;
+    justify-items: center;
+    align-items: center;
     grid-template-columns: 50% 50%;
     grid-template-rows: auto;
     grid-template-areas: 
         "gif texto"
         "gif boton"
 }
+@media screen and (max-width: 400px) {
+    #bajoError {
+        display: flex;
+        flex-direction: column;
+    }
+    #varGif {
+        margin: 1rem;
+        height: 110px;
+}
+}
+@media screen and (min-width: 401px) and (max-width: 480px) {
+    #bajoError {
+        display: flex;
+        flex-direction: column;
+    }
+    #varGif {
+        margin: 1rem;
+        height: 150px;
+}
+}
+@media screen and (min-width: 481px) and (max-width: 768px) {
+    #bajoError {
+        display: flex;
+        flex-direction: column;
+    }
+    #varGif {
+        margin: 1rem;
+        height: 200px;
+}
+}
+
+
 </style>
