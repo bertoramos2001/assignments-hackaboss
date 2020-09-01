@@ -2,6 +2,7 @@
   <div>
     <footer>
         Alberto Ramos, 2020
+        <ion-icon name="logo-tux"></ion-icon>
     </footer>
   </div>
 </template>
