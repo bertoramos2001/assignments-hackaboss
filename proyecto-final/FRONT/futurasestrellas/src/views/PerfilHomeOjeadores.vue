@@ -140,7 +140,7 @@
 import axios from "axios";
 import menucustom from "@/components/MenuCustom.vue";
 import moment from "moment";
-import { isOwner } from "@/utils/utils.js";
+import { isOwnerScout } from "@/utils/utils.js";
 import Swal from "sweetalert2";
 
 export default {
@@ -171,7 +171,7 @@ export default {
       )
       .then(function(response) {
         self.infoGeneral = response.data;
-        self.getIsOwner(self.infoGeneral.email, localStorage.getItem('ROL'));
+        self.getIsOwnerScout(self.infoGeneral.email);
       })
       .catch(function(error) {
         console.log(error);
@@ -206,8 +206,8 @@ export default {
     formatDateAvatar(fecha) {
         return moment(fecha).format("YYYY/MM/DD")
     },
-    getIsOwner(email, rol) {
-      this.owner = isOwner(email, rol);
+    getIsOwnerScout(email) {
+      this.owner = isOwnerScout(email);
     },
     redirectEditProfileScout(infoGeneral) {
       this.$router

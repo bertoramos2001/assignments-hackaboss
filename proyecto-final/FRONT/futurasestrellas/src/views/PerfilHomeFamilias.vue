@@ -163,7 +163,7 @@ import axios from "axios";
 import menucustom from "@/components/MenuCustom.vue";
 import menuperfilfamilias from "@/components/MenuPerfilFamilias.vue";
 import moment from "moment";
-import { isOwner, isScout } from "@/utils/utils.js";
+import { isOwnerPlayer, isScout } from "@/utils/utils.js";
 import Swal from "sweetalert2";
 
 export default {
@@ -197,8 +197,8 @@ export default {
       )
       .then(function(response) {
         self.infoGeneral = response.data;
-        self.getIsOwner(self.infoGeneral.email_tutor, localStorage.getItem('ROL'));
-        self.getIsScout()
+        self.getIsScout();
+        self.getIsOwnerPlayer(self.$route.params.email)
       })
       .catch(function(error) {
         console.log(error);
@@ -233,8 +233,8 @@ export default {
     formatDateAvatar(fecha) {
         return moment(fecha).format("YYYY/MM/DD")
     },
-    getIsOwner(emailTutor, rol) {
-      this.owner = isOwner(emailTutor, rol);
+    getIsOwnerPlayer(emailTutor) {
+      this.owner = isOwnerPlayer(emailTutor);
     },
     getIsScout() {
         this.scout = isScout();

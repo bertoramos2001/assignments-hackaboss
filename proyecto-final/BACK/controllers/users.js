@@ -304,7 +304,7 @@ const searchUsers = async (req, res, next) => { // en esta funcion, dependiendo 
             listaUsuarios = await databaseFunctions.getScoutList();
         } else if ( rol !== 'ojeador' && rol !=='familia') {
             const rolError = new Error('No existe el rol que estás buscando')
-            rolErrlr.status = 404
+            rolError.status = 404
             next(rolError)
             return;
         }
@@ -349,16 +349,16 @@ const searchUsers = async (req, res, next) => { // en esta funcion, dependiendo 
     }
     if ( strongLeg ) { //si existe pierna fuerte
         if ( rol === 'familia') {
-            listaUsuarios = listaUsuarios.filter( usuario => usuario.pierna_buena === strongLeg);
+            listaUsuarios = listaUsuarios.filter( usuario => (usuario.pierna_buena).toLowerCase() === strongLeg);
         } else if (rol === 'ojeador') {
-            listaUsuarios = listaUsuarios.filter( usuario => usuario.pierna_buena_busca === strongLeg);
+            listaUsuarios = listaUsuarios.filter( usuario => (usuario.pierna_buena_busca).toLowerCase() === strongLeg);
         }
     }
     if (categoria) {  //si existe categoria
         if ( rol === 'familia') {
-            listaUsuarios = listaUsuarios.filter( usuario => usuario.categoria === categoria);
+            listaUsuarios = listaUsuarios.filter( usuario => (usuario.categoria).toLowerCase() === categoria);
         } else if (rol === 'ojeador') {
-            listaUsuarios = listaUsuarios.filter( usuario => usuario.categoria_busca === categoria);
+            listaUsuarios = listaUsuarios.filter( usuario => (usuario.categoria_busca).toLowerCase() === categoria);
         }
     }
 

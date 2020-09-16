@@ -145,11 +145,19 @@ export function logout() {
     localStorage.removeItem('ROL')
     localStorage.removeItem('EMAIL')
 }
-//funcion para comprobar si un usuario es el dueño del perfil
-export function isOwner(emailUsuario, rolUsuario) {
+//funcion para comprobar si un usuario es el dueño del perfil de jugador
+export function isOwnerPlayer(emailUsuario) {
   let authToken = getAuthToken()
   let email = getEmail()
   let rol = getRole()
 
-  return !!authToken && !isExpired(authToken) && email === emailUsuario && rol === rolUsuario
+  return !!authToken && !isExpired(authToken) && email === emailUsuario && rol === 'familia'
+}
+//funcion para comprobar si un usuario es el dueño del perfil de ojeador
+export function isOwnerScout(emailUsuario) {
+  let authToken = getAuthToken()
+  let email = getEmail()
+  let rol = getRole()
+
+  return !!authToken && !isExpired(authToken) && email === emailUsuario && rol === 'ojeador'
 }

@@ -27,11 +27,11 @@
       </div>
 
       <div class="elementoBuscar">
-        <label for="rol">Sexo:</label>
+        <label for="sexo">Sexo:</label>
         <br>
-            <select v-model="rol" name="rol" id="rol">
-                <option value="male">Hombre</option>
-                <option value="female">Mujer</option>
+            <select v-model="sexo" name="sexo" id="sexo">
+                <option value="Hombre">Hombre</option>
+                <option value="Mujer">Mujer</option>
             </select>
       </div>
 
@@ -111,15 +111,15 @@
         <br>
         <select v-model="posicion" name="posicionPrincipal" id="posicionPrincipal">
             <option value="portero">Portero</option>
-            <option value="lateralDerecho">Lateral Derecho</option>
-            <option value="lateralIzquierdo">Lateral Izquierdo</option>
-            <option value="centralDerecho">Central Derecho</option>
-            <option value="centralIzquierdo">Central Izquierdo</option>
-            <option value="mediocentroDefensivo">MediocentroDefensivo</option>
-            <option value="medioccentroCreador">Mediocentro Creador</option>
-            <option value="mediocentroOfensivo">Mediocentro Ofensivo</option>
-            <option value="extremoDerecho">Extremo Derecho</option>
-            <option value="extremoIzquierdo">Extremo Izquierdo</option>
+            <option value="lateral-derecho">Lateral Derecho</option>
+            <option value="lateral-izquierdo">Lateral Izquierdo</option>
+            <option value="central-derecho">Central Derecho</option>
+            <option value="central-izquierdo">Central Izquierdo</option>
+            <option value="mediocentro-defensivo">Mediocentro Defensivo</option>
+            <option value="medioccentro-creador">Mediocentro Creador</option>
+            <option value="mediocentro-ofensivo">Mediocentro Ofensivo</option>
+            <option value="extremo-derecho">Extremo Derecho</option>
+            <option value="extremo-izquierdo">Extremo Izquierdo</option>
             <option value="delantero">Delantero</option>
         </select>
       </div>
@@ -128,9 +128,9 @@
         <label for="categoria">Categoría:</label>
         <br>
         <select v-model="categoria" name="categoria" id="categoria">
-            <option value="prebenjamin">Prebenjamín</option>
-            <option value="benjamin">Benjamín</option>
-            <option value="alevin">Alevín</option>
+            <option value="prebenjamín">Prebenjamín</option>
+            <option value="benjamín">Benjamín</option>
+            <option value="alevín">Alevín</option>
             <option value="infantil">Infantil</option>
             <option value="cadete">Cadete</option>
             <option value="juvenil">Juvenil</option>

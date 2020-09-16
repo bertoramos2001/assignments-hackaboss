@@ -41,7 +41,7 @@
 import axios from 'axios'
 import menucustom from '@/components/MenuCustom.vue'
 import menuperfilfamilias from '@/components/MenuPerfilFamilias.vue'
-import { isOwner } from "@/utils/utils.js";
+import { isOwnerPlayer } from "@/utils/utils.js";
 import Swal from 'sweetalert2'
 
 export default {
@@ -66,7 +66,7 @@ export default {
         axios.get(`http://localhost:7000/perfil/familia/${this.$route.params.email}/videos`)
         .then(function(response) {
             self.videos = response.data
-            self.getIsOwner(this.$route.params.email, localStorage.getItem('ROL'));
+            self.getIsOwnerPlayer(self.$route.params.email);
         })
         .catch(function(error) {
             console.log(error)
@@ -79,8 +79,8 @@ export default {
         mostrarAddVideo() {
             this.seeModal = true;
         },
-        getIsOwner(emailTutor, rol) {
-            this.owner = isOwner(emailTutor, rol);
+        getIsOwnerPlayer(emailTutor) {
+            this.owner = isOwnerPlayer(emailTutor);
         },
         videoFamilia(event) {
             console.log(event)
