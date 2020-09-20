@@ -1,37 +1,36 @@
-# entregas-hab
+# Assignments for Hack a Boss
 
-En este repoditorio subiré todas las entregas semanales del bootcamp Hack a Boss
+List of all the graded assignments done in the Hack a Boss Full-Stack bootcamp in Vigo, Spain
 
 
 ## 1.HTML
-- **entrega 1:** Creación de un email simple, con imágenes y texto
+- **assignment 1:** Creation of a simple email, with images and text. (using only html tables and no style properties)
 
 ## 2.JAVASCRIPT 1
-- **entrega 1:** Obtener los hashtags en un array de strings
+- **assignment 1:** Get the hashtags in a strings array.
 
-- **entrega 2:** Filtrar objetos para decidir en qué fotografías sale cada persona
+- **assignment 2:** Filter objects in order to decide in which pictures does each person appear
 
-- **entrega 3:** Contador de mensajes por usuario y mostrarlos en objetos
+- **assignment 3:** Count the messages per user and show the result in objects.
 
 ## 3.CSS
-- **entrega 1:** Creación de una página de reservas de hoteles
+- **assignment 1:** Hotel reservation page.
 
 ## 4.JAVASCRIPT 2
-- **entrega 1:** Funcionalidad de añadir hoteles a una lista de reservas en el ejercicio de css y guardarlos en local storage
+- **assignment 1:** Adding functionalities to CSS project; adding hotels to a shopping list and store them in local storage using JS DOM.
 
 ## 5.BACK
-- **entrega 1:** calculadora de préstamo usando la librería loan calc y metiendo los valores por consola
+- **assignment 1:** Loan calculator using loan calc library and adding the values in the console
 
-- **entrega 2:** API REST para añadir conciertos y ver la lista de estos
+- **assignment 2:** API REST to add concerts and see a list of them
 
-- **entrega 3:** backend de ecommerce; un único usuario (administrador) puede añadir y modificar productos, todos los
-                usuarios pueden visualizar la lista de productos. Se pueden filtrar los poroductos mediante la querystring
- >***NOTA*** la contraseña para entrar como asministrador es 1234, como se indica en el código
+- **assignment 3:** ecommerce backend; one only user (admin) can add and modify products, all the users can see the list of products. They can all filter products through the querystring.
+ >***NOTE*** admin password is 1234, as it is shown in the source code
 
- >***NOTA*** los objetos se pueden filtrar por nombre, precio mínimo y precio máximo
+ >***NOTE*** Products can be filtered by name, minimum price and maximum price.
 
  ## 6.MySQL
- -**entrega 1:** Base de datos de web que gestiona reservas en restaurantes durante la pandemia
+ -**assignment 1:** Database for restaurants in a city during the pandemic.
 
  ## 7.VUE.JS
- -**entrega 1:** Plataforma 'Hack a Music', en la que recibimos datos de la API de Lastfm y los mostramos en diferentes vistas. Entre los datos mostrados se encuentran las canciones y artistas más escuchados en España o los tags de música más utilizados a nivel globals
+ -**assignment 2:** 'Hack a Music' platform, in which we receive data from the Lastfm API and show them in different views. Among the data we can find the most listened songs and artists in Spain or most popular music tags globally.
